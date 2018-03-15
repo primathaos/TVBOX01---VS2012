@@ -503,7 +503,7 @@ namespace TVBOX01
 
             //3.4 烽火移动wifi 彩盒标签 //通用 //杨浩
             #region
-            if (tt_username == "FH004" || tt_username == "FH104")
+            if (tt_username == "FH004" || tt_username == "FH104" || tt_username == "FH204" || tt_username == "FH214")
             {
                 string tt_password = GetUserPassword(tt_username);
                 if (this.textBox2.Text == tt_password)

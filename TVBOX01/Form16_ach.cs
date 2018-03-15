@@ -77,7 +77,7 @@ namespace TVBOX01
             this.button18.Visible = false;
 
             //员工账号分离
-            if (str.Contains("FH004"))
+            if (str.Contains("FH004") || str.Contains("FH204"))
             {
                 this.tabPage4.Parent = null;
                 this.button14.Visible = true;
@@ -270,7 +270,7 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
-                if (str.Contains("FH104"))
+                if (str.Contains("FH104") || str.Contains("FH214"))
                 {
                     this.button2.Visible = true;
                     this.button19.Visible = true;
@@ -422,8 +422,15 @@ namespace TVBOX01
                     if (tt_flag5)
                     {
                         string tt_ec = this.label16.Text;
-                        string tt_sql5_1 = "select  docdesc,Fpath04,Fdata04,Fmd04  from odc_ec where zjbm = '" + tt_ec + "' ";
-                        string tt_sql5_2 = "select  docdesc,Fpath03,Fdata03,Fmd03  from odc_ec where zjbm = '" + tt_ec + "' ";
+
+                        string tt_sql5_1 = "select docdesc,Fpath04,Fdata04,Fmd04 from odc_ec where zjbm = '" + tt_ec + "' ";
+
+                        if (str.Contains("FH204") || str.Contains("FH214"))//小型化方案彩盒II
+                        {
+                            tt_sql5_1 = "select docdesc,Fpath09,Fdata09,Fmd09 from odc_ec where zjbm = '" + tt_ec + "' ";
+                        }
+
+                        string tt_sql5_2 = "select docdesc,Fpath03,Fdata03,Fmd03 from odc_ec where zjbm = '" + tt_ec + "' ";
 
                         DataSet ds5_1 = Dataset1.GetDataSet(tt_sql5_1, tt_conn);
                         DataSet ds5_2 = Dataset1.GetDataSet(tt_sql5_2, tt_conn);
@@ -437,8 +444,8 @@ namespace TVBOX01
                             tt_path1 = Application.StartupPath + ds5_1.Tables[0].Rows[0].ItemArray[1].ToString();
                             //tt_md5 = ds5.Tables[0].Rows[0].ItemArray[3].ToString();
 
-                            this.label82.Text = ds5_2.Tables[0].Rows[0].ItemArray[1].ToString(); //彩盒模板路径
-                            this.label105.Text = ds5_2.Tables[0].Rows[0].ItemArray[2].ToString(); //彩盒数据类型
+                            this.label82.Text = ds5_2.Tables[0].Rows[0].ItemArray[1].ToString(); //II型标签模板路径
+                            this.label105.Text = ds5_2.Tables[0].Rows[0].ItemArray[2].ToString(); //II型标签数据类型
                             tt_path2 = Application.StartupPath + ds5_2.Tables[0].Rows[0].ItemArray[1].ToString();
 
                             tt_flag6 = true;
@@ -502,6 +509,13 @@ namespace TVBOX01
                         this.textBox2.Enabled = true;
                         this.textBox19.Enabled = false;
                         this.textBox3.Enabled = false;
+
+                        if (str.Contains("FH204") || str.Contains("FH214"))
+                        {
+                            this.textBox2.Visible = false;
+                            this.textBox19.Enabled = true;
+                            this.textBox3.Visible = false;
+                        }
 
                         GetProductYield();  //生产信息
                     }
@@ -1093,6 +1107,26 @@ namespace TVBOX01
             string tt_deletesql = "delete from odc_check_barcode where maclable = '" + tt_mac + "'";
             int tt_Checknum = Dataset1.ExecCommand(tt_deletesql, tt_conn);
             return tt_Checknum;
+        }
+
+        //查询重打记录
+        private bool CheckPrintRecord(string tt_fhostlable, string tt_flocal)
+        {
+            string tt_sql = "select count(1), min(Fname), min(fhostlable) " +
+                            "from odc_lableprint where fhostlable = '" + tt_fhostlable + "'" +
+                            "and flocal = '" + tt_flocal + "'";
+
+            string[] tt_array = new string[3];
+            tt_array = Dataset1.GetDatasetArrayTwo(tt_sql, tt_conn);
+
+            if (int.Parse(tt_array[0]) >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion
@@ -1894,7 +1928,6 @@ namespace TVBOX01
                     }
                 }
 
-                
                 //第四步扣数检查
                 Boolean tt_flag4 = false;
                 if (tt_flag1 && tt_flag2 && tt_flag3)
@@ -1902,8 +1935,6 @@ namespace TVBOX01
                     tt_flag4 = true;
                     setRichtexBox("4、物料扣数过，gong");
                 }
-
-
 
                 //第五步物料检查
                 Boolean tt_flag5 = false;
@@ -1925,7 +1956,6 @@ namespace TVBOX01
                         setRichtexBox("4、物料填写都不为空，gong");
                     }
                 }
-                
 
                 //第六步流程检查
                 Boolean tt_flag6 = false;
@@ -1946,7 +1976,6 @@ namespace TVBOX01
                     }
 
                 }
-                
 
                 //第七步查找关联表数据
                 Boolean tt_flag7 = false;
@@ -1979,7 +2008,6 @@ namespace TVBOX01
                     }
                 }
 
-
                 //第八步串码是否存在检查
                 Boolean tt_flag8 = false;
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag7)
@@ -1998,7 +2026,6 @@ namespace TVBOX01
 
                     }
                 }
-
 
                 //第九步 查找站位信息
                 Boolean tt_flag9 = false;
@@ -2029,9 +2056,7 @@ namespace TVBOX01
                         setRichtexBox("9、没有找到待测站位，或有多条待测站位，流程异常，over");
                         PutLableInfor("没有找到待测站位，或有多条待测站位，流程异常！");
                     }
-
                 }
-
 
                 //第十步查询macinfo表信息
                 Boolean tt_flag10 = false;
@@ -2039,10 +2064,7 @@ namespace TVBOX01
                 {
                     tt_flag10 = true;
                     setRichtexBox("10、Macinfo表查找数据过,goon");
-
                 }
-
-
 
                 //第十一步物料追溯添加
                 Boolean tt_flag11 = false;
@@ -2050,13 +2072,11 @@ namespace TVBOX01
                 {
                     tt_flag11 = true;
                     setRichtexBox("11、物料追溯记录过，gong");
-                }                        
+                }
 
                 //最后判断
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag7 && tt_flag8 && tt_flag10 && tt_flag11)
                 {
-
-
                     CheckStation(tt_shortmac);
                     this.richTextBox1.BackColor = Color.Aquamarine;
                     PutLableInfor("OK MAC扫描成功，请扫描生产序列号！");
@@ -2078,77 +2098,224 @@ namespace TVBOX01
         //扫描生产序列号
         private void textBox19_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (str.Contains("FH204") || str.Contains("FH214"))
             {
-
-                //---开始生产序列号扫描
-                setRichtexBox("-----开始生产序列号扫描--------");
-                string tt_hostlable = this.textBox19.Text.Trim().ToUpper();
-                string tt_task = this.textBox1.Text.Trim().ToUpper();
-                string tt_scanmac = this.textBox2.Text.Trim().ToUpper();
-                string tt_shortmac = tt_scanmac.Replace("-", "");
-
-
-                //第一步位数判断
-                Boolean tt_flag1 = false;
-                tt_flag1 = CheckStrLengh(tt_hostlable, this.textBox15.Text);
-
-
-                //第二步包含符判断
-                Boolean tt_flag2 = false;
-                if (tt_flag1)
+                if (e.KeyCode == Keys.Enter)//小型化产品彩盒标签II，原扫描处理在else项下
                 {
-                    tt_flag2 = CheckStrContain(tt_hostlable, this.textBox14.Text.Trim());
-                }
+                    //---开始序列号扫描
+                    ScanDataInitial();
+                    setRichtexBox("-----开始序列号扫描--------");
+                    string tt_hostlable = this.textBox19.Text.Trim();
 
-                //第三步判断产品关联生产序列号是否与扫描一致
-                Boolean tt_flag3 = false;
-                string tt_hostlable_1 = "";
-                if (tt_flag1 && tt_flag2)
-                {
-                    string tt_sql3 = "select hostlable from odc_alllable where taskscode = '" + tt_task + "' and maclable = '" + tt_shortmac + "'";
-                    
-                    DataSet ds3 = Dataset1.GetDataSet(tt_sql3, tt_conn);
-                    if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
+                    //第一步位数判断
+                    Boolean tt_flag1 = false;
+                    tt_flag1 = CheckStrLengh(tt_hostlable, this.textBox15.Text);
+
+
+                    //第二步包含符判断
+                    Boolean tt_flag2 = false;
+                    if (tt_flag1)
                     {
-                        tt_hostlable_1 = ds3.Tables[0].Rows[0].ItemArray[0].ToString().ToUpper(); //主机条码
+                        tt_flag2 = CheckStrContain(tt_hostlable, this.textBox14.Text.Trim());
+                    }
 
-                        if (tt_hostlable_1 == this.textBox19.Text.Trim())
+
+                    //第三步 判断路径
+                    Boolean tt_flag3 = false;
+                    if (tt_flag1 && tt_flag2)
+                    {
+                        bool tt_flag3_1 = getPathIstrue(tt_path1);
+                        bool tt_flag3_2 = getPathIstrue(tt_path2);
+                        if (tt_flag3_1 && tt_flag3_2)
                         {
                             tt_flag3 = true;
-                            setRichtexBox("3、关联表查询到一条数据，生产序列号与扫描一致，数据记录为" + tt_hostlable_1 + ",扫描为" + tt_hostlable + ",goon");
+                            setRichtexBox("3、已找到所有模板,：" + tt_path1 + "，" + tt_path2 + ",goon");
+                        }
+                        else if (!tt_flag3_1 && !tt_flag3_2)
+                        {
+                            setRichtexBox("3、没有找到模板,：" + tt_path1 + "," + tt_path2 + ",over");
+                            PutLableInfor("没有找到模板，请检查！");
+                        }
+                        else if (!tt_flag3_1)
+                        {
+                            setRichtexBox("3、没有找到彩盒标签模板,：" + tt_path1 + ",over");
+                            PutLableInfor("没有找到彩盒标签模板，请检查！");
+                        }
+                        else if (!tt_flag3_2)
+                        {
+                            setRichtexBox("3、没有找到II型标签模板,：" + tt_path2 + ",over");
+                            PutLableInfor("没有找到II型标签模板，请检查！");
+                        }
+                    }
+
+
+                    //第三步查找信息
+                    Boolean tt_flag4 = false;
+                    if (tt_flag1 && tt_flag2)
+                    {
+                        string tt_sql4 = "select pcbasn,hostlable,maclable,smtaskscode,boxlable,dystlable,bprintuser,shelllable from odc_alllable " +
+                                         "where taskscode = '" + this.textBox1.Text + "' and hostlable = '" + tt_hostlable + "' ";
+
+
+                        DataSet ds4 = Dataset1.GetDataSet(tt_sql4, tt_conn);
+                        if (ds4.Tables.Count > 0 && ds4.Tables[0].Rows.Count > 0)
+                        {
+                            tt_flag4 = true;
+                            this.label44.Text = ds4.Tables[0].Rows[0].ItemArray[0].ToString().ToUpper();  //单板号
+                            this.label45.Text = ds4.Tables[0].Rows[0].ItemArray[1].ToString().ToUpper();  //主机条码
+                            this.label46.Text = ds4.Tables[0].Rows[0].ItemArray[2].ToString().ToUpper();  //短MAC
+                            this.label47.Text = ds4.Tables[0].Rows[0].ItemArray[3].ToString().ToUpper();  //设备标识码
+                            this.label48.Text = ds4.Tables[0].Rows[0].ItemArray[4].ToString().ToUpper();  //彩盒条码
+                            this.label49.Text = ds4.Tables[0].Rows[0].ItemArray[5].ToString();  //电源条码
+                            this.label59.Text = ds4.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();  //长MAC
+                            this.label61.Text = ds4.Tables[0].Rows[0].ItemArray[7].ToString().ToUpper();  //GPSN
+
+                            this.label98.Text = Regex.Replace(this.label47.Text, " ", "");
+
+                            if (this.label87.Text == "EPON")
+                            {
+                                tt_ounmac = Regex.Replace(this.label61.Text, "-", "");
+                            }
+                            else
+                            {
+                                tt_ounmac = this.label61.Text;
+                            }
+
+                            setRichtexBox("4、关联表查询到一条数据，goon");
+
                         }
                         else
                         {
-                            setRichtexBox("3、生产序列号与扫描不一致，over");
-                            PutLableInfor("数据记录为" + tt_hostlable_1 + ",扫描为" + tt_hostlable + ",请检查!");
+                            setRichtexBox("4、关联表没有查询到数据，over");
+                            PutLableInfor("关联表没有查询到数据，请检查！");
                         }
 
                     }
-                    else
+
+                    //第五步查询macinfo表信息
+                    Boolean tt_flag5 = false;
+                    if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4)
                     {
-                        setRichtexBox("3、关联表没有查询到数据，over");
-                        PutLableInfor("关联表没有查询到数据，请检查！");
+                        tt_flag5 = true;
+                        setRichtexBox("5、Macinfo表查找数据过,goon");
                     }
 
+
+                    //第六步 查找彩盒II打印信息
+                    Boolean tt_flag6 = false;
+                    if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5)
+                    {
+                        bool tt_flag6_1 = CheckPrintRecord(tt_hostlable, "彩盒标签II");
+
+                        if (tt_flag6_1 == true)
+                        {
+                            setRichtexBox("6、彩盒II标签已经打印过，over");
+                            PutLableInfor("此产品彩盒II标签已经打印过，请检查！");
+                        }
+                        else if (tt_flag6_1 == false)
+                        {
+                            tt_flag6 = true;
+                            setRichtexBox("6、重打检查OK,goon");
+                        }
+                    }
+
+
+                    //最后判断
+                    if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6)
+                    {
+                        Dataset1.lablePrintRecord(this.textBox1.Text, this.label46.Text, this.label45.Text, "彩盒标签II", str, tt_computermac, "电信小型化产品彩盒标签II", tt_conn);
+                        
+                        GetParaDataPrint1(1);
+                        //GetParaDataPrint2(0);//双打功能暂时不启用
+                        PutLableInfor("OK 彩盒标签II打印成功，请继续扫描下一片");
+                        GetProductYield();
+                        CheckStation(tt_hostlable);
+                        this.richTextBox1.BackColor = Color.Chartreuse;
+                        textBox19.Focus();
+                        textBox19.SelectAll();
+                    }
+                    else
+                    {
+                        this.richTextBox1.BackColor = Color.Red;
+                        textBox19.Focus();
+                        textBox19.SelectAll();
+                    }
                 }
-                
-                //最后判断
-                if (tt_flag1 && tt_flag2 && tt_flag3)
+            }
+            else
+            {
+                if (e.KeyCode == Keys.Enter)
                 {
-                    this.richTextBox1.BackColor = Color.Aquamarine;
-                    PutLableInfor("OK 生产序列号扫描成功，请继续扫描电源");
-                    this.textBox2.Enabled = false;
-                    this.textBox19.Enabled = false;
-                    this.textBox3.Enabled = true;
-                    textBox3.Focus();
-                    textBox3.SelectAll();
-                }
-                else
-                {
-                    this.richTextBox1.BackColor = Color.Red;
-                    textBox19.Focus();
-                    textBox19.SelectAll();
+
+                    //---开始生产序列号扫描
+                    setRichtexBox("-----开始生产序列号扫描--------");
+                    string tt_hostlable = this.textBox19.Text.Trim().ToUpper();
+                    string tt_task = this.textBox1.Text.Trim().ToUpper();
+                    string tt_scanmac = this.textBox2.Text.Trim().ToUpper();
+                    string tt_shortmac = tt_scanmac.Replace("-", "");
+
+
+                    //第一步位数判断
+                    Boolean tt_flag1 = false;
+                    tt_flag1 = CheckStrLengh(tt_hostlable, this.textBox15.Text);
+
+
+                    //第二步包含符判断
+                    Boolean tt_flag2 = false;
+                    if (tt_flag1)
+                    {
+                        tt_flag2 = CheckStrContain(tt_hostlable, this.textBox14.Text.Trim());
+                    }
+
+                    //第三步判断产品关联生产序列号是否与扫描一致
+                    Boolean tt_flag3 = false;
+                    string tt_hostlable_1 = "";
+                    if (tt_flag1 && tt_flag2)
+                    {
+                        string tt_sql3 = "select hostlable from odc_alllable where taskscode = '" + tt_task + "' and maclable = '" + tt_shortmac + "'";
+
+                        DataSet ds3 = Dataset1.GetDataSet(tt_sql3, tt_conn);
+                        if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
+                        {
+                            tt_hostlable_1 = ds3.Tables[0].Rows[0].ItemArray[0].ToString().ToUpper(); //主机条码
+
+                            if (tt_hostlable_1 == this.textBox19.Text.Trim())
+                            {
+                                tt_flag3 = true;
+                                setRichtexBox("3、关联表查询到一条数据，生产序列号与扫描一致，数据记录为" + tt_hostlable_1 + ",扫描为" + tt_hostlable + ",goon");
+                            }
+                            else
+                            {
+                                setRichtexBox("3、生产序列号与扫描不一致，over");
+                                PutLableInfor("数据记录为" + tt_hostlable_1 + ",扫描为" + tt_hostlable + ",请检查!");
+                            }
+
+                        }
+                        else
+                        {
+                            setRichtexBox("3、关联表没有查询到数据，over");
+                            PutLableInfor("关联表没有查询到数据，请检查！");
+                        }
+
+                    }
+
+                    //最后判断
+                    if (tt_flag1 && tt_flag2 && tt_flag3)
+                    {
+                        this.richTextBox1.BackColor = Color.Aquamarine;
+                        PutLableInfor("OK 生产序列号扫描成功，请继续扫描电源");
+                        this.textBox2.Enabled = false;
+                        this.textBox19.Enabled = false;
+                        this.textBox3.Enabled = true;
+                        textBox3.Focus();
+                        textBox3.SelectAll();
+                    }
+                    else
+                    {
+                        this.richTextBox1.BackColor = Color.Red;
+                        textBox19.Focus();
+                        textBox19.SelectAll();
+                    }
                 }
             }
         }
