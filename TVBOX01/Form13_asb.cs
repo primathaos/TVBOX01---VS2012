@@ -3225,7 +3225,7 @@ namespace TVBOX01
             DataRow row9 = dt.NewRow();
             row9["参数"] = "S09";
             row9["名称"] = "GPSN\\ONU MAC暗码";
-            row9["内容"] = this.label80.Text;
+            row9["内容"] = this.label71.Text;
             dt.Rows.Add(row9);
 
             DataRow row10 = dt.NewRow();
