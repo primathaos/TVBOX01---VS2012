@@ -1711,8 +1711,7 @@ namespace TVBOX01
                             else
                             {
                                 tt_gpsn = Regex.Replace(tt_gpsn0, "FHTT", "46485454");
-                            }
-                            
+                            }                           
                         }
                         else
                         {
@@ -2902,6 +2901,60 @@ namespace TVBOX01
             row14["内容"] = this.label97.Text;
             dt.Rows.Add(row14);
 
+            DataRow row15 = dt.NewRow();
+            row15["参数"] = "S15";
+            row15["名称"] = "设备标识";
+            row15["内容"] = this.label42.Text;
+            dt.Rows.Add(row15);
+
+            DataRow row16 = dt.NewRow();
+            row16["参数"] = "S16";
+            row16["名称"] = "设备标示暗码";
+            row16["内容"] = this.label101.Text;
+            dt.Rows.Add(row16);
+
+            DataRow row17 = dt.NewRow();
+            row17["参数"] = "S17";
+            row17["名称"] = "用户名";
+            row17["内容"] = this.label112.Text;
+            dt.Rows.Add(row17);
+
+            DataRow row18 = dt.NewRow();
+            row18["参数"] = "S18";
+            row18["名称"] = "密码";
+            row18["内容"] = this.label111.Text;
+            dt.Rows.Add(row18);
+
+            DataRow row19 = dt.NewRow();
+            row19["参数"] = "S19";
+            row19["名称"] = "2G账号";
+            row19["内容"] = this.label108.Text;
+            dt.Rows.Add(row19);
+
+            DataRow row20 = dt.NewRow();
+            row20["参数"] = "S20";
+            row20["名称"] = "2G密码";
+            row20["内容"] = this.label110.Text;
+            dt.Rows.Add(row20);
+
+            DataRow row21 = dt.NewRow();
+            row21["参数"] = "S21";
+            row21["名称"] = "5G账号";
+            row21["内容"] = this.label106.Text;
+            dt.Rows.Add(row21);
+
+            DataRow row22 = dt.NewRow();
+            row22["参数"] = "S22";
+            row22["名称"] = "5G密码";
+            row22["内容"] = this.label104.Text;
+            dt.Rows.Add(row22);
+
+            DataRow row23 = dt.NewRow();
+            row23["参数"] = "S23";
+            row23["名称"] = "GPSN//ONU MAC原码";
+            row23["内容"] = this.label95.Text;
+            dt.Rows.Add(row23);
+
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
 
@@ -2935,6 +2988,15 @@ namespace TVBOX01
                 report.SetParameterValue("S12", dst.Tables[0].Rows[11][2].ToString());
                 report.SetParameterValue("S13", dst.Tables[0].Rows[12][2].ToString());
                 report.SetParameterValue("S14", dst.Tables[0].Rows[13][2].ToString());
+                report.SetParameterValue("S15", dst.Tables[0].Rows[14][2].ToString());
+                report.SetParameterValue("S16", dst.Tables[0].Rows[15][2].ToString());
+                report.SetParameterValue("S17", dst.Tables[0].Rows[16][2].ToString());
+                report.SetParameterValue("S18", dst.Tables[0].Rows[17][2].ToString());
+                report.SetParameterValue("S19", dst.Tables[0].Rows[18][2].ToString());
+                report.SetParameterValue("S20", dst.Tables[0].Rows[19][2].ToString());
+                report.SetParameterValue("S21", dst.Tables[0].Rows[20][2].ToString());
+                report.SetParameterValue("S22", dst.Tables[0].Rows[21][2].ToString());
+                report.SetParameterValue("S23", dst.Tables[0].Rows[22][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
@@ -2951,6 +3013,13 @@ namespace TVBOX01
                     {
                         p2.Top += tt_top;
                         p2.Left += tt_left;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top;
+                        p3.Left += tt_left;
                     }
                 }
 
@@ -3048,7 +3117,7 @@ namespace TVBOX01
             DataRow row9 = dt.NewRow();
             row9["参数"] = "S09";
             row9["名称"] = "GPSN\\ONU MAC暗码";
-            row9["内容"] = this.label95.Text;
+            row9["内容"] = this.label71.Text;
             dt.Rows.Add(row9);
 
             DataRow row10 = dt.NewRow();
