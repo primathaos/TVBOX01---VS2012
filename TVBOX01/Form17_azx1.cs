@@ -1744,6 +1744,7 @@ namespace TVBOX01
                     tt_pon_name = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //产品类型
                     tt_areacode = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //生产地区
                     tt_gyid_Old = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //次级流程配置
+                    tt_MiniType = ds1.Tables[0].Rows[0].ItemArray[10].ToString();  //小型化配置方案
 
                     tt_gyid_Use = "";
 
@@ -2076,6 +2077,10 @@ namespace TVBOX01
                         {
                             tt_flag10 = true;
                             if ((tt_productname == "HG6201T" || tt_productname == "HG2201T") && tt_areacode == "安徽")
+                            {
+                                this.label77.Text = "20";
+                            }
+                            else if (tt_MiniType == "小型化方案")
                             {
                                 this.label77.Text = "20";
                             }
