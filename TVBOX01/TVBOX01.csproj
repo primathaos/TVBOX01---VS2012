@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{96A8B4A7-9CF0-442C-9081-39AAC19D7E94}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TVBOX01</RootNamespace>
+    <AssemblyName>TVBOX01</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ooopic_1492140321.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ESBasic, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ba1538489f75683e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ESBasic.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport, Version=2013.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FastReport.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Bars, Version=2013.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FastReport.Bars.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Editor, Version=2013.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FastReport.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.VSDesign, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\FastReport.VSDesign.dll</HintPath>
+    </Reference>
+    <Reference Include="OAUS.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\OAUS.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dataset1.cs" />
+    <Compile Include="Dataset2.cs" />
+    <Compile Include="Form10_lg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form10_lg.Designer.cs">
+      <DependentUpon>Form10_lg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form11_we.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form11_we.Designer.cs">
+      <DependentUpon>Form11_we.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form12_ot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form12_ot.Designer.cs">
+      <DependentUpon>Form12_ot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form13_asb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form13_asb.Designer.cs">
+      <DependentUpon>Form13_asb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form14_ayd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form14_ayd.Designer.cs">
+      <DependentUpon>Form14_ayd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form15_ayx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form15_ayx.Designer.cs">
+      <DependentUpon>Form15_ayx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form16_ach.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form16_ach.Designer.cs">
+      <DependentUpon>Form16_ach.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form17_azx1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form17_azx1.Designer.cs">
+      <DependentUpon>Form17_azx1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form18_azx2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form18_azx2.Designer.cs">
+      <DependentUpon>Form18_azx2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form19_abf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form19_abf.Designer.cs">
+      <DependentUpon>Form19_abf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1_fh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1_fh.Designer.cs">
+      <DependentUpon>Form1_fh.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form20_abd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form20_abd.Designer.cs">
+      <DependentUpon>Form20_abd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form21_als.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form21_als.Designer.cs">
+      <DependentUpon>Form21_als.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form22_alog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form22_alog.Designer.cs">
+      <DependentUpon>Form22_alog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form23_alg2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form23_alg2.Designer.cs">
+      <DependentUpon>Form23_alg2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form24_ama.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form24_ama.Designer.cs">
+      <DependentUpon>Form24_ama.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form25_amb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form25_amb.Designer.cs">
+      <DependentUpon>Form25_amb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2_zg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2_zg.Designer.cs">
+      <DependentUpon>Form2_zg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form3_mp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3_mp.Designer.cs">
+      <DependentUpon>Form3_mp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form4_ch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form4_ch.Designer.cs">
+      <DependentUpon>Form4_ch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form5_cc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form5_cc.Designer.cs">
+      <DependentUpon>Form5_cc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form6_bd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form6_bd.Designer.cs">
+      <DependentUpon>Form6_bd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form7_zx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form7_zx.Designer.cs">
+      <DependentUpon>Form7_zx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form8_zb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form8_zb.Designer.cs">
+      <DependentUpon>Form8_zb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form9_kb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form9_kb.Designer.cs">
+      <DependentUpon>Form9_kb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="login.Designer.cs">
+      <DependentUpon>login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reprint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reprint.Designer.cs">
+      <DependentUpon>Reprint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServiceReference1\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServiceReference2\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Form10_lg.resx">
+      <DependentUpon>Form10_lg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form11_we.resx">
+      <DependentUpon>Form11_we.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form12_ot.resx">
+      <DependentUpon>Form12_ot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form13_asb.resx">
+      <DependentUpon>Form13_asb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form14_ayd.resx">
+      <DependentUpon>Form14_ayd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form15_ayx.resx">
+      <DependentUpon>Form15_ayx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form16_ach.resx">
+      <DependentUpon>Form16_ach.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form17_azx1.resx">
+      <DependentUpon>Form17_azx1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form18_azx2.resx">
+      <DependentUpon>Form18_azx2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form19_abf.resx">
+      <DependentUpon>Form19_abf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1_fh.resx">
+      <DependentUpon>Form1_fh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form20_abd.resx">
+      <DependentUpon>Form20_abd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form21_als.resx">
+      <DependentUpon>Form21_als.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form22_alog.resx">
+      <DependentUpon>Form22_alog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form23_alg2.resx">
+      <DependentUpon>Form23_alg2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form24_ama.resx">
+      <DependentUpon>Form24_ama.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form25_amb.resx">
+      <DependentUpon>Form25_amb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2_zg.resx">
+      <DependentUpon>Form2_zg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3_mp.resx">
+      <DependentUpon>Form3_mp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form4_ch.resx">
+      <DependentUpon>Form4_ch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form5_cc.resx">
+      <DependentUpon>Form5_cc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form6_bd.resx">
+      <DependentUpon>Form6_bd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form7_zx.resx">
+      <DependentUpon>Form7_zx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form8_zb.resx">
+      <DependentUpon>Form8_zb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form9_kb.resx">
+      <DependentUpon>Form9_kb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="login.resx">
+      <DependentUpon>login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Reprint.resx">
+      <DependentUpon>Reprint.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Service References\ServiceReference1\WebService.wsdl" />
+    <None Include="Service References\ServiceReference2\WebService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ooopic_1468032700.ico" />
+    <Content Include="ooopic_1468033257.ico" />
+    <Content Include="ooopic_1492140321.ico" />
+    <None Include="Service References\ServiceReference2\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ServiceReference2\configuration.svcinfo" />
+    <None Include="Service References\ServiceReference2\configuration91.svcinfo" />
+    <None Include="Service References\ServiceReference2\WebService.disco" />
+    <None Include="Service References\ServiceReference1\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ServiceReference1\configuration.svcinfo" />
+    <None Include="Service References\ServiceReference1\configuration91.svcinfo" />
+    <None Include="Service References\ServiceReference1\WebService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServiceReference1\" />
+    <WCFMetadataStorage Include="Service References\ServiceReference2\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
