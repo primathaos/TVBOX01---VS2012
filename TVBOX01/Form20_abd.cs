@@ -1131,7 +1131,7 @@ namespace TVBOX01
 
                     if (tt_mataionstation == "2115" && ("HG6201T".Contains(Getproductname(tt_mac)) == true) && ("安徽".Contains(Getproductarea(tt_mac)) == true))
                     {
-                        tt_mataionstation = "2110";
+                        tt_mataionstation = "2111";
                     }
 
                     tt_routmaxnum = GetNcodeSerialNo(tt_gyid, tt_mataionstation);
