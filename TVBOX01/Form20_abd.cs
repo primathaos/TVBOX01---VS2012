@@ -1029,6 +1029,11 @@ namespace TVBOX01
                         tt_ncode = "2115";
                     }
 
+                    if (tt_ncode == "2115" && tt_productname_check == 1 && ("安徽".Contains(Getproductarea(tt_mac)) == true))
+                    {
+                        tt_ncode = "2111";
+                    }
+
                     tt_flag8 = true;
                     SetRichtexBox("8、该单板有待测站位，前站位：" + tt_array8[1] + "，当前站位" + tt_array8[2] + ", goon");
                 }
