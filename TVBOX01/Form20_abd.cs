@@ -349,6 +349,22 @@ namespace TVBOX01
             return tt_productname;
         }
 
+        //获取产品地区
+        private string Getproductarea(string tt_mac)
+        {
+            string tt_productname = "";
+            string tt_sql = "select areacode from ODC_TASKS " +
+                            "where taskscode in " +
+                            "(select taskscode from odc_alllable where maclable = '" + tt_mac + "')";
+
+            DataSet ds = Dataset1.GetDataSet(tt_sql, tt_conn);
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                tt_productname = ds.Tables[0].Rows[0][0].ToString();
+            }
+            return tt_productname;
+        }
+
         //修复无1920问题
         private int Change_ccode1920(string tt_mac, string tt_id)
         {
@@ -1111,6 +1127,11 @@ namespace TVBOX01
                     if (tt_mataionstation == "2111" && ("HG6201M,HG6201T,HG2201T".Contains(Getproductname(tt_mac)) == true))
                     {
                         tt_mataionstation = "2115";
+                    }
+
+                    if (tt_mataionstation == "2115" && ("HG6201T".Contains(Getproductname(tt_mac)) == true) && ("安徽".Contains(Getproductarea(tt_mac)) == true))
+                    {
+                        tt_mataionstation = "2110";
                     }
 
                     tt_routmaxnum = GetNcodeSerialNo(tt_gyid, tt_mataionstation);
