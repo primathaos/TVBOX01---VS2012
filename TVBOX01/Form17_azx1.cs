@@ -3658,7 +3658,9 @@ namespace TVBOX01
                         SetPrintRecord(tt_taskscode, tt_recordmac, tt_host, tt_local, tt_username, tt_computermac, tt_remark);
                         //打印记录
                         Dataset1.lablePrintRecord(tt_taskscode, tt_recordmac, tt_host, tt_local, tt_username, tt_computermac, tt_remark, tt_conn);
+                        ClearLabelInfo2();
                         ClearLabelInfo3();
+                        ClearLabelInfo4();
                         CheckStation(tt_task, tt_gesn);
                         PutLableInfor("II型标签打印OK,继续");
                     }
