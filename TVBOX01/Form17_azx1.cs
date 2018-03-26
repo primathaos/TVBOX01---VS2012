@@ -3409,7 +3409,7 @@ namespace TVBOX01
 
                     int tt_productname_check = 0;
 
-                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label10.Text.Trim()) == true)
+                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label10.Text.Trim()) == true && tt_areacode != "安徽")
                     {
                         tt_productname_check = 1;
                     }
