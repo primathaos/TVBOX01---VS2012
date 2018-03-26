@@ -3196,7 +3196,7 @@ namespace TVBOX01
 
                     int tt_productname_check = 0;
 
-                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label13.Text.Trim()) == true)
+                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label13.Text.Trim()) == true && this.label14.Text != "安徽")
                     {
                         tt_productname_check = 1;
                     }
