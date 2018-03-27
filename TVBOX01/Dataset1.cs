@@ -2391,7 +2391,7 @@ namespace TVBOX01
             return mac;
         }
 
-        //获取是否处于MAC列表内
+        //获取是否处于MAC列表内/升级确认
         public static string GetComputerMAC(string con)
         {
             try
@@ -2399,11 +2399,24 @@ namespace TVBOX01
                 string serverIP = ConfigurationManager.AppSettings["ServerIP"];
                 int serverPort = int.Parse(ConfigurationManager.AppSettings["ServerPort"]);
 
+                string datebaseIP = "172.18.201.2";
+                if (serverIP == "172.16.20.29")
+                {
+                    datebaseIP = "172.16.30.2";
+                }
+
                 if (VersionHelper.HasNewVersion(serverIP, serverPort))
                 {
-                    MessageBox.Show("检测到新软件版本，开始自动升级");
-                    string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe";
-                    System.Diagnostics.Process myProcess = System.Diagnostics.Process.Start(updateExePath);
+                    UpMessage form1 = new UpMessage();
+                    form1.SIP = datebaseIP;
+                    form1.StartPosition = FormStartPosition.CenterScreen;
+                    form1.ShowDialog();
+                    string Upmessage_reback = Uptext.UptextData["Key1"].ToString();
+                    if (Upmessage_reback == "YES")
+                    {
+                        string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe";
+                        System.Diagnostics.Process myProcess = System.Diagnostics.Process.Start(updateExePath);
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -2439,6 +2452,11 @@ namespace TVBOX01
         public class Context
         {
             public static Hashtable ContextData = new Hashtable();
+        }
+
+        public class Uptext
+        {
+            public static Hashtable UptextData = new Hashtable();
         }
 
         //打印记录

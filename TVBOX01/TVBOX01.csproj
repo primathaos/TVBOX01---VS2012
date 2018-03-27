@@ -251,6 +251,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="UpMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpMessage.Designer.cs">
+      <DependentUpon>UpMessage.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form10_lg.resx">
       <DependentUpon>Form10_lg.cs</DependentUpon>
     </EmbeddedResource>
@@ -340,6 +346,9 @@
     </Compile>
     <EmbeddedResource Include="Reprint.resx">
       <DependentUpon>Reprint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpMessage.resx">
+      <DependentUpon>UpMessage.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
