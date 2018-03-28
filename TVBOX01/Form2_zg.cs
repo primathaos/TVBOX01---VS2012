@@ -325,11 +325,49 @@ namespace TVBOX01
                 }
             }
 
-
             return tt_flag;
         }
 
+        //逐字比较，若遇见X判断为true
+        private bool BosaCheck(string tt_BosaNum, string tt_BosaKeyWord)
+        {
+            bool tt_flag = false;
 
+            string tt_BosaNumChars = "";
+            string tt_BosaKeyWordChars = "";
+            int i_Length = 0;
+
+            if (tt_BosaNum.Contains(".")) //如果扫描条码带有小数点，取小数点前的字段进行比较
+            {
+                tt_BosaNum = tt_BosaNum.Split('.')[0];
+            }
+
+            if (tt_BosaKeyWord.Length <= tt_BosaNum.Length) //如果数据库取值长度小于等于扫描长度，使用数据库字符长度做循环
+            {
+                i_Length = tt_BosaKeyWord.Length;
+            }
+            else  //反之则使用扫描长度做循环
+            {
+                i_Length = tt_BosaNum.Length;
+            }
+
+            for (int i = 0; i < i_Length; i++) //数列倒置进行比较，防止BOSA条码小于数据库取值长度，两字段前面几位又相同的情况，防止误判
+            {
+                tt_BosaNumChars = tt_BosaNum.Substring((tt_BosaNum.Length - 1) - i, 1);
+                tt_BosaKeyWordChars = tt_BosaKeyWord.Substring((tt_BosaKeyWord.Length - 1) - i, 1);
+                if (tt_BosaNumChars == tt_BosaKeyWordChars || tt_BosaKeyWordChars == "X") //如果字符相同，或者数据库取值为X，返回true
+                {
+                    tt_flag = true;
+                }
+                else
+                {
+                    tt_flag = false;
+                }
+                if (!tt_flag) break;
+            }
+
+            return tt_flag;
+        }
 
 
         #endregion
@@ -744,12 +782,11 @@ namespace TVBOX01
                 Boolean tt_flag2_1 = false;
                 if (tt_flag2)
                 {
-                    string tt_pcba_num = tt_scanpcba.Substring(4, 4) + "-" + tt_scanpcba.Substring(8, 1);
+                    string tt_pcba_num = tt_scanpcba.Substring(4, 4) + "-" + tt_scanpcba.Substring(8, 1); //从单板扫描条码提取单板条码特征
 
-                    tt_bosatype_explicit = "";
+                    tt_bosatype_explicit = ""; //BOSA相关信息
 
-                    string tt_sql2 = "select startindex_1,length_1,feature_1,startindex_2,length_2,feature_2,bosa_type,key_0 from odc_bosatypelist " +
-                                     "where pcba_num like '%" + tt_pcba_num + "%'";
+                    string tt_sql2 = "select keywordlist,bosa_type from odc_bosatypelist where pcba_num like '%" + tt_pcba_num + "%'";
 
                     DataSet ds2 = Dataset1.GetDataSetTwo(tt_sql2, tt_conn);
                     if (ds2.Tables.Count > 0 && ds2.Tables[0].Rows.Count > 0) //单板条码在数据库BOSATYPELIST表查到的情况，即检查单板是Macom方案，BOSA不是Macom方案的情况
@@ -757,62 +794,17 @@ namespace TVBOX01
                         bool tt_flag2_2 = false;
                         for (int i = 0; i < ds2.Tables[0].Rows.Count; i++)
                         {
-                            int tt_startindex_1 = int.Parse(ds2.Tables[0].Rows[i].ItemArray[0].ToString());
-                            int tt_length_1 = int.Parse(ds2.Tables[0].Rows[i].ItemArray[1].ToString());
-                            string tt_feature_1 = ds2.Tables[0].Rows[i].ItemArray[2].ToString();
-                            int tt_startindex_2 = int.Parse(ds2.Tables[0].Rows[i].ItemArray[3].ToString());
-                            int tt_length_2 = int.Parse(ds2.Tables[0].Rows[i].ItemArray[4].ToString());
-                            string tt_feature_2 = ds2.Tables[0].Rows[i].ItemArray[5].ToString();
-                            int tt_key = int.Parse(ds2.Tables[0].Rows[i].ItemArray[7].ToString());
-
-                            bool bool_bosatype_1 = false;
-                            bool bool_bosatype_2 = false;
-                            string tt_bosatype_1 = "";
-                            string tt_bosatype_2 = "";
-
-                            if (tt_length_1 == 0 && tt_length_2 == 0)
+                            string tt_BosaKeyWordlist = ds2.Tables[0].Rows[i].ItemArray[0].ToString(); //数据库中存贮的BOSA条码命名规则，在数据库中以逗号分隔，便于后续操作
+                            string[] tt_BosaKeyWordlist_Temp = tt_BosaKeyWordlist.Split(',');
+                            for (int j = 0; j < tt_BosaKeyWordlist_Temp.Length; j++)
                             {
-                                PutLableInfor("BOSA方案拦截，单一物料不能全设为0，请工程检查数据库");
-                                i = ds2.Tables[0].Rows.Count;
+                                tt_flag2_2 = BosaCheck(tt_scanbosa, tt_BosaKeyWordlist_Temp[j]); //按照规则逐个比较数据库取值和扫描条码的字符，相同返回ture
+                                if (tt_flag2_2) break;                                    
                             }
-                            else
+                            if (tt_flag2_2)
                             {
-                                if (tt_length_1 == 0 && tt_key == 2)
-                                {
-                                    bool_bosatype_1 = true;
-                                }
-                                else
-                                {
-                                    tt_bosatype_1 = tt_scanbosa.Substring(tt_startindex_1, tt_length_1);
-                                }
-
-                                if (tt_length_2 == 0 && tt_key == 1)
-                                {
-                                    bool_bosatype_2 = true;
-                                }
-                                else
-                                {
-                                    tt_bosatype_2 = tt_scanbosa.Substring(tt_startindex_2, tt_length_2);
-                                }
-                            }                            
-
-                            if (tt_bosatype_1 != "" && tt_bosatype_2 != "" && tt_bosatype_1 == tt_feature_1 && tt_bosatype_2 == tt_feature_2)
-                            {
-                                tt_flag2_2 = true;
-                                tt_bosatype_explicit = ds2.Tables[0].Rows[i].ItemArray[6].ToString();
-                                i = ds2.Tables[0].Rows.Count;
-                            }
-                            else if (tt_bosatype_2 != "" && bool_bosatype_1 && tt_bosatype_2 == tt_feature_2)
-                            {
-                                tt_flag2_2 = true;
-                                tt_bosatype_explicit = ds2.Tables[0].Rows[i].ItemArray[6].ToString();
-                                i = ds2.Tables[0].Rows.Count;
-                            }
-                            else if (tt_bosatype_1 != "" && tt_bosatype_1 == tt_feature_1 && bool_bosatype_2)
-                            {
-                                tt_flag2_2 = true;
-                                tt_bosatype_explicit = ds2.Tables[0].Rows[i].ItemArray[6].ToString();
-                                i = ds2.Tables[0].Rows.Count;
+                                tt_bosatype_explicit = ds2.Tables[0].Rows[i].ItemArray[1].ToString(); //如果符合规则，取BOSA相关信息写入变量，等过站动作时上传ALLLABLE表，测试软件有用到这些信息
+                                break;
                             }
                         }
 
@@ -829,7 +821,7 @@ namespace TVBOX01
                     }
                     else //单板条码在数据库BOSATYPELIST表查不到的情况，即检查单板不是Macom方案，BOSA用Macom方案的情况
                     {
-                        string tt_sql2_1 = "select startindex_1,length_1,feature_1,startindex_2,length_2,feature_2,key_0 from odc_bosatypelist";
+                        string tt_sql2_1 = "select keywordlist from odc_bosatypelist";
 
                         DataSet ds2_1 = Dataset1.GetDataSetTwo(tt_sql2_1, tt_conn);
                         if (ds2_1.Tables.Count > 0 && ds2_1.Tables[0].Rows.Count > 0)
@@ -837,66 +829,14 @@ namespace TVBOX01
                             bool tt_flag2_3 = false;
                             for (int i = 0; i < ds2_1.Tables[0].Rows.Count; i++)
                             {
-                                int tt_startindex_1 = int.Parse(ds2_1.Tables[0].Rows[i].ItemArray[0].ToString());
-                                int tt_length_1 = int.Parse(ds2_1.Tables[0].Rows[i].ItemArray[1].ToString());
-                                string tt_feature_1 = ds2_1.Tables[0].Rows[i].ItemArray[2].ToString();
-                                int tt_startindex_2 = int.Parse(ds2_1.Tables[0].Rows[i].ItemArray[3].ToString());
-                                int tt_length_2 = int.Parse(ds2_1.Tables[0].Rows[i].ItemArray[4].ToString());
-                                string tt_feature_2 = ds2_1.Tables[0].Rows[i].ItemArray[5].ToString();
-                                int tt_key = int.Parse(ds2_1.Tables[0].Rows[i].ItemArray[6].ToString());
-
-                                bool bool_bosatype_1 = false;
-                                bool bool_bosatype_2 = false;
-                                string tt_bosatype_1 = "";
-                                string tt_bosatype_2 = "";
-
-                                int tt_lengthcheck = int.Parse(this.textBox6.Text);
-
-                                if (tt_length_1 == 0 && tt_length_2 == 0)
+                                string tt_BosaKeyWordlist = ds2_1.Tables[0].Rows[i].ItemArray[0].ToString();
+                                string[] tt_BosaKeyWordlist_Temp = tt_BosaKeyWordlist.Split(',');
+                                for (int j = 0; j < tt_BosaKeyWordlist_Temp.Length; j++)
                                 {
-                                    PutLableInfor("BOSA方案拦截，单一物料不能全设为0，请工程检查数据库");
-                                    i = ds2_1.Tables[0].Rows.Count;
+                                    tt_flag2_3 = BosaCheck(tt_scanbosa, tt_BosaKeyWordlist_Temp[j]); //按照规则逐个比较数据库取值和扫描条码的字符，相同返回ture
+                                    if (tt_flag2_3) break; //如果符合规则，说明BOSA属于Macom方案，但此时单板不属于Macom方案，所以直接跳出循环，报告匹配不正确
                                 }
-                                else if (tt_startindex_2 >= tt_lengthcheck)//防止BOSA条码长度低于数据库截断长度
-                                {
-                                    tt_flag2_1 = true;
-                                }
-                                else
-                                {
-                                    if (tt_length_1 == 0 && tt_key == 2)
-                                    {
-                                        bool_bosatype_1 = true;
-                                    }
-                                    else
-                                    {
-                                        tt_bosatype_1 = tt_scanbosa.Substring(tt_startindex_1, tt_length_1);
-                                    }
-
-                                    if (tt_length_2 == 0 && tt_key == 1)
-                                    {
-                                        bool_bosatype_2 = true;
-                                    }
-                                    else
-                                    {
-                                        tt_bosatype_2 = tt_scanbosa.Substring(tt_startindex_2, tt_length_2);
-                                    }
-                                }
-
-                                if (tt_bosatype_1 != "" && tt_bosatype_2 != "" && tt_bosatype_1 == tt_feature_1 && tt_bosatype_2 == tt_feature_2)
-                                {
-                                    tt_flag2_3 = true;
-                                    i = ds2_1.Tables[0].Rows.Count;
-                                }
-                                else if (tt_bosatype_2 != "" && bool_bosatype_1 && tt_bosatype_2 == tt_feature_2)
-                                {
-                                    tt_flag2_3 = true;
-                                    i = ds2_1.Tables[0].Rows.Count;
-                                }
-                                else if (tt_bosatype_1 != "" && tt_bosatype_1 == tt_feature_1 && bool_bosatype_2)
-                                {
-                                    tt_flag2_3 = true;
-                                    i = ds2_1.Tables[0].Rows.Count;
-                                }
+                                if (tt_flag2_3) break;
                             }
 
                             if (tt_flag2_3)

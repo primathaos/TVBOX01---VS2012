@@ -638,31 +638,6 @@ namespace TVBOX01
             this.richTextBox1.Text = this.richTextBox1.Text + tt_textinfor + "\n";
         }
 
-        //log记录
-        private void AddLog(string strTaskCode, string strMac)
-        {
-            string folderPath = string.Format(@"\彩盒标签日志\{0}\{1}", strTaskCode, DateTime.Now.ToString("yyyy-MM-dd"));
-            string Logpath = string.Format(folderPath + @"\{0}.txt", strMac);
-
-            if (!Directory.Exists(folderPath))//如果不存在就创建file文件夹 
-            {
-                Directory.CreateDirectory(folderPath);//创建该文件夹 
-            }
-
-            if (!File.Exists(Logpath))//如果不存在就创建TxT文档 
-            {
-                StreamWriter log = File.CreateText(Logpath);//创建文档
-                log.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":\r\n" + this.richTextBox1.Text);
-                log.Close();
-            }
-            else
-            {
-                StreamWriter log = new StreamWriter(Logpath, true);
-                log.WriteLine(System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":\r\n" + this.richTextBox1.Text);
-                log.Close();
-            }
-        }
-        
         //lable提示信息
         private void PutLableInfor(string tt_lableinfo)
         {
@@ -844,7 +819,6 @@ namespace TVBOX01
                 throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
             }
         }
-
 
         #endregion
 
@@ -1882,7 +1856,7 @@ namespace TVBOX01
                     GetProductYield();
                     CheckStation(tt_shortmac);
                     this.richTextBox1.BackColor = Color.Chartreuse;
-                    AddLog(this.textBox1.Text, tt_shortmac);
+                    Dataset1.AddLog("彩盒标签日志", this.textBox1.Text, tt_shortmac, this.richTextBox1.Text, "侧边栏显示LOG");
                     textBox4.Focus();
                     textBox4.SelectAll();
 
@@ -2257,7 +2231,7 @@ namespace TVBOX01
                         GetProductYield();
                         CheckStation(tt_hostlable);
                         this.richTextBox1.BackColor = Color.Chartreuse;
-                        AddLog(this.textBox1.Text, this.label46.Text);
+                        Dataset1.AddLog("彩盒标签日志", this.textBox1.Text, this.label46.Text, this.richTextBox1.Text, "侧边栏显示LOG");
                         textBox19.Focus();
                         textBox19.SelectAll();
                     }
@@ -2573,7 +2547,7 @@ namespace TVBOX01
                     this.richTextBox1.BackColor = Color.Chartreuse;
                     getProductRhythm();
                     PutLableInfor("OK 电源关联成功，请扫描MAC！");
-                    AddLog(tt_task, tt_shortmac);
+                    Dataset1.AddLog("彩盒标签日志", tt_task, tt_shortmac, this.richTextBox1.Text, "侧边栏显示LOG");
                     this.textBox2.Enabled = true;
                     this.textBox19.Enabled = false;
                     this.textBox3.Enabled = false;

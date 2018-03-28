@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Management;
 using System.Configuration;
 using System.Collections;
+using System.IO;
 
 namespace TVBOX01
 {
@@ -2391,7 +2392,14 @@ namespace TVBOX01
             return mac;
         }
 
+        public class Uptext
+        {
+            public static Hashtable UptextData = new Hashtable();
+        }
+
         //获取是否处于MAC列表内/升级确认
+        static int i = 0;
+        static DateTime tt_UpChangetime;
         public static string GetComputerMAC(string con)
         {
             try
@@ -2416,6 +2424,27 @@ namespace TVBOX01
                     {
                         string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe";
                         System.Diagnostics.Process myProcess = System.Diagnostics.Process.Start(updateExePath);
+                    }
+                    else
+                    {
+                        i++;
+                        if (i == 1)
+                        {
+                            tt_UpChangetime = DateTime.Now;
+                        }
+                        else if (i > 1)
+                        {
+                            DateTime tt_Upsaynotime = DateTime.Now;
+                            TimeSpan tt_diffre;
+                            tt_diffre = tt_Upsaynotime - tt_UpChangetime;
+                            //if (tt_diffre.Minutes >= 1)//程序调试用
+                            if (tt_diffre.Hours >= 12)
+                            {
+                                MessageBox.Show("据打印软件发布升级通知已超过12小时，开始强制升级");
+                                string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe";
+                                System.Diagnostics.Process myProcess = System.Diagnostics.Process.Start(updateExePath);
+                            }
+                        }
                     }
                 }
             }
@@ -2454,11 +2483,6 @@ namespace TVBOX01
             public static Hashtable ContextData = new Hashtable();
         }
 
-        public class Uptext
-        {
-            public static Hashtable UptextData = new Hashtable();
-        }
-
         //打印记录
         public static void lablePrintRecord(string tt_task, string tt_mac, string tt_host, string tt_local, string tt_user, string tt_computername, string tt_remark ,string tt_conn)
         {
@@ -2467,6 +2491,31 @@ namespace TVBOX01
 
             int tt_intcount = ExecCommand(tt_insertsql, tt_conn);
 
+        }
+
+        //log记录
+        public static void AddLog(string strName, string strTaskCode, string strMac, string strLogText, string strMode)
+        {
+            string folderPath = string.Format(@"\{0}\{1}\{2}\{3}", strName, strTaskCode, DateTime.Now.ToString("yyyy-MM-dd"), strMode);
+            string Logpath = string.Format(folderPath + @"\{0}.txt", strMac);
+
+            if (!Directory.Exists(folderPath))//如果不存在就创建file文件夹 
+            {
+                Directory.CreateDirectory(folderPath);//创建该文件夹 
+            }
+
+            if (!File.Exists(Logpath))//如果不存在就创建TxT文档 
+            {
+                StreamWriter log = File.CreateText(Logpath);//创建文档
+                log.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "：  " + strLogText);
+                log.Close();
+            }
+            else
+            {
+                StreamWriter log = new StreamWriter(Logpath, true);
+                log.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "：  " + strLogText);
+                log.Close();
+            }
         }
 
         #endregion
