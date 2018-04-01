@@ -2843,17 +2843,20 @@ namespace TVBOX01
                 Boolean tt_flag16 = false;
                 if(tt_flag15)
                 {
-                    string tt_maintaincheck = Dataset2.getMaintainJumpCheck(tt_dataset1, tt_int1920id);
-                    if (tt_maintaincheck.Equals("1"))
-                    {
-                        tt_flag16 = true;
-                        setRichtexBox("16、3350跳出检查OK没有问题，返回值：" + tt_maintaincheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
-                    }
-                    else
-                    {
-                        setRichtexBox("16、NG04,3350跳出检查Fail有问题，返回值：" + tt_maintaincheck + ",over");
-                        PutLableInfor("NG04," + tt_maintaincheck);
-                    }
+                    tt_flag16 = true;
+                    setRichtexBox("16、NG04 3350跳出检验跳过，over");
+
+                    //string tt_maintaincheck = Dataset2.getMaintainJumpCheck(tt_dataset1, tt_int1920id);
+                    //if (tt_maintaincheck.Equals("1"))
+                    //{
+                    //    tt_flag16 = true;
+                    //    setRichtexBox("16、3350跳出检查OK没有问题，返回值：" + tt_maintaincheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
+                    //}
+                    //else
+                    //{
+                    //    setRichtexBox("16、NG04,3350跳出检查Fail有问题，返回值：" + tt_maintaincheck + ",over");
+                    //    PutLableInfor("NG04," + tt_maintaincheck);
+                    //}
                     
                 }
                 #endregion
@@ -2900,17 +2903,20 @@ namespace TVBOX01
                 Boolean tt_flag18 = false;
                 if (tt_flag17)
                 {
-                    string tt_codeserialcheck = Dataset2.getCodeSerialCheck(tt_dataset1, tt_int1920id);
-                    if (tt_codeserialcheck.Equals("1"))
-                    {
-                        tt_flag18 = true;
-                        setRichtexBox("18、MAC全顺序检查OK没有问题，返回值：" + tt_codeserialcheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
-                    }
-                    else
-                    {
-                        setRichtexBox("18、NG06,MAC全顺序检查Fail有问题，返回值：" + tt_codeserialcheck + ",over");
-                        PutLableInfor("NG06," + tt_codeserialcheck);
-                    }
+                    tt_flag18 = true;
+                    setRichtexBox("18、NG06 流程顺序检查跳过，over");
+
+                    //string tt_codeserialcheck = Dataset2.getCodeSerialCheck(tt_dataset1, tt_int1920id);
+                    //if (tt_codeserialcheck.Equals("1"))
+                    //{
+                    //    tt_flag18 = true;
+                    //    setRichtexBox("18、MAC全顺序检查OK没有问题，返回值：" + tt_codeserialcheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
+                    //}
+                    //else
+                    //{
+                    //    setRichtexBox("18、NG06,MAC全顺序检查Fail有问题，返回值：" + tt_codeserialcheck + ",over");
+                    //    PutLableInfor("NG06," + tt_codeserialcheck);
+                    //}
                 }
                 #endregion
 
@@ -2920,17 +2926,20 @@ namespace TVBOX01
                 Boolean tt_flag19 = false;
                 if (tt_flag18)
                 {
-                    string tt_nearcodecheck = Dataset2.getNearCodeCheck2(tt_dataset1, tt_int1920id, tt_allroutdataset);
-                    if (tt_nearcodecheck.Equals("1"))
-                    {
-                        tt_flag19 = true;
-                        setRichtexBox("19、过站前后站位检查OK没有问题，返回值：" + tt_nearcodecheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
-                    }
-                    else
-                    {
-                        setRichtexBox("19、NG07,过站前后站位检查Fail有问题，返回值：" + tt_nearcodecheck + ",over");
-                        PutLableInfor("NG07," + tt_nearcodecheck);
-                    }
+                    tt_flag19 = true;
+                    setRichtexBox("19、NG07 流程顺序检查跳过，over");
+
+                    //string tt_nearcodecheck = Dataset2.getNearCodeCheck2(tt_dataset1, tt_int1920id, tt_allroutdataset);
+                    //if (tt_nearcodecheck.Equals("1"))
+                    //{
+                    //    tt_flag19 = true;
+                    //    setRichtexBox("19、过站前后站位检查OK没有问题，返回值：" + tt_nearcodecheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
+                    //}
+                    //else
+                    //{
+                    //    setRichtexBox("19、NG07,过站前后站位检查Fail有问题，返回值：" + tt_nearcodecheck + ",over");
+                    //    PutLableInfor("NG07," + tt_nearcodecheck);
+                    //}
                 }
                 #endregion
 
@@ -2940,17 +2949,20 @@ namespace TVBOX01
                 Boolean tt_flag20 = false;
                 if (tt_flag19)
                 {
-                    string tt_updowncodecheck = Dataset2.getUpdownCodeCheck(tt_dataset1, tt_int1920id, tt_allroutdataset);
-                    if (tt_updowncodecheck.Equals("1"))
-                    {
-                        tt_flag20 = true;
-                        setRichtexBox("20、过站上下站位检查OK没有问题，返回值：" + tt_updowncodecheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
-                    }
-                    else
-                    {
-                        setRichtexBox("20、NG08,过站上下站位检查Fail有问题，返回值：" + tt_updowncodecheck + ",over");
-                        PutLableInfor("NG08," + tt_updowncodecheck);
-                    }
+                    tt_flag20 = true;
+                    setRichtexBox("20、NG08 流程顺序检查跳过，over");
+
+                    //string tt_updowncodecheck = Dataset2.getUpdownCodeCheck(tt_dataset1, tt_int1920id, tt_allroutdataset);
+                    //if (tt_updowncodecheck.Equals("1"))
+                    //{
+                    //    tt_flag20 = true;
+                    //    setRichtexBox("20、过站上下站位检查OK没有问题，返回值：" + tt_updowncodecheck + ",检查起始ID:" + tt_int1920id.ToString() + ",goon");
+                    //}
+                    //else
+                    //{
+                    //    setRichtexBox("20、NG08,过站上下站位检查Fail有问题，返回值：" + tt_updowncodecheck + ",over");
+                    //    PutLableInfor("NG08," + tt_updowncodecheck);
+                    //}
                 }
                 #endregion
 
