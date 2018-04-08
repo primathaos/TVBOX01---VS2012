@@ -274,7 +274,8 @@ namespace TVBOX01
 
                 tt_computermac = Dataset1.GetHostIpName();
 
-                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id " +
+                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate," +
+                                 "customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id,fhcode " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1,tt_conn);
                                 
@@ -294,6 +295,8 @@ namespace TVBOX01
                     this.label69.Text = ds1.Tables[0].Rows[0].ItemArray[11].ToString();  //PON类型
 
                     string tt_idnum = ds1.Tables[0].Rows[0].ItemArray[12].ToString();//制造单ID
+
+                    string tt_power_old = ds1.Tables[0].Rows[0].ItemArray[13].ToString();//旧电源适配器标识
 
                     int tt_idnum1 = Convert.ToInt32(tt_idnum);
 
@@ -366,6 +369,11 @@ namespace TVBOX01
                         {
                             this.label90.Text = ds3.Tables[0].Rows[0].ItemArray[0].ToString(); //电压
                             this.label92.Text = ds3.Tables[0].Rows[0].ItemArray[1].ToString(); //电流
+                            if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                            {
+                                this.label92.Text = "1.5A";
+                            }
+
                             tt_flag3 = true;
                         }
                         else

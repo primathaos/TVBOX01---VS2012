@@ -284,7 +284,7 @@ namespace TVBOX01
                 }
 
                 tt_computermac = Dataset1.GetHostIpName();
-                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 111) fdate,gyid,Tasktype,softwareversion,pon_name " +
+                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 111) fdate,gyid,Tasktype,softwareversion,pon_name,fhcode " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
 
@@ -300,6 +300,7 @@ namespace TVBOX01
                     this.label51.Text = ds1.Tables[0].Rows[0].ItemArray[6].ToString();  //物料编码
                     this.label84.Text = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //软件版本
                     this.label87.Text = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //PON类型        
+                    string tt_power_old = ds1.Tables[0].Rows[0].ItemArray[9].ToString();//旧电源适配器标识
 
                     if (tt_productname == "HG6201G" || tt_productname == "HG6201GW" || tt_productname == "HG6201GS")
                     {
@@ -351,7 +352,13 @@ namespace TVBOX01
                     Boolean tt_flag3 = false;
                     if (tt_flag2)
                     {
-                        string tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_productname + "' ";
+                        string tt_power_search = tt_productname;
+                        if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                        {
+                            tt_power_search = "HG6201M_OLD";
+                        }
+
+                        string tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' ";
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
 
                         if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
