@@ -19,6 +19,7 @@ namespace TVBOX01
         #region 1、属性设置
         static string tt_conn;
         static string tt_ccode = "0000";
+        static string tt_gyid = "";
         int tt_yield = 0;  //产量
 
         private void Form18_azx2_Load(object sender, EventArgs e)
@@ -99,10 +100,6 @@ namespace TVBOX01
             this.label11.Text = null;
 
         }
-
-
-
-
 
         //扫描前数据初始化
         private void ScanDataInitial()
@@ -307,8 +304,6 @@ namespace TVBOX01
 
         }
 
-
-
         //获取应扫描数量
         private string getShouldScan(string tt_quantity)
         {
@@ -338,8 +333,6 @@ namespace TVBOX01
             {
                 MessageBox.Show("当前用户号：" + tt_username + "没有找到设定的待测站位，请确认");
             }
-
-
             return tt_testcode;
         }
 
@@ -377,7 +370,7 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
-                string tt_sql = " select tasksquantity,product_name,areacode  " +
+                string tt_sql = " select tasksquantity,product_name,areacode,gyid  " +
                           "from odc_tasks where  taskstate = 2 and taskscode = '" + this.textBox1.Text + "' ";
 
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql, tt_conn);
@@ -387,6 +380,7 @@ namespace TVBOX01
                     this.label55.Text = ds1.Tables[0].Rows[0].ItemArray[0].ToString(); //工单数量
                     this.label56.Text = ds1.Tables[0].Rows[0].ItemArray[1].ToString();  //产品名称
                     this.label57.Text = ds1.Tables[0].Rows[0].ItemArray[2].ToString();  //地区
+                    tt_gyid = ds1.Tables[0].Rows[0].ItemArray[3].ToString();  //生产流程
                     this.label58.Text = getShouldScan(this.label55.Text);   //获取应扫描数量
 
                     this.textBox1.Enabled = false;
@@ -558,11 +552,54 @@ namespace TVBOX01
                     }
                 }
 
+                //第六步附 检查2115 站位状态
+                Boolean tt_flag6_1 = false;
+                if (tt_flag6)
+                {
+                    string tt_sql6_1 = "select ncode,napplytype from dbo.odc_routingtasklist where pcba_pn = '" + tt_shortmac + "' and ncode = '2115'";
 
+                    string tt_allprocesses = Dataset2.getGyidAllProcess(tt_gyid, tt_conn);                    
+                    DataSet ds6_1 = Dataset1.GetDataSetTwo(tt_sql6_1, tt_conn);
+                    bool tt_processcheck = true;
+                    if (ds6_1.Tables.Count > 0 && ds6_1.Tables[0].Rows.Count > 0)
+                    {
+                        string tt_napplytype = "1";
+                        for (int i = 0; i < ds6_1.Tables[0].Rows.Count; i++)
+                        {
+                            tt_napplytype = ds6_1.Tables[0].Rows[i].ItemArray[1].ToString();
+                            if (tt_napplytype == "0")
+                            {
+                                tt_processcheck = false;
+                                break;
+                            } 
+                        }
+
+                        if ((tt_allprocesses.Contains("2111") && tt_napplytype == "1") || tt_processcheck)
+                        {
+                            tt_flag6_1 = true;
+                            setRichtexBox("6.1、该产品产品耦合测试没有出现过不良，或者有2111站位，且当前已通过耦合测试，可以过站，goon");
+                        }
+                        else if (!tt_allprocesses.Contains("2111") && !tt_processcheck)
+                        {
+                            setRichtexBox("6.1、该产品流程没有2111站位，且耦合测试曾经出现过测试失败，不允许过站，over");
+                            PutLableInfor("该产品2111不是必测站位，且耦合测试曾经出现过测试失败，不建议测试吞吐量！");
+                        }
+                        else if (tt_allprocesses.Contains("2111") && tt_napplytype == "0")
+                        {
+                            setRichtexBox("6.1、该产品流程有2111站位，但耦合测试没有通过测试，不允许过站，over");
+                            PutLableInfor("该产品流程有2111站位，但耦合测试没有通过测试，不允许过站！");
+                        }
+                    }
+                    else
+                    {
+                        setRichtexBox("6.1、没有找到2115站位状态，流程异常，over");
+                        PutLableInfor("没有找到2115站位状态，流程异常！");
+                    }
+                }
 
                 //第七步 开始过站
                 Boolean tt_flag7 = false;
-                if (tt_flag6)
+                if (tt_flag6_1)
                 {
                     string tt_sql7 = "update odc_routingtasklist set ncode = '2111',Fremark ='10%扫描耦合' " +
                                      "where pcba_pn = '" + tt_mac + "' and napplytype is null ";

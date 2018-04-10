@@ -2077,7 +2077,7 @@ namespace TVBOX01
                             if (int.Parse(this.label85.Text) >= 3000)
                             {
                                 string tt_gyid = this.label79.Text;
-                                string tt_ccode = this.label76.Text;
+                                string tt_ccode = this.label85.Text;
                                 string tt_ncode = "2230";
                                 bool tt_flag1 = Dataset1.FhUnPassStationI(tt_taskscode, tt_username, tt_recordmac, tt_gyid, tt_ccode, tt_ncode, tt_conn);
                                 if (tt_flag1)
