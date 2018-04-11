@@ -50,6 +50,9 @@ namespace TVBOX01
         DateTime tt_reprintstattime;
         DateTime tt_reprintendtime;
 
+        //打印模式选择
+        static string PrintChange = "";
+
         //本机MAC
         static string tt_computermac = "";
 		
@@ -270,6 +273,23 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini"))
+                {
+                    MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini" + "文件不存在");
+                    return;
+                }
+
+                //读取配置文件，选择打印方式
+                string[] lines = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini", System.Text.Encoding.GetEncoding("GB2312"));
+
+                foreach (string line in lines)
+                {
+                    if (line.Contains("PrintChange"))
+                    {
+                        PrintChange = line.Substring(line.IndexOf("=") + 1).Trim();
+                    }
+                }
+
                 if (str.Contains("FH104") || str.Contains("FH214"))
                 {
                     this.button2.Visible = true;
@@ -437,7 +457,7 @@ namespace TVBOX01
                             tt_sql5_1 = "select docdesc,Fpath09,Fdata09,Fmd09 from odc_ec where zjbm = '" + tt_ec + "' ";
                         }
 
-                        string tt_sql5_2 = "select docdesc,Fpath03,Fdata03,Fmd03 from odc_ec where zjbm = '" + tt_ec + "' ";
+                        string tt_sql5_2 = "select docdesc,Fpath10,Fdata10,Fmd10 from odc_ec where zjbm = '" + tt_ec + "' ";
 
                         DataSet ds5_1 = Dataset1.GetDataSet(tt_sql5_1, tt_conn);
                         DataSet ds5_2 = Dataset1.GetDataSet(tt_sql5_2, tt_conn);
@@ -554,6 +574,8 @@ namespace TVBOX01
                 this.button18.Visible = false;
                 this.tabPage4.Parent = null;
                 this.tabPage3.Parent = tabControl2;
+                this.textBox29.Enabled = false;
+                this.textBox30.Enabled = false;
                 ClearLabelInfo1();
                 ScanDataInitial();
             }
@@ -1607,8 +1629,15 @@ namespace TVBOX01
                     this.textBox21.Enabled = false;
                     this.textBox22.Enabled = false;
                     this.button3.Visible = true;
-                    //this.button18.Visible = true;//双打功能暂时不启动
-                    this.tabPage6.Parent = null;//禁用II型标签微调，双打功能暂时不启动
+                    if (PrintChange == "1")
+                    {
+                        this.button18.Visible = true;//双打功能
+                        this.tabPage6.Parent = tabControl3;
+                    }
+                    else
+                    {
+                        this.tabPage6.Parent = null;//禁用II型标签微调，双打功能暂时不启动
+                    }
                     this.textBox29.Enabled = true;
                     this.textBox30.Enabled = true;
                     this.tabPage3.Parent = null;
@@ -1859,7 +1888,10 @@ namespace TVBOX01
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6)
                 {
                     GetParaDataPrint1(0);
-                    //GetParaDataPrint2(0);//双打功能暂时不启用
+                    if (PrintChange == "1")
+                    {
+                        GetParaDataPrint2(0);//双打功能
+                    }
                     GetProductYield();
                     CheckStation(tt_shortmac);
                     this.richTextBox1.BackColor = Color.Chartreuse;
@@ -2233,7 +2265,10 @@ namespace TVBOX01
                         Dataset1.lablePrintRecord(this.textBox1.Text, this.label46.Text, this.label45.Text, "彩盒标签II", str, tt_computermac, "电信小型化产品彩盒标签II", tt_conn);
                         
                         GetParaDataPrint1(1);
-                        //GetParaDataPrint2(0);//双打功能暂时不启用
+                        if (PrintChange == "1")
+                        {
+                            GetParaDataPrint2(0);//双打功能
+                        }
                         PutLableInfor("OK 彩盒标签II打印成功，请继续扫描下一片");
                         GetProductYield();
                         CheckStation(tt_hostlable);
@@ -2547,9 +2582,10 @@ namespace TVBOX01
                     Dataset1.lablePrintRecord(tt_task, tt_shortmac, this.label45.Text, "彩盒标签", str, tt_computermac, "", tt_conn);
 
                     GetParaDataPrint1(1);
-                    //GetParaDataPrint2(1);//双打功能暂时不启用
-                    //GetParaDataPrint2(1);
-                    //GetParaDataPrint2(1);
+                    if (PrintChange == "1")
+                    {
+                        GetParaDataPrint2(1);//双打功能
+                    }
                     GetProductYield();
                     this.richTextBox1.BackColor = Color.Chartreuse;
                     getProductRhythm();
@@ -2749,7 +2785,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
-                    //report.PrintSettings.Printer = this.textBox29.Text;//双打功能暂时不启用
+                    if (PrintChange == "1")
+                    {
+                        report.PrintSettings.Printer = this.textBox29.Text;//双打功能
+                    }
                     report.Print();
                     report.Save(tt_path1);
                     tt_top1 = 0;

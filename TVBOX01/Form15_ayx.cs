@@ -70,6 +70,9 @@ namespace TVBOX01
         static string tt_gyid_Old = "";
         static string tt_gyid_Use = "";
 
+        //打印模式选择
+        static string PrintChange = "";
+
         //本机MAC
         static string tt_computermac = "";
 
@@ -340,6 +343,23 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini"))
+                {
+                    MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini" + "文件不存在");
+                    return;
+                }
+
+                //读取配置文件，选择打印方式
+                string[] lines = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini", System.Text.Encoding.GetEncoding("GB2312"));
+
+                foreach (string line in lines)
+                {
+                    if (line.Contains("PrintChange"))
+                    {
+                        PrintChange = line.Substring(line.IndexOf("=") + 1).Trim();
+                    }
+                }
+
                 if (str.Contains("FH103"))
                 {
                     this.button3.Visible = true;
@@ -402,7 +422,8 @@ namespace TVBOX01
                 this.button29.Visible = false;
                 this.tabPage4.Parent = null;
                 this.tabPage3.Parent = tabControl2;
-
+                this.textBox29.Enabled = false;
+                this.textBox30.Enabled = false;
                 ClearLabelInfo();
                 ScanDataInitial();
                 getScanTextboaClear();
@@ -2328,20 +2349,20 @@ namespace TVBOX01
                     this.textBox28.Enabled = false;
                     this.textBox27.Enabled = false;
                     this.button3.Visible = true;
-                    //if (this.label41.Text != "")
-                    //{
-                        //this.button11.Visible = true;//双打功能暂时不启用
-                    //}
+                    if (this.label41.Text != "" && PrintChange == "1")
+                    {
+                        this.button11.Visible = true;//双打功能
+                    }
                     this.tabPage3.Parent = null;
                     this.tabPage4.Parent = tabControl2;
-                    //if (this.label41.Text == "")
-                    //{
+                    if (this.label41.Text == "")
+                    {
                         this.tabPage8.Parent = null;
-                    //}
-                    //else
-                    //{
-                    //    this.tabPage8.Parent = tabControl3;//同上
-                    //}
+                    }
+                    else if (PrintChange == "1")
+                    {
+                        this.tabPage8.Parent = tabControl3;//同上
+                    }
                     this.textBox29.Enabled = true;
                     this.textBox30.Enabled = true;
                     ScanDataInitial();
@@ -2626,10 +2647,10 @@ namespace TVBOX01
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6)
                 {
                     GetParaDataPrint1(0);
-                    //if (this.label41.Text != "")//双打功能暂时不启用
-                    //{
-                    //    GetParaDataPrint2(0);
-                    //}
+                    if (this.label41.Text != "" && PrintChange == "1")//双打功能
+                    {
+                        GetParaDataPrint2(0);
+                    }
                     GetProductNumInfo();                   
 
                     string tt_gyid = "";
@@ -3514,19 +3535,19 @@ namespace TVBOX01
                     if (tt_checkflag == 1)
                     {
                         GetParaDataPrint1(0);
-                        //if (this.label41.Text != "")//双打功能暂时不启用
-                        //{
-                        //    GetParaDataPrint2(0);
-                        //}
+                        if (this.label41.Text != "" && PrintChange == "1")//双打功能
+                        {
+                            GetParaDataPrint2(0);
+                        }
                         PutLableInfor("复测check产品过站成功，打印机不出纸，请继续扫描！");
                     }
                     else
                     {
                         GetParaDataPrint1(1);
-                        //if (this.label41.Text != "")//双打功能暂时不启用
-                        //{
-                        //    GetParaDataPrint2(1);
-                        //}
+                        if (this.label41.Text != "" && PrintChange == "1")//双打功能
+                        {
+                            GetParaDataPrint2(1);
+                        }
                         PutLableInfor("过站成功，请继续扫描！");
                     }
                     GetProductNumInfo();
@@ -3681,7 +3702,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1 && this.textBox29.Text != "")
                 {
-                    //report.PrintSettings.Printer = this.textBox29.Text;//双打功能暂时不启用
+                    if (PrintChange == "1")
+                    {
+                        report.PrintSettings.Printer = this.textBox29.Text;//双打功能
+                    }
                     report.Print();
                     report.Save(tt_path1);
                     tt_top1 = 0;
@@ -3776,7 +3800,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1 && this.textBox29.Text != "")
                 {
-                    //report.PrintSettings.Printer = this.textBox29.Text;//双打功能暂时不启用
+                    if (PrintChange == "1")
+                    {
+                        report.PrintSettings.Printer = this.textBox29.Text;//双打功能
+                    }
                     report.Print();
                     report.Save(tt_path1);
                     tt_top1 = 0;
