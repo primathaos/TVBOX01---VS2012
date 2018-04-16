@@ -67,6 +67,13 @@ namespace TVBOX01
         //小型化方案装箱兼容用
         static string tt_MiniType = "";
 
+        //临时参数
+
+        //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
+        string tt_power_old = "";
+        //1.5A电源物料不足问题重打标识
+        string tt_power_re = "";
+
         //本机MAC
         static string tt_computermac = "";
         private void Form17_azx1_Load(object sender, EventArgs e)
@@ -1724,7 +1731,7 @@ namespace TVBOX01
 
                 tt_computermac = Dataset1.GetHostIpName();
 				
-                string tt_sql1 = "select tasksquantity,product_name,fec,convert(varchar, taskdate, 23) fdate,tasktype,softwareversion,gyid,pon_name,areacode,gyid2,parenttask " +
+                string tt_sql1 = "select tasksquantity,product_name,fec,convert(varchar, taskdate, 23) fdate,tasktype,softwareversion,gyid,pon_name,areacode,gyid2,parenttask,fhcode " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";                
 
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
@@ -1744,7 +1751,10 @@ namespace TVBOX01
                     tt_pon_name = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //产品类型
                     tt_areacode = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //生产地区
                     tt_gyid_Old = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //次级流程配置
-                    tt_MiniType = ds1.Tables[0].Rows[0].ItemArray[10].ToString();  //小型化配置方案
+                    tt_MiniType = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //小型化配置方案
+
+                    tt_power_old = ds1.Tables[0].Rows[0].ItemArray[11].ToString().Trim();  //旧电源适配器标识
+                    tt_power_re = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //旧电源适配器标识(需重打检查)
 
                     tt_gyid_Use = "";
 
@@ -3057,13 +3067,51 @@ namespace TVBOX01
                 }
                 #endregion
 
-                
+
+                //临时附加检查 查找原1.5A铭牌标签是否已重打为1.0A
+                #region
+                Boolean tt_flag6_1 = false;
+                if (tt_flag6)
+                {
+                    if (tt_power_re == "1.5A" && tt_power_old != "1.5")
+                    {
+                        string tt_sql6_1 = "select fremark from odc_lablereprint where fmaclable = '" + tt_shortmac + "'";
+
+                        DataSet ds6_1 = Dataset1.GetDataSet(tt_sql6_1, tt_conn);
+                        if (ds6_1.Tables.Count > 0 && ds6_1.Tables[0].Rows.Count > 0)
+                        {
+                            string tt_1A_remark = ds6_1.Tables[0].Rows[0].ItemArray[0].ToString();
+                            if (tt_1A_remark == "原1.5A产品改为打印1.0A铭牌")
+                            {
+                                tt_flag6_1 = true;
+                                setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
+                            }
+                            else
+                            {
+                                setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
+                                PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
+                            }
+                        }
+                        else
+                        {
+                            setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
+                            PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
+                        }
+                    }
+                    else
+                    {
+                        tt_flag6_1 = true;
+                    }
+                }
+                #endregion
+
+
                 //第七步  流程检查
                 #region
                 Boolean tt_flag7 = false;
                 tt_ccode = this.label54.Text;
                 tt_ncode = this.label55.Text;
-                if (tt_flag6)
+                if (tt_flag6 && tt_flag6_1)
                 {
                     if (tt_ccode == "" || tt_ncode == "")
                     {
@@ -3257,7 +3305,6 @@ namespace TVBOX01
                         tt_flag12 = true;
                         setRichtexBox("12、该产品已称重,goon");
                     }
-
                 }
                 #endregion
 

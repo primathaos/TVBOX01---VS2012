@@ -51,6 +51,13 @@ namespace TVBOX01
         DateTime tt_productstarttime = DateTime.Now; //开始时间
         DateTime tt_productprimtime; //上一次时间
 
+        //临时参数
+
+        //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
+        string tt_power_old = "";
+        //1.5A电源物料不足问题重打标识
+        string tt_power_re = "";
+
         //本机MAC
         static string tt_computermac = "";
 
@@ -275,7 +282,7 @@ namespace TVBOX01
                 tt_computermac = Dataset1.GetHostIpName();
 
                 string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate," +
-                                 "customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id,fhcode " +
+                                 "customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id,fhcode,parenttask " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1,tt_conn);
                                 
@@ -296,7 +303,8 @@ namespace TVBOX01
 
                     string tt_idnum = ds1.Tables[0].Rows[0].ItemArray[12].ToString();//制造单ID
 
-                    string tt_power_old = ds1.Tables[0].Rows[0].ItemArray[13].ToString();//旧电源适配器标识
+                    tt_power_old = ds1.Tables[0].Rows[0].ItemArray[13].ToString().Trim();//旧电源适配器标识
+                    tt_power_re = ds1.Tables[0].Rows[0].ItemArray[14].ToString().Trim();//旧电源适配器标识(需重打检查)
 
                     int tt_idnum1 = Convert.ToInt32(tt_idnum);
 
@@ -2246,11 +2254,19 @@ namespace TVBOX01
 
                     if (tt_flag && tt_nowcode != "9990")
                     {
-                        Reprint form1 = new Reprint();
-                        form1.StartPosition = FormStartPosition.CenterScreen;
-                        form1.ShowDialog();
+                        string tt_remark = "";
+                        if (tt_power_re == "1.5A" && tt_power_old != "1.5")
+                        {
+                            tt_remark = "原1.5A产品改为打印1.0A铭牌";
+                        }
+                        else
+                        {
+                            Reprint form1 = new Reprint();
+                            form1.StartPosition = FormStartPosition.CenterScreen;
+                            form1.ShowDialog();
 
-                        string tt_remark = Dataset1.Context.ContextData["Key1"].ToString();
+                            tt_remark = Dataset1.Context.ContextData["Key1"].ToString();
+                        }
 
                         GetParaDataPrint(1);  //打印
                         string tt_host = Gethostlable(tt_recordmac);
