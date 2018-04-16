@@ -1439,12 +1439,13 @@ namespace TVBOX01
             }
         }
 
-        //查询是否存在出货数据
-        private string Getaddress(string tt_pagesn)
+        //查询是否存在栈板号和出货数据
+        private bool Getaddress(string tt_pagesn, out string tt_polletsn, out string tt_faddress)
         {
-            string tt_faddress = "";
+            tt_polletsn = "";
+            tt_faddress = "";
 
-            string tt_sql = "select count(1), min(pasn), min(faddress) " +
+            string tt_sql = "select count(1), min(polletsn), min(faddress) " +
                             "from odc_package where pagesn = '" + tt_pagesn + "' ";
 
             string[] tt_array = new string[3];
@@ -1452,14 +1453,22 @@ namespace TVBOX01
 
             if (int.Parse(tt_array[0]) >= 1)
             {
+                tt_polletsn = tt_array[1];
                 tt_faddress = tt_array[2];
+                if (tt_polletsn == "" && tt_faddress == "")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 MessageBox.Show("网络连接失败，或此箱号" + tt_pagesn + "不存在，请确认");
+                return false;
             }
-
-            return tt_faddress;
         }
 
         //查询重打记录
@@ -2309,16 +2318,16 @@ namespace TVBOX01
         //打散
         private void button4_Click(object sender, EventArgs e)
         {
-            string tt_faddress = Getaddress(this.label46.Text);
+            string tt_polletsn = "";
+            string tt_faddress = "";
 
-            if (this.label46.Text.Length > 0 && tt_faddress == "")
+            if (this.label46.Text.Length > 0 && Getaddress(this.label46.Text,out tt_polletsn,out tt_faddress))
             {
                 MessageBoxButtons messButton = MessageBoxButtons.OKCancel;
                 DialogResult dr = MessageBox.Show("确要打散箱号：" + this.label46.Text + ",吗", "装箱打散", messButton);
 
                 if (dr == DialogResult.OK)//如果点击“确定”按钮
                 {
-
                     string tt_taskcode = this.textBox1.Text;
                     string tt_pagesnbreak = this.label46.Text;
                     string tt_ccodebreak = this.label54.Text;
@@ -2328,7 +2337,6 @@ namespace TVBOX01
                     {
                         MessageBox.Show("OK 打散成功");
                         ClearListView();
-
                     }
                     else
                     {
@@ -2338,7 +2346,11 @@ namespace TVBOX01
             }
             else if (tt_faddress != "")
             {
-                MessageBox.Show("此箱已存在出货数据："+ tt_faddress +"，不允许打散");
+                MessageBox.Show("此箱已存在出货数据：" + tt_faddress + "，不允许打散");
+            }
+            else if (tt_polletsn != "")
+            {
+                MessageBox.Show("此箱未打散栈板：" + tt_polletsn + "，不允许打散");
             }
             else
             {
