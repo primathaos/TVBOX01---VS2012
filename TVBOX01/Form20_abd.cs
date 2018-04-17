@@ -293,7 +293,7 @@ namespace TVBOX01
                 for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                 {
                     tt_fixbefor = ds.Tables[0].Rows[i][1].ToString();
-                    if (tt_process.Contains(tt_fixbefor) || (tt_productname_check ==1 && tt_fixbefor == "2111")) break;                   
+                    if (tt_process.Contains(tt_fixbefor) || (tt_productname_check == 1 && tt_fixbefor == "2111")) break;                   
                 }
             }
             return tt_fixbefor;
@@ -955,16 +955,18 @@ namespace TVBOX01
             //第六步 查看工单流程
             #region
             string tt_gyid = "";
+            string tt_parenttask = "";
             Boolean tt_flag6 = false;
             if(tt_flag5)
             {
-                string tt_sql6 = "select count(1),min(gyid),0 from odc_tasks where taskscode = '"+tt_taskcode+"' ";
+                string tt_sql6 = "select count(1),min(gyid),min(parenttask) from odc_tasks where taskscode = '" + tt_taskcode+"' ";
                 string[] tt_array6 = new string[3];
                 tt_array6 = Dataset1.GetDatasetArray(tt_sql6, tt_conn);
                 if (tt_array6[0] == "1")
                 {
                     tt_flag6 = true;
                     tt_gyid = tt_array6[1];
+                    tt_parenttask = tt_array6[2].Trim();
                     SetRichtexBox("6、该产品流程配置为" + tt_gyid + ",goon");
                 }
                 else
@@ -1019,7 +1021,10 @@ namespace TVBOX01
                     tt_ncode = tt_array8[2];
 
                     int tt_productname_check = 0;
-                    if ("HG6201M,HG6201T,HG2201T".Contains(Getproductname(tt_mac)))
+                    if (Getproductname(tt_mac) == "HG6201M"
+                        || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac)) 
+                        && Getproductarea(tt_mac).Trim() != "安徽"
+                        && tt_parenttask != "小型化方案"))
                     {
                         tt_productname_check = 1;
                     }
@@ -1027,11 +1032,6 @@ namespace TVBOX01
                     if (tt_ncode == "2111" && tt_productname_check == 1)
                     {
                         tt_ncode = "2115";
-                    }
-
-                    if (tt_ncode == "2115" && tt_productname_check == 1 && ("安徽".Contains(Getproductarea(tt_mac)) == true))
-                    {
-                        tt_ncode = "2111";
                     }
 
                     tt_flag8 = true;
@@ -1091,14 +1091,17 @@ namespace TVBOX01
                 if(tt_ncode == "3350")
                 {
                     int tt_productname_check = 0;
-                    if ("HG6201M,HG6201T,HG2201T".Contains(Getproductname(tt_mac)))
+                    if (Getproductname(tt_mac) == "HG6201M"
+                        || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac))
+                        && Getproductarea(tt_mac).Trim() != "安徽"
+                        && tt_parenttask != "小型化方案"))
                     {
                         tt_productname_check = 1;
                     }
 
                     tt_mataionstation = GetFixBeforStation(tt_mac, tt_process, tt_productname_check);
 
-                    if (tt_mataionstation!="0")
+                    if (tt_mataionstation !="0")
                     {
                         tt_flag10 = true;
                         SetRichtexBox("10、找到1个3350以前站位："+tt_mataionstation+",goon");
@@ -1129,14 +1132,13 @@ namespace TVBOX01
             {
                 if (tt_ncode == "3350")
                 {
-                    if (tt_mataionstation == "2111" && ("HG6201M,HG6201T,HG2201T".Contains(Getproductname(tt_mac)) == true))
+                    if (tt_mataionstation == "2111"
+                        && (Getproductname(tt_mac) == "HG6201M"
+                        || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac))
+                        && Getproductarea(tt_mac).Trim() != "安徽"
+                        && tt_parenttask != "小型化方案")))
                     {
                         tt_mataionstation = "2115";
-                    }
-
-                    if (tt_mataionstation == "2115" && ("HG6201T".Contains(Getproductname(tt_mac)) == true) && ("安徽".Contains(Getproductarea(tt_mac)) == true))
-                    {
-                        tt_mataionstation = "2111";
                     }
 
                     tt_routmaxnum = GetNcodeSerialNo(tt_gyid, tt_mataionstation);

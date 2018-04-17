@@ -2265,10 +2265,6 @@ namespace TVBOX01
                         Dataset1.lablePrintRecord(this.textBox1.Text, this.label46.Text, this.label45.Text, "彩盒标签II", str, tt_computermac, "电信小型化产品彩盒标签II", tt_conn);
                         
                         GetParaDataPrint1(1);
-                        if (PrintChange == "1")
-                        {
-                            GetParaDataPrint2(0);//双打功能
-                        }
                         PutLableInfor("OK 彩盒标签II打印成功，请继续扫描下一片");
                         GetProductYield();
                         CheckStation(tt_hostlable);
