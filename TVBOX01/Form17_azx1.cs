@@ -78,6 +78,9 @@ namespace TVBOX01
         static string tt_computermac = "";
         private void Form17_azx1_Load(object sender, EventArgs e)
         {
+            //FastReport环境变量设置（打印时不提示 "正在准备../正在打印..",一个程序只需设定一次，故一般写在程序入口）
+            (new FastReport.EnvironmentSettings()).ReportSettings.ShowProgress = false;
+
             this.toolStripStatusLabel2.Text = str;
             this.toolStripStatusLabel4.Text = sip;
             tt_conn = "server=" + sip + ";database=oracle;uid=sa;pwd=adminsa";
@@ -164,7 +167,7 @@ namespace TVBOX01
 
         #endregion
 
-        
+
         #region 2、数据清除
         //锁定工单清除
         private void ClearLabelInfo1()
@@ -229,7 +232,7 @@ namespace TVBOX01
             this.label46.Text = null;
             this.label47.Text = null;
             this.label48.Text = null;
-           
+
             //流程信息
             this.label53.Text = null;
             this.label3.Text = null;
@@ -340,7 +343,7 @@ namespace TVBOX01
         }
 
         #endregion
-        
+
 
         #region 3、ListView操作
 
@@ -360,7 +363,7 @@ namespace TVBOX01
         {
             int i = this.listView1.Items.Count + 1;
             ListViewItem[] p = new ListViewItem[1];
-            p[0] = new ListViewItem(new string[] { i.ToString(), tt_boxsn, tt_pcba, tt_mac, tt_smtbarcode, tt_fhttgpsn, tt_smtbarcode1});
+            p[0] = new ListViewItem(new string[] { i.ToString(), tt_boxsn, tt_pcba, tt_mac, tt_smtbarcode, tt_fhttgpsn, tt_smtbarcode1 });
             this.listView1.Items.AddRange(p);
             this.listView1.Items[this.listView1.Items.Count - 1].EnsureVisible();
             setListviewSerialShow(tt_boxsn);
@@ -522,14 +525,14 @@ namespace TVBOX01
         //显示ListView序号
         private void setListviewSerialShow(string tt_str)
         {
-            if (tt_str.Length > 2  )
-            this.label78.Text = tt_str.Substring(tt_str.Length - 2, 2);
-   
+            if (tt_str.Length > 2)
+                this.label78.Text = tt_str.Substring(tt_str.Length - 2, 2);
+
         }
 
 
         #endregion
-        
+
 
         #region 4、辅助功能
         //richtext加记录
@@ -633,7 +636,7 @@ namespace TVBOX01
         {
             Boolean tt_flag = false;
 
-            if (tt_containstr.Length > 3 )
+            if (tt_containstr.Length > 3)
             {
 
                 if (tt_scansn.Contains(tt_containstr))
@@ -973,7 +976,7 @@ namespace TVBOX01
             }
 
         }
-        
+
 
         ////获取箱号  青岛获取箱号
         //private string GetBoxNumber(string tt_beforstr, string tt_fromsn, string tt_setunitnum)
@@ -986,7 +989,7 @@ namespace TVBOX01
         //    tt_boxnumber = tt_beforstr + tt_boxnum3.PadLeft(6, '0');
         //    return tt_boxnumber;
         //}
-        
+
 
         ////贵州获取箱号
         //private string GetBoxNumber2(string tt_beforstr, string tt_task)
@@ -1091,7 +1094,7 @@ namespace TVBOX01
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("生成尾箱，计算箱号错误："+ex.Message);
+                    MessageBox.Show("生成尾箱，计算箱号错误：" + ex.Message);
                 }
             }
 
@@ -1136,13 +1139,13 @@ namespace TVBOX01
 
             if (tt_flag3)
             {
-                tt_boxnumber = tt_beforstr7 + tt_middlelot+ "C" + tt_boxnum3.PadLeft(3, '0');
+                tt_boxnumber = tt_beforstr7 + tt_middlelot + "C" + tt_boxnum3.PadLeft(3, '0');
             }
 
-            
+
             return tt_boxnumber;
         }
-                
+
 
         //流程检查，获取下一流程
         private bool GetNextCode(string tt_task, string tt_username)
@@ -1260,7 +1263,7 @@ namespace TVBOX01
                 this.label63.Text = tt_ccodenumber;
             }
             #endregion
-            
+
 
             return tt_flag;
         }
@@ -1302,7 +1305,7 @@ namespace TVBOX01
             tt_array3 = Dataset1.GetDatasetArray(tt_sql, tt_conn);
             this.label69.Text = tt_array3[0];
             this.label70.Text = tt_array3[1];
-            
+
 
         }
 
@@ -1426,7 +1429,7 @@ namespace TVBOX01
         }
 
         //打印数记录
-        private void SetPrintRecord(string tt_task, string tt_mac, string tt_host, string tt_local, string tt_user ,string tt_computername, string tt_remark)
+        private void SetPrintRecord(string tt_task, string tt_mac, string tt_host, string tt_local, string tt_user, string tt_computername, string tt_remark)
         {
             string tt_insertsql = "insert into odc_lablereprint (Ftaskcode,Fmaclable,Fhostlable,Flocal,Fname,Fdate,Fcomputername,Fremark) " +
                        "values('" + tt_task + "','" + tt_mac + "','" + tt_host + "','" + tt_local + "','" + tt_user + "',getdate(),'" + tt_computername + "','" + tt_remark + "') ";
@@ -1529,6 +1532,31 @@ namespace TVBOX01
                 MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
             }
             return tt_teleplan;
+        }
+
+        //1.5A 电源替换1.0A 铭牌防呆查询
+        private bool CheckPowerLable(string tt_Dataname,string tt_shortmac,string tt_scanboxsn)
+        {
+            bool tt_flag = false;
+            string tt_sql = "select fremark from " + tt_Dataname + " where fmaclable = '" + tt_shortmac + "'";
+
+            DataSet ds = Dataset1.GetDataSet(tt_sql, tt_conn);
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                string tt_1A_remark = ds.Tables[0].Rows[0].ItemArray[0].ToString();
+                if (tt_1A_remark == "原1.5A产品改为打印1.0A铭牌")
+                {
+                    tt_flag = true;
+                    setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
+                }
+                else
+                {
+                    setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
+                    PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
+                }
+            }
+
+            return tt_flag;
         }
 
         #endregion
@@ -3087,27 +3115,9 @@ namespace TVBOX01
                 {
                     if (tt_power_re == "1.5A" && tt_power_old != "1.5")
                     {
-                        string tt_sql6_1 = "select fremark from odc_lablereprint where fmaclable = '" + tt_shortmac + "'";
-
-                        DataSet ds6_1 = Dataset1.GetDataSet(tt_sql6_1, tt_conn);
-                        if (ds6_1.Tables.Count > 0 && ds6_1.Tables[0].Rows.Count > 0)
+                        if (CheckPowerLable("odc_lablereprint", tt_shortmac, tt_scanboxsn) || CheckPowerLable("odc_lableprint", tt_shortmac, tt_scanboxsn))
                         {
-                            string tt_1A_remark = ds6_1.Tables[0].Rows[0].ItemArray[0].ToString();
-                            if (tt_1A_remark == "原1.5A产品改为打印1.0A铭牌")
-                            {
-                                tt_flag6_1 = true;
-                                setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
-                            }
-                            else
-                            {
-                                setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
-                                PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
-                            }
-                        }
-                        else
-                        {
-                            setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
-                            PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
+                            tt_flag6_1 = true;
                         }
                     }
                     else
@@ -3468,7 +3478,10 @@ namespace TVBOX01
 
                     int tt_productname_check = 0;
 
-                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label10.Text.Trim()) == true && tt_areacode != "安徽")
+                    if (this.label10.Text.Trim() == "HG6201M"
+                        || ("HG6201T,HG2201T".Contains(this.label10.Text.Trim())
+                        && tt_areacode != "安徽"
+                        && tt_MiniType != "小型化方案"))
                     {
                         tt_productname_check = 1;
                     }

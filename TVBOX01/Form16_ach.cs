@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;  //正则表达式
 using FastReport;
 using FastReport.Barcode;
+using System.Threading;
 
 namespace TVBOX01
 {
@@ -52,12 +53,16 @@ namespace TVBOX01
 
         //打印模式选择
         static string PrintChange = "";
+        static string IItype_PrintDelay = "";
 
         //本机MAC
         static string tt_computermac = "";
 		
         private void Form16_ach_Load(object sender, EventArgs e)
         {
+            //FastReport环境变量设置（打印时不提示 "正在准备../正在打印..",一个程序只需设定一次，故一般写在程序入口）
+            (new FastReport.EnvironmentSettings()).ReportSettings.ShowProgress = false;
+
             this.toolStripStatusLabel2.Text = str;
             this.toolStripStatusLabel4.Text = sip;
             tt_conn = "server=" + sip + ";database=oracle;uid=sa;pwd=adminsa";
@@ -85,6 +90,8 @@ namespace TVBOX01
                 this.tabPage4.Parent = null;
                 this.button14.Visible = true;
             }
+
+            this.textBox6.Text = "16";
             
             ClearLabelInfo1();
 
@@ -287,6 +294,11 @@ namespace TVBOX01
                     if (line.Contains("PrintChange"))
                     {
                         PrintChange = line.Substring(line.IndexOf("=") + 1).Trim();
+                    }
+
+                    if (line.Contains("IItype_PrintDelay"))
+                    {
+                        IItype_PrintDelay = line.Substring(line.IndexOf("=") + 1).Trim();
                     }
                 }
 
@@ -2366,6 +2378,7 @@ namespace TVBOX01
             {
                 //---开始电源扫描
                 setRichtexBox("-----开始电源扫描--------");
+                textBox3.Enabled = false;
                 string tt_scanshell = this.textBox3.Text.Trim().ToUpper();
                 string tt_dyscanshell = tt_scanshell.Substring(0, 7);
                 string tt_task = this.textBox1.Text.Trim().ToUpper();
@@ -2596,6 +2609,7 @@ namespace TVBOX01
                 else
                 {
                     this.richTextBox1.BackColor = Color.Red;
+                    textBox3.Enabled = true;
                     textBox3.Focus();
                     textBox3.SelectAll();
                 }
@@ -2886,6 +2900,7 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1 && this.textBox29.Text != "")
                 {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
                     report.PrintSettings.Printer = this.textBox30.Text;
                     report.Print();
                     report.Save(tt_path2);

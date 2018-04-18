@@ -47,6 +47,9 @@ namespace TVBOX01
         static string tt_computermac = "";
         private void Form12_ot_Load(object sender, EventArgs e)
         {
+            //FastReport环境变量设置（打印时不提示 "正在准备../正在打印..",一个程序只需设定一次，故一般写在程序入口）
+            (new FastReport.EnvironmentSettings()).ReportSettings.ShowProgress = false;
+
             this.toolStripStatusLabel2.Text = str;
             this.toolStripStatusLabel4.Text = sip;
             tt_conn = "server=" + sip + ";database=oracle;uid=sa;pwd=adminsa";

@@ -67,6 +67,8 @@
             this.label44 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label77 = new System.Windows.Forms.Label();
+            this.label76 = new System.Windows.Forms.Label();
             this.label67 = new System.Windows.Forms.Label();
             this.label116 = new System.Windows.Forms.Label();
             this.label118 = new System.Windows.Forms.Label();
@@ -361,7 +363,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1283, 716);
+            this.tabControl1.Size = new System.Drawing.Size(1285, 720);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -383,7 +385,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage1.Size = new System.Drawing.Size(1275, 690);
+            this.tabPage1.Size = new System.Drawing.Size(1277, 694);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "扫描及过站";
             // 
@@ -666,6 +668,8 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.label77);
+            this.groupBox6.Controls.Add(this.label76);
             this.groupBox6.Controls.Add(this.label67);
             this.groupBox6.Controls.Add(this.label116);
             this.groupBox6.Controls.Add(this.label118);
@@ -702,6 +706,27 @@
             this.groupBox6.TabIndex = 9;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "条码信息";
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label77.ForeColor = System.Drawing.Color.Red;
+            this.label77.Location = new System.Drawing.Point(342, 121);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(54, 12);
+            this.label77.TabIndex = 72;
+            this.label77.Text = "label77";
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(342, 103);
+            this.label76.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(77, 12);
+            this.label76.TabIndex = 71;
+            this.label76.Text = "上海资产编码";
             // 
             // label67
             // 
@@ -1396,7 +1421,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(104, 78);
+            this.label41.Location = new System.Drawing.Point(171, 78);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(47, 12);
@@ -1409,9 +1434,9 @@
             this.label117.Location = new System.Drawing.Point(6, 78);
             this.label117.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label117.Name = "label117";
-            this.label117.Size = new System.Drawing.Size(89, 12);
+            this.label117.Size = new System.Drawing.Size(167, 12);
             this.label117.TabIndex = 24;
-            this.label117.Text = "二维码模板路径";
+            this.label117.Text = "二维码\\上海资产编码模板路径";
             // 
             // label37
             // 
@@ -1704,9 +1729,9 @@
             this.toolStripStatusLabel8,
             this.toolStripStatusLabel9,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(4, 665);
+            this.statusStrip1.Location = new System.Drawing.Point(4, 669);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1267, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1269, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -2364,7 +2389,7 @@
             this.tabPage8.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage8.Size = new System.Drawing.Size(330, 154);
             this.tabPage8.TabIndex = 1;
-            this.tabPage8.Text = "二维码标签模板打印微调";
+            this.tabPage8.Text = "二维码标签\\上海资产编码模板打印微调";
             // 
             // button30
             // 
@@ -2498,7 +2523,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage2.Size = new System.Drawing.Size(1276, 687);
+            this.tabPage2.Size = new System.Drawing.Size(1275, 690);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "数据查询";
             // 
@@ -2757,7 +2782,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1276, 687);
+            this.tabPage5.Size = new System.Drawing.Size(1275, 690);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "工单查询";
             // 
@@ -2926,7 +2951,7 @@
             this.tabPage6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage6.Size = new System.Drawing.Size(1276, 687);
+            this.tabPage6.Size = new System.Drawing.Size(1275, 690);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "自助分单";
             // 
@@ -3484,7 +3509,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1283, 716);
+            this.ClientSize = new System.Drawing.Size(1285, 720);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -3834,5 +3859,7 @@
         private System.Windows.Forms.Button button32;
         private System.Windows.Forms.Button button33;
         private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.Label label76;
     }
 }

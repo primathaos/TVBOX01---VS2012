@@ -1466,6 +1466,7 @@ namespace TVBOX01
                                                string tt_username,
                                                string tt_hostlable,
                                                string tt_shortmac,
+                                               string tt_shanghaicheck,
                                                string tt_gyid,
                                                string tt_ccode,
                                                string tt_ncode,
@@ -1484,9 +1485,12 @@ namespace TVBOX01
                     string tt_boxlable = "";
                     string tt_beforstr = "";
                     string tt_hostmax = "";
+                    string tt_hostmode = "";
                     string tt_nexthost = "";
+                    string tt_shanghailabel = "";
+                    string tt_shanghainexthost = "";
                     string tt_id = "";
-                    string tt_sql = "select hostqzwh,hostmax,id from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_smalltask + "' ";
+                    string tt_sql = "select hostqzwh,hostmax,id,hostmode from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_smalltask + "' ";
 
 
                     DataSet ds = new DataSet();
@@ -1496,6 +1500,7 @@ namespace TVBOX01
                         tt_beforstr = ds.Tables[0].Rows[0].ItemArray[0].ToString();
                         tt_hostmax = ds.Tables[0].Rows[0].ItemArray[1].ToString();
                         tt_id = ds.Tables[0].Rows[0].ItemArray[2].ToString();
+                        tt_hostmode = ds.Tables[0].Rows[0].ItemArray[3].ToString();
                     }
 
 
@@ -1503,6 +1508,12 @@ namespace TVBOX01
                     {
                         tt_nexthost = (int.Parse(tt_hostmax) + 1).ToString();
                         tt_boxlable = tt_beforstr + tt_nexthost.PadLeft(4, '0');
+
+                        if (tt_shanghaicheck != "")
+                        {
+                            tt_shanghainexthost = string.Format("{0:X}", int.Parse(tt_nexthost));
+                            tt_shanghailabel = tt_hostmode + tt_shanghainexthost.PadLeft(4, '0');
+                        }
                     }
                     else
                     {
@@ -1531,7 +1542,7 @@ namespace TVBOX01
 
 
                         string tt_sql3 = "update odc_alllable set boxlable ='" + tt_boxlable + "', hprinttime = getdate(), " +
-                                                             " taskscode = '" + tt_smalltask + "', hostlable = '" + tt_boxlable + "' " +
+                                                             " taskscode = '" + tt_smalltask + "', hostlable = '" + tt_boxlable + "', productlable = '" + tt_shanghailabel + "'" +
                                          "where hprintman ='" + tt_bigtask + "' and taskscode = '" + tt_bigtask + "'  and maclable ='" + tt_shortmac + "'  ";
 
                         command.CommandText = tt_sql3;

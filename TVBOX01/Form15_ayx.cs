@@ -76,8 +76,18 @@ namespace TVBOX01
         //本机MAC
         static string tt_computermac = "";
 
+        //小型化产品用参数
+        static string tt_parenttask = "";
+
+        //上海资产编码前段号参数
+        static string tt_shanghailabel = "";
+
+
         private void Form15_ayx_Load(object sender, EventArgs e)
         {
+            //FastReport环境变量设置（打印时不提示 "正在准备../正在打印..",一个程序只需设定一次，故一般写在程序入口）
+            (new FastReport.EnvironmentSettings()).ReportSettings.ShowProgress = false;
+
             this.toolStripStatusLabel2.Text = str;
             this.toolStripStatusLabel4.Text = sip;
             tt_conn = "server=" + sip + ";database=oracle;uid=sa;pwd=adminsa";
@@ -184,6 +194,7 @@ namespace TVBOX01
             this.textBox30.Text = this.label115.Text;
             this.textBox29.Enabled = false;
             this.textBox30.Enabled = false;
+
         }
 
         private string str;//定义的私有变量
@@ -264,6 +275,7 @@ namespace TVBOX01
             this.label46.Text = null;
             this.label47.Text = null;
             this.label67.Text = null;
+            this.label77.Text = null;
             this.label136.Text = null;
             this.label134.Text = null;
             this.label128.Text = null;
@@ -297,6 +309,7 @@ namespace TVBOX01
             this.label46.Text = null;
             this.label47.Text = null;
             this.label67.Text = null;
+            this.label77.Text = null;
             this.label136.Text = null;
             this.label134.Text = null;
             this.label128.Text = null;
@@ -380,11 +393,14 @@ namespace TVBOX01
                     this.textBox9.Enabled = false;
 
                     this.textBox2.Visible = true;
-                    this.textBox7.Visible = true;
-                    this.textBox11.Visible = true;
-
                     this.textBox2.Enabled = false;
-                    this.textBox11.Enabled = true;
+                    this.textBox7.Visible = true;
+
+                    if (tt_parenttask != "小型化")
+                    {
+                        this.textBox11.Visible = true;
+                        this.textBox11.Enabled = true;
+                    }
 
                     GetProductNumInfo();  //生产信息
                     getPalletBoxNo(this.label86.Text,this.label85.Text,this.label44.Text,this.label12.Text);
@@ -424,6 +440,8 @@ namespace TVBOX01
                 this.tabPage3.Parent = tabControl2;
                 this.textBox29.Enabled = false;
                 this.textBox30.Enabled = false;
+                tt_shanghailabel = "";
+                tt_parenttask = "";
                 ClearLabelInfo();
                 ScanDataInitial();
                 getScanTextboaClear();
@@ -488,7 +506,7 @@ namespace TVBOX01
 
             #region 第一步：子工单检查
             bool tt_flag1 = false;
-            string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Pon_name,Gyid2 " +
+            string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Pon_name,Gyid2,Parenttask " +
                              "from odc_tasks where taskscode = '" + tt_task1 + "' ";
              DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
             if (ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
@@ -502,6 +520,7 @@ namespace TVBOX01
                 this.label15.Text = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //物料编码
                 tt_ponname = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //PON 类型
                 tt_gyid_Old = ds1.Tables[0].Rows[0].ItemArray[10].ToString();  //次级流程配置
+                tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[11].ToString();  //小型化产品用参数
 
                 tt_gyid_Use = "";
 
@@ -685,19 +704,49 @@ namespace TVBOX01
             bool tt_flag8 = false;
             if(tt_flag6)
             {
+                bool tt_flag8_1 = false;
+
                 string tt_sql8 = "select count(1),min(hostqzwh),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
                                      "where taskscode = '" + tt_task1 + "' ";
                 string[] tt_array8 = new string[3];
                 tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
                 if (tt_array8[0] == "1")
                 {
-                    tt_flag8 = true;
+                    tt_flag8_1 = true;
                     this.label65.Text = tt_array8[1].ToUpper();
                     this.label44.Text = tt_array8[2];
                 }
                 else
                 {
                     MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                }
+
+                if (tt_productname == "HG6821M" && this.label14.Text == "上海" && tt_flag8_1)
+                {
+                    this.button29.Text = "预览资产码";
+                    this.button11.Text = "打印资产码";
+                    this.label115.Text = "资产码";
+
+                    string tt_sql8_1 = "select count(1),min(hostmode),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
+                                     "where taskscode = '" + tt_task1 + "' ";
+                    string[] tt_array8_1 = new string[3];
+                    tt_array8_1 = Dataset1.GetDatasetArray(tt_sql8_1, tt_conn);
+                    if (tt_array8_1[0] == "1")
+                    {
+                        tt_flag8 = true;
+                        tt_shanghailabel = tt_array8_1[1].ToUpper().Trim();
+                    }
+                    else
+                    {
+                        MessageBox.Show("没有找到子工单" + tt_task1 + "的上海资产编码配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                    }
+                }
+                else if ((tt_productname != "HG6821M" || this.label14.Text != "上海") && tt_flag8_1)
+                {
+                    this.button29.Text = "预览二维码";
+                    this.button11.Text = "打印二维码";
+                    this.label115.Text = "二维码";
+                    tt_flag8 = true;
                 }
             }
             #endregion
@@ -2569,7 +2618,7 @@ namespace TVBOX01
                 string tt_longmac = "";
                 if (tt_flag1 && tt_flag2 && tt_flag3)
                 {
-                    string tt_sql3 = "select pcbasn,hostlable,maclable,smtaskscode,bprintuser,shelllable,boxlable  from odc_alllable " +
+                    string tt_sql3 = "select pcbasn,hostlable,maclable,smtaskscode,bprintuser,shelllable,boxlable,productlable from odc_alllable " +
                                      "where taskscode = '" + tt_task + "' and maclable = '" + tt_shortmac + "' ";
 
 
@@ -2584,6 +2633,7 @@ namespace TVBOX01
                         this.label46.Text = ds3.Tables[0].Rows[0].ItemArray[4].ToString();  //长MAC
                         this.label47.Text = ds3.Tables[0].Rows[0].ItemArray[5].ToString().Replace("-","");  //GPSN
                         this.label67.Text = ds3.Tables[0].Rows[0].ItemArray[6].ToString();  //boxlable
+                        this.label77.Text = ds3.Tables[0].Rows[0].ItemArray[7].ToString();  //上海资产编码
                         tt_longmac = this.label46.Text;
                         setRichtexBox("4、关联表查询到一条数据，goon");
 
@@ -2751,6 +2801,7 @@ namespace TVBOX01
                 //---开始MAC扫描
                 #region
                 setRichtexBox("-----开始MAC过站扫描--------");
+                textBox2.Enabled = false;
                 string tt_smalltask = this.textBox1.Text.Trim().ToUpper();
                 string tt_bigtask = this.textBox9.Text.Trim().ToUpper();
                 string tt_scanmac = this.textBox2.Text.Trim();
@@ -3217,7 +3268,10 @@ namespace TVBOX01
 
                     int tt_productname_check = 0;
 
-                    if (CheckStrContain("HG6201M,HG6201T,HG2201T", this.label13.Text.Trim()) == true && this.label14.Text != "安徽")
+                    if (this.label13.Text.Trim() == "HG6201M"
+                        || ("HG6201T,HG2201T".Contains(this.label13.Text.Trim())
+                        && this.label14.Text != "安徽"
+                        && tt_parenttask != "小型化方案"))
                     {
                         tt_productname_check = 1;
                     }
@@ -3435,7 +3489,7 @@ namespace TVBOX01
                 {
                     string tt_username = STR;
                     tt_intgetno = Dataset1.FhYDSnInStation(tt_smalltask, tt_bigtask, tt_username,
-                                                          tt_hostlable, tt_shortmac,
+                                                          tt_hostlable, tt_shortmac,tt_shanghailabel,
                                                           tt_gyid_Use, tt_ccode, tt_ncode,
                                                           tt_conn);
                     if (tt_intgetno > 0)
@@ -3474,7 +3528,7 @@ namespace TVBOX01
                 string tt_boxlable = "";
                 if (tt_flag25)
                 {
-                    string tt_sql26 = "select count(1), min(boxlable),0 from odc_alllable " +
+                    string tt_sql26 = "select count(1), min(boxlable),min(productlable) from odc_alllable " +
                                 "where taskscode = '" + tt_smalltask + "' and hprintman = '" + tt_bigtask + "' and maclable = '" + tt_shortmac + "' ";
 
 
@@ -3486,6 +3540,7 @@ namespace TVBOX01
                         tt_flag26 = true;
                         tt_boxlable = tt_array26[1];
                         this.label67.Text = tt_boxlable;
+                        this.label77.Text = tt_array26[2];
                         setRichtexBox("26、生产序列号获取成功，已获取序列号：" + tt_boxlable + ", goon");
 
 
@@ -3553,20 +3608,36 @@ namespace TVBOX01
                     GetProductNumInfo();
                     CheckStation(tt_shortmac, tt_gyid_Use);
                     this.richTextBox1.BackColor = Color.Chartreuse;
-                    this.textBox2.Enabled = false;
-                    this.textBox11.Enabled = true;                    
+                    if (tt_parenttask != "小型化")
+                    {
+                        this.textBox11.Enabled = true;
+                        this.textBox2.Enabled = false;
+                    }
                 }
                 else
                 {
                     this.richTextBox1.BackColor = Color.Red;
-                    this.textBox2.Enabled = false;
-                    this.textBox11.Enabled = true;
+                    if (tt_parenttask != "小型化")
+                    {
+                        this.textBox11.Enabled = true;
+                        this.textBox2.Enabled = false;
+                    }
                 }
-                #endregion                
 
-                //光标转移
-                textBox11.Focus();
-                textBox11.SelectAll();
+                if (tt_parenttask == "小型化")
+                {
+                    //光标转移
+                    textBox2.Enabled = true;
+                    textBox2.Focus();
+                    textBox2.SelectAll();
+                }
+                else
+                {
+                    //光标转移
+                    textBox11.Focus();
+                    textBox11.SelectAll();
+                }
+                #endregion
             }
 
         }
@@ -3892,6 +3963,8 @@ namespace TVBOX01
                                 ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
                                 ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
 
+            string tt_shanghaiprint = this.label77.Text;
+
             DataSet dst2 = new DataSet();
             DataTable dt2 = new DataTable();
             dst2.Tables.Add(dt2);
@@ -3930,6 +4003,12 @@ namespace TVBOX01
             row5["内容"] = tt_YDQR_ZJ;
             dt2.Rows.Add(row5);
 
+            DataRow row6 = dt2.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "上海资产编码";
+            row6["内容"] = tt_shanghaiprint;
+            dt2.Rows.Add(row6);
+
             this.dataGridView7.DataSource = null;
             this.dataGridView7.Rows.Clear();
 
@@ -3953,6 +4032,8 @@ namespace TVBOX01
                 report.SetParameterValue("S02", dst2.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst2.Tables[0].Rows[2][2].ToString());
                 report.SetParameterValue("S04", dst2.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst2.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst2.Tables[0].Rows[5][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

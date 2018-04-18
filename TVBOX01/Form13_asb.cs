@@ -2013,7 +2013,14 @@ namespace TVBOX01
                     getProductRhythm();
 
                     //打印记录
-                    Dataset1.lablePrintRecord(tt_task,tt_shortmac,tt_hostlable,"设备铭牌",str,tt_computermac,"",tt_conn);
+
+                    string tt_remark = "";
+                    if (tt_power_re == "1.5A" && tt_power_old != "1.5")
+                    {
+                        tt_remark = "原1.5A产品改为打印1.0A铭牌";
+                    }
+
+                    Dataset1.lablePrintRecord(tt_task,tt_shortmac,tt_hostlable,"设备铭牌",str,tt_computermac,tt_remark,tt_conn);
 
                     //打印
                     GetParaDataPrint(1);
