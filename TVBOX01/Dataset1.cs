@@ -1788,6 +1788,12 @@ namespace TVBOX01
                         command.CommandText = tt_sql2;
                         command.ExecuteNonQuery();
 
+                        string tt_sql3 = "INSERT INTO ODC_STAJUMP (TASKSCODE,MAC,LASTNCODE,JUMPTIME,NOWCODE) " +
+                                         "VALUES ('" + tt_task + "','" + tt_mac + "','" + tt_ncode + "',getdate(),'" + tt_skipcode + "') ";
+
+                        command.CommandText = tt_sql3;
+                        command.ExecuteNonQuery();
+
 
                         transaction.Commit();
                         tt_flag = true;

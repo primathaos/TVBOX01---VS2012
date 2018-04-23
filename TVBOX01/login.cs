@@ -906,7 +906,7 @@ namespace TVBOX01
                     bool tt_flag2 = false;
                     if (tt_flag1)
                     {
-                        string tt_uiversion = "20180115";
+                        string tt_uiversion = "20180419";
                         string tt_setuiversion = GetProgramVersion2(tt_username);
                         if (getStringToInt(tt_uiversion) >= getStringToInt(tt_setuiversion))
                         {

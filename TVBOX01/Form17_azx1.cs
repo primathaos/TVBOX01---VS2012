@@ -1543,17 +1543,22 @@ namespace TVBOX01
             DataSet ds = Dataset1.GetDataSet(tt_sql, tt_conn);
             if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                string tt_1A_remark = ds.Tables[0].Rows[0].ItemArray[0].ToString();
-                if (tt_1A_remark == "原1.5A产品改为打印1.0A铭牌")
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                 {
-                    tt_flag = true;
-                    setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
+                    string tt_1A_remark = ds.Tables[0].Rows[i].ItemArray[0].ToString();
+                    if (tt_1A_remark.Trim() == "原1.5A产品改为打印1.0A铭牌")
+                    {
+                        tt_flag = true;
+                        setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
+                        break;
+                    }
                 }
-                else
-                {
-                    setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
-                    PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
-                }
+            }
+
+            if (!tt_flag)
+            {
+                setRichtexBox("附加检查：没有查询到1.5A电源铭牌重打1.0A铭牌的记录,over");
+                PutLableInfor("该产品:" + tt_scanboxsn + "需要重打 1.0A 铭牌！");
             }
 
             return tt_flag;
