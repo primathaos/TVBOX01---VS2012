@@ -66,13 +66,16 @@ namespace TVBOX01
 
         //小型化方案装箱兼容用
         static string tt_MiniType = "";
-
+        
         //临时参数
 
         //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
         string tt_power_old = "";
         //1.5A电源物料不足问题重打标识
         string tt_power_re = "";
+
+        //移动产品新二维码用判断参数
+        static int tt_CMCCQR_DateCheck = 30000000;
 
         //本机MAC
         static string tt_computermac = "";
@@ -1550,6 +1553,7 @@ namespace TVBOX01
                     {
                         tt_flag = true;
                         setRichtexBox("附加检查：查询到1.5A电源铭牌重打1.0A铭牌的记录,goon");
+                        PutLableInfor("");
                         break;
                     }
                 }
@@ -1798,6 +1802,8 @@ namespace TVBOX01
                     tt_power_old = ds1.Tables[0].Rows[0].ItemArray[11].ToString().Trim();  //旧电源适配器标识
                     tt_power_re = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //旧电源适配器标识(需重打检查)
 
+                    tt_CMCCQR_DateCheck = int.Parse(this.label12.Text.Replace("-", ""));//移动产品新二维码用判断参数
+
                     tt_gyid_Use = "";
 
                     tt_allprocesses = null;
@@ -1820,7 +1826,8 @@ namespace TVBOX01
                     {
                         tt_QRDZ = 1;
                     }
-                    else if ((tt_productname == "HG6201U" || tt_productname == "HG2201U") && tt_areacode == "天津")
+
+                    if ((tt_productname == "HG6201U" || tt_productname == "HG2201U") && tt_areacode == "天津")
                     {
                         tt_QRDZ = 1;
                     }
@@ -2196,6 +2203,7 @@ namespace TVBOX01
                 tt_QRDZ = 0;//重置是否检查二维码定制标签
                 //this.button17.Visible = true;
                 tt_MiniType = "";//小型化方案用
+                tt_CMCCQR_DateCheck = 30000000; //移动产品新二维码用判断参数
             }
         }
 
@@ -6793,7 +6801,7 @@ namespace TVBOX01
 
             string CMCC_QR = "";
 
-            if (tt_areacode == "四川")
+            if (tt_areacode == "四川" && tt_CMCCQR_DateCheck <= 20180424)
             {
                 CMCC_QR = GetQR_SICHUAN(GetListViewItem(2, 1)) + GetListViewItem(2, 1) + GetQR_SEPARATOR(GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(2, 2))
                         + GetQR_SICHUAN(GetListViewItem(2, 2)) + GetListViewItem(2, 2) + GetQR_SEPARATOR(GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(2, 3))
@@ -6815,6 +6823,30 @@ namespace TVBOX01
                         + GetQR_SICHUAN(GetListViewItem(2, 18)) + GetListViewItem(2, 18) + GetQR_SEPARATOR(GetListViewItem(4, 18)) + GetListViewItem(4, 18) + GetQR_LINE_BREAK(GetListViewItem(2, 19))
                         + GetQR_SICHUAN(GetListViewItem(2, 19)) + GetListViewItem(2, 19) + GetQR_SEPARATOR(GetListViewItem(4, 19)) + GetListViewItem(4, 19) + GetQR_LINE_BREAK(GetListViewItem(2, 20))
                         + GetQR_SICHUAN(GetListViewItem(2, 20)) + GetListViewItem(2, 20) + GetQR_SEPARATOR(GetListViewItem(4, 20)) + GetListViewItem(4, 20);
+            }
+            else if (tt_areacode == "四川" && tt_CMCCQR_DateCheck > 20180424)
+            {
+                CMCC_QR = GetQR_SICHUAN(GetListViewItem(2, 1)) + GetQR_LINE_BREAK(GetListViewItem(2, 1)) 
+                        + GetListViewItem(2, 1) + GetQR_SEPARATOR(GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(2, 2))
+                        + GetListViewItem(2, 2) + GetQR_SEPARATOR(GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(2, 3))
+                        + GetListViewItem(2, 3) + GetQR_SEPARATOR(GetListViewItem(4, 3)) + GetListViewItem(4, 3) + GetQR_LINE_BREAK(GetListViewItem(2, 4))
+                        + GetListViewItem(2, 4) + GetQR_SEPARATOR(GetListViewItem(4, 4)) + GetListViewItem(4, 4) + GetQR_LINE_BREAK(GetListViewItem(2, 5))
+                        + GetListViewItem(2, 5) + GetQR_SEPARATOR(GetListViewItem(4, 5)) + GetListViewItem(4, 5) + GetQR_LINE_BREAK(GetListViewItem(2, 6))
+                        + GetListViewItem(2, 6) + GetQR_SEPARATOR(GetListViewItem(4, 6)) + GetListViewItem(4, 6) + GetQR_LINE_BREAK(GetListViewItem(2, 7))
+                        + GetListViewItem(2, 7) + GetQR_SEPARATOR(GetListViewItem(4, 7)) + GetListViewItem(4, 7) + GetQR_LINE_BREAK(GetListViewItem(2, 8))
+                        + GetListViewItem(2, 8) + GetQR_SEPARATOR(GetListViewItem(4, 8)) + GetListViewItem(4, 8) + GetQR_LINE_BREAK(GetListViewItem(2, 9))
+                        + GetListViewItem(2, 9) + GetQR_SEPARATOR(GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(2, 10))
+                        + GetListViewItem(2, 10) + GetQR_SEPARATOR(GetListViewItem(4, 10)) + GetListViewItem(4, 10) + GetQR_LINE_BREAK(GetListViewItem(2, 11))
+                        + GetListViewItem(2, 11) + GetQR_SEPARATOR(GetListViewItem(4, 11)) + GetListViewItem(4, 11) + GetQR_LINE_BREAK(GetListViewItem(2, 12))
+                        + GetListViewItem(2, 12) + GetQR_SEPARATOR(GetListViewItem(4, 12)) + GetListViewItem(4, 12) + GetQR_LINE_BREAK(GetListViewItem(2, 13))
+                        + GetListViewItem(2, 13) + GetQR_SEPARATOR(GetListViewItem(4, 13)) + GetListViewItem(4, 13) + GetQR_LINE_BREAK(GetListViewItem(2, 14))
+                        + GetListViewItem(2, 14) + GetQR_SEPARATOR(GetListViewItem(4, 14)) + GetListViewItem(4, 14) + GetQR_LINE_BREAK(GetListViewItem(2, 15))
+                        + GetListViewItem(2, 15) + GetQR_SEPARATOR(GetListViewItem(4, 15)) + GetListViewItem(4, 15) + GetQR_LINE_BREAK(GetListViewItem(2, 16))
+                        + GetListViewItem(2, 16) + GetQR_SEPARATOR(GetListViewItem(4, 16)) + GetListViewItem(4, 16) + GetQR_LINE_BREAK(GetListViewItem(2, 17))
+                        + GetListViewItem(2, 17) + GetQR_SEPARATOR(GetListViewItem(4, 17)) + GetListViewItem(4, 17) + GetQR_LINE_BREAK(GetListViewItem(2, 18))
+                        + GetListViewItem(2, 18) + GetQR_SEPARATOR(GetListViewItem(4, 18)) + GetListViewItem(4, 18) + GetQR_LINE_BREAK(GetListViewItem(2, 19))
+                        + GetListViewItem(2, 19) + GetQR_SEPARATOR(GetListViewItem(4, 19)) + GetListViewItem(4, 19) + GetQR_LINE_BREAK(GetListViewItem(2, 20))
+                        + GetListViewItem(2, 20) + GetQR_SEPARATOR(GetListViewItem(4, 20)) + GetListViewItem(4, 20);
             }
             else if (tt_areacode == "浙江")
             {
@@ -6839,9 +6871,8 @@ namespace TVBOX01
                         + GetQR_COMMA(GetListViewItem(4, 18)) + GetListViewItem(4, 18)
                         + GetQR_COMMA(GetListViewItem(4, 19)) + GetListViewItem(4, 19)
                         + GetQR_COMMA(GetListViewItem(4, 20)) + GetListViewItem(4, 20);
-
             }
-            else
+            else if (tt_CMCCQR_DateCheck <= 20180424)
             {
                 CMCC_QR = GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(4, 2))
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(4, 3))
@@ -6864,12 +6895,35 @@ namespace TVBOX01
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 19)) + GetListViewItem(4, 19) + GetQR_LINE_BREAK(GetListViewItem(4, 20))
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 20)) + GetListViewItem(4, 20);
             }
+            else
+            {
+                CMCC_QR = GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 1)) + GetQR_LINE_BREAK(GetListViewItem(4, 1))
+                        + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(4, 2))
+                        + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(4, 3))
+                        + GetListViewItem(4, 3) + GetQR_LINE_BREAK(GetListViewItem(4, 4))
+                        + GetListViewItem(4, 4) + GetQR_LINE_BREAK(GetListViewItem(4, 5))
+                        + GetListViewItem(4, 5) + GetQR_LINE_BREAK(GetListViewItem(4, 6))
+                        + GetListViewItem(4, 6) + GetQR_LINE_BREAK(GetListViewItem(4, 7))
+                        + GetListViewItem(4, 7) + GetQR_LINE_BREAK(GetListViewItem(4, 8))
+                        + GetListViewItem(4, 8) + GetQR_LINE_BREAK(GetListViewItem(4, 9))
+                        + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(4, 10))
+                        + GetListViewItem(4, 10) + GetQR_LINE_BREAK(GetListViewItem(4, 11))
+                        + GetListViewItem(4, 11) + GetQR_LINE_BREAK(GetListViewItem(4, 12))
+                        + GetListViewItem(4, 12) + GetQR_LINE_BREAK(GetListViewItem(4, 13))
+                        + GetListViewItem(4, 13) + GetQR_LINE_BREAK(GetListViewItem(4, 14))
+                        + GetListViewItem(4, 14) + GetQR_LINE_BREAK(GetListViewItem(4, 15))
+                        + GetListViewItem(4, 15) + GetQR_LINE_BREAK(GetListViewItem(4, 16))
+                        + GetListViewItem(4, 16) + GetQR_LINE_BREAK(GetListViewItem(4, 17))
+                        + GetListViewItem(4, 17) + GetQR_LINE_BREAK(GetListViewItem(4, 18))
+                        + GetListViewItem(4, 18) + GetQR_LINE_BREAK(GetListViewItem(4, 19))
+                        + GetListViewItem(4, 19) + GetQR_LINE_BREAK(GetListViewItem(4, 20))
+                        + GetListViewItem(4, 20);
+            }
 
             dst.Tables.Add(dt);
             dt.Columns.Add("参数");
             dt.Columns.Add("名称");
             dt.Columns.Add("内容");
-
 
             DataRow row1 = dt.NewRow();
             row1["参数"] = "N01";
@@ -6990,7 +7044,6 @@ namespace TVBOX01
             row20["名称"] = "GPSN20";
             row20["内容"] = GetGPSN_WORD(tt_pon_name, tt_telecustomer, GetListViewItem(4, 20)) + GetListViewItem(4, 20);
             dt.Rows.Add(row20);
-
 
             //------表头参数------
 

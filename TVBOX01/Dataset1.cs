@@ -2253,7 +2253,7 @@ namespace TVBOX01
                                             string tt_pon_name, string tt_tasksquantity, string tt_stardate, string tt_gyid, string tt_issd, string tt_pccount,
                                             string tt_teamgroupid, string tt_softwareversion, string tt_tasktype, string tt_areacode, string tt_sver, string tt_svert,
                                             string tt_svers, string tt_modelname, string tt_vendorid, string tt_onumodel, string tt_flhratio, string tt_flgratio,
-                                            string tt_fec, string tt_remark, string tt_bosatype, string tt_gyid2 ,string con)
+                                            string tt_fec, string tt_remark, string tt_bosatype, string tt_gyid2, string tt_parenttask, string con)
         {
             Boolean tt_flag = false;
 
@@ -2271,7 +2271,7 @@ namespace TVBOX01
                 {
                     string tt_sql1 = "insert into odc_tasks (taskscode,taskstate,taskdate,customer,pid,product_name,pon_name," +
                                      "tasksquantity,stardate,gyid,gyid2,issd,pccount,teamgroupid,softwareversion,tasktype,areacode," +
-                                     "sver,svert,svers,modelname,vendorid,onumodel,flhratio,flgratio,fec,bosatype,fremark,fremark_date)" +
+                                     "sver,svert,svers,modelname,vendorid,onumodel,flhratio,flgratio,fec,bosatype,parenttask,fremark,fremark_date)" +
                                      "values ('" + tt_taskscode + "','" + tt_taskstate + "','" + tt_taskdate  + "'," +
                                              "'" + tt_customer + "','" + tt_pid + "','" + tt_product_name + "'," +
                                              "'" + tt_pon_name + "','" + tt_tasksquantity + "','" + tt_stardate + "'," +
@@ -2280,7 +2280,7 @@ namespace TVBOX01
                                              "'" + tt_areacode + "','" + tt_sver + "','" + tt_svert + "'," +
                                              "'" + tt_svers + "','" + tt_modelname + "','" + tt_vendorid + "'," +
                                              "'" + tt_onumodel + "','" + tt_flhratio + "','" + tt_flgratio + "'," + 
-                                             "'" + tt_fec + "','" + tt_bosatype + "','" + tt_remark + "',getdate()) ";
+                                             "'" + tt_fec + "','" + tt_bosatype + "','" + tt_parenttask + "','" + tt_remark + "',getdate()) ";
                     command.CommandText = tt_sql1;
                     command.ExecuteNonQuery();
 

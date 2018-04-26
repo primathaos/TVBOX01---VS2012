@@ -82,6 +82,9 @@ namespace TVBOX01
         //上海资产编码前段号参数
         static string tt_shanghailabel = "";
 
+        //联通河北日期参数
+        static string tt_hebeiItypedate = "";
+
 
         private void Form15_ayx_Load(object sender, EventArgs e)
         {
@@ -173,6 +176,8 @@ namespace TVBOX01
             this.listView1.Columns.Add("额外编码", 100);
             this.listView1.Columns.Add("延迟制造", 100);
             this.listView1.Columns.Add("BOSA TYPE", 100);
+            this.listView1.Columns.Add("生产流程2", 100);
+            this.listView1.Columns.Add("小型化", 100);
 
             this.listView2.Columns.Add("序号", 40);
             this.listView2.Columns.Add("制造单", 80);
@@ -442,6 +447,7 @@ namespace TVBOX01
                 this.textBox30.Enabled = false;
                 tt_shanghailabel = "";
                 tt_parenttask = "";
+                tt_hebeiItypedate = "";
                 ClearLabelInfo();
                 ScanDataInitial();
                 getScanTextboaClear();
@@ -521,6 +527,10 @@ namespace TVBOX01
                 tt_ponname = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //PON 类型
                 tt_gyid_Old = ds1.Tables[0].Rows[0].ItemArray[10].ToString();  //次级流程配置
                 tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[11].ToString();  //小型化产品用参数
+
+                string tt_tasksdate = ds1.Tables[0].Rows[0].ItemArray[4].ToString(); //制造单日期
+                string[] tt_datetemp = tt_tasksdate.Split('.');
+                tt_hebeiItypedate = tt_datetemp[0] + "年-" + tt_datetemp[1] + "月-" + tt_datetemp[2] + "日";//河北联通定制标签用
 
                 tt_gyid_Use = "";
 
@@ -3826,6 +3836,12 @@ namespace TVBOX01
             row2["内容"] = this.label15.Text;
             dt1.Rows.Add(row2);
 
+            DataRow row3 = dt1.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "河北联通";
+            row3["内容"] = tt_hebeiItypedate;
+            dt1.Rows.Add(row3);
+
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
 
@@ -3847,6 +3863,7 @@ namespace TVBOX01
                 report.Load(tt_path1);
                 report.SetParameterValue("S01", dst1.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst1.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst1.Tables[0].Rows[2][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
@@ -4100,7 +4117,7 @@ namespace TVBOX01
                 string tt_sql1 = "select a.taskscode,a.taskstate,a.taskdate,a.customer,a.pid,a.product_name,a.pon_name," +
                                  "a.tasksquantity,b.hostmax,a.stardate,a.gyid,a.issd,a.pccount,a.teamgroupid,a.softwareversion," +
                                  "a.tasktype,a.areacode,a.sver,a.svert,a.svers,a.modelname,a.vendorid,a.flhratio,a.flgratio,a.fec," +
-                                 "b.hostqzwh,b.hostvalue,b.hostmode,a.onumodel,a.bosatype,a.gyid2 from odc_tasks as a,odc_hostlableoptioan as b " +
+                                 "b.hostqzwh,b.hostvalue,b.hostmode,a.onumodel,a.bosatype,a.gyid2,a.parenttask from odc_tasks as a,odc_hostlableoptioan as b " +
                                  "where a.taskscode like '" + tt_tasks + "%' and a.taskscode = b.taskscode " +
                                  "order by a.id";
 
@@ -4146,12 +4163,13 @@ namespace TVBOX01
                         string tt_onumodel = ds1.Tables[0].Rows[i].ItemArray[28].ToString();
                         string tt_bosatype = ds1.Tables[0].Rows[i].ItemArray[29].ToString();
                         string tt_gyid2 = ds1.Tables[0].Rows[i].ItemArray[30].ToString();
+                        string tt_parenttask = ds1.Tables[0].Rows[i].ItemArray[31].ToString();
 
                         PutListViewData1(tt_taskscode, tt_taskstate, tt_taskdate, tt_customer, tt_pid, tt_product_name,
                                         tt_pon_name, tt_tasksquantity, tt_hostmax, tt_stardate, tt_gyid, tt_issd, tt_pccount, tt_teamgroupid,
                                         tt_softwareversion, tt_tasktype, tt_areacode, tt_sver, tt_svert, tt_svers, tt_modelname,
                                         tt_vendorid, tt_flhratio, tt_flgratio, tt_fec, tt_hostqzwh, tt_hostvalue, tt_hostmode, tt_onumodel, 
-                                        tt_bosatype, tt_gyid2);
+                                        tt_bosatype, tt_gyid2, tt_parenttask);
                     }
 
                     string tt_sql2 = "select count(1),min(fpliietset),0 from odc_dypowertype " +
@@ -4709,6 +4727,7 @@ namespace TVBOX01
                 string tt_remark = GetListViewItem2(5, i + 1);
                 string tt_bosatype = GetListViewItem1(30, tt_tasknum);
                 string tt_gyid2 = GetListViewItem1(31, tt_tasknum);
+                string tt_parenttask = GetListViewItem1(32, tt_tasknum);
 
                 //生产序列号表赋值
                 string tt_hostqzwh = GetListViewItem2(3, i + 1);
@@ -4718,7 +4737,7 @@ namespace TVBOX01
                 tt_intgetnotasks = Dataset1.Fhzztasksmade(tt_taskscode, tt_taskstate, tt_taskdate, tt_customer, tt_pid, tt_product_name,
                                             tt_pon_name, tt_tasksquantity, tt_stardate, tt_gyid, tt_issd, tt_pccount, tt_teamgroupid,
                                             tt_softwareversion, tt_tasktype, tt_areacode, tt_sver, tt_svert, tt_svers, tt_modelname,
-                                            tt_vendorid, tt_onumodel, tt_flhratio, tt_flgratio, tt_fec, tt_remark, tt_bosatype, tt_gyid2, tt_conn);
+                                            tt_vendorid, tt_onumodel, tt_flhratio, tt_flgratio, tt_fec, tt_remark, tt_bosatype, tt_gyid2, tt_parenttask ,tt_conn);
                 //分单生产序列号处理过程
                 if (tt_intgetnotasks)
                 {
@@ -4790,14 +4809,14 @@ namespace TVBOX01
                                      string tt_pon_name, string tt_tasksquantity, string tt_hostmax, string tt_stardate, string tt_gyid, string tt_issd, string tt_pccount, 
                                      string tt_teamgroupid, string tt_softwareversion, string tt_tasktype, string tt_areacode, string tt_sver, string tt_svert,
                                      string tt_svers, string tt_modelname, string tt_vendorid, string tt_flhratio, string tt_flgratio, string tt_fec,
-                                     string tt_hostqzwh, string tt_hostvalue, string tt_hostmode, string tt_onumodel, string tt_bosatype, string tt_gyid2)
+                                     string tt_hostqzwh, string tt_hostvalue, string tt_hostmode, string tt_onumodel, string tt_bosatype, string tt_gyid2, string tt_parenttask)
         {
             int i = this.listView1.Items.Count + 1;
             ListViewItem[] p = new ListViewItem[1];
             p[0] = new ListViewItem(new string[] { i.ToString(), tt_taskscode, tt_taskstate, tt_taskdate, tt_customer, tt_pid, tt_product_name, tt_pon_name,
                                                    tt_tasksquantity, tt_hostmax, tt_stardate, tt_gyid, tt_issd, tt_pccount, tt_teamgroupid, tt_softwareversion,
                                                    tt_tasktype, tt_areacode, tt_sver, tt_svert, tt_svers, tt_modelname, tt_vendorid, tt_flhratio, tt_flgratio,
-                                                   tt_fec , tt_hostqzwh, tt_hostvalue, tt_hostmode, tt_onumodel, tt_bosatype, tt_gyid2});
+                                                   tt_fec , tt_hostqzwh, tt_hostvalue, tt_hostmode, tt_onumodel, tt_bosatype, tt_gyid2, tt_parenttask});
             this.listView1.Items.AddRange(p);
             this.listView1.Items[this.listView1.Items.Count - 1].EnsureVisible();
         }
@@ -4807,7 +4826,7 @@ namespace TVBOX01
         {
             int i = this.listView2.Items.Count + 1;
             ListViewItem[] p = new ListViewItem[1];
-            p[0] = new ListViewItem(new string[] { i.ToString(), tt_taskscode, tt_tasksquantity, tt_hostqzwh, tt_hostmode, tt_remark });
+            p[0] = new ListViewItem(new string[] { i.ToString(), tt_taskscode, tt_tasksquantity, tt_hostqzwh, tt_hostmode, tt_remark});
             this.listView2.Items.AddRange(p);
             this.listView2.Items[this.listView2.Items.Count - 1].EnsureVisible();
         }
@@ -4949,6 +4968,10 @@ namespace TVBOX01
                 else if (tt_itemtype == 31)
                 {
                     tt_item = this.listView1.Items[tt_itemnumber - 1].SubItems[31].Text;
+                }
+                else if (tt_itemtype == 32)
+                {
+                    tt_item = this.listView1.Items[tt_itemnumber - 1].SubItems[32].Text;
                 }
             }
 

@@ -306,6 +306,11 @@ namespace TVBOX01
                         this.label86.Text = "10086-5";
                         this.label91.Text = "设备二维码信息";
                     }
+                    else if (this.label57.Text == "江西")
+                    {
+                        this.label86.Text = "10086";
+                        this.label91.Text = "零配置";
+                    }
                     else
                     {
                         this.label86.Text = "10086";
@@ -1520,7 +1525,7 @@ namespace TVBOX01
                         {
                             tt_qrcode = "FIBER|" + this.label56.Text + "|" + tt_gpsn + "|" + tt_shortmac;
                         }
-                        else if (this.label57.Text == "浙江")
+                        else if (this.label57.Text == "浙江" || this.label57.Text == "江西")
                         {
                             tt_qrcode = "厂家:烽火通信科技股份有限公司,型号:" + this.label56.Text + ",SN:" + tt_gpsn +
                                         ",生产日期:" + this.label59.Text.Replace("/", ".") + ",用户无线默认SSID:" + tt_ssid +
