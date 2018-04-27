@@ -2453,7 +2453,6 @@ namespace TVBOX01
                         setRichtexBox("4、没有彩盒21可以更新可更新的记录，over");
                         PutLableInfor("扫描的MAC还没有获取彩盒21，请重新扫描");
                     }
-
                 }
 
                 //第五步物料追溯信息

@@ -1270,7 +1270,7 @@ namespace TVBOX01
                         {
                             this.label88.Text = "FIBER|" + this.label56.Text + "|" + this.label40.Text + "|" + this.label38.Text;
                         }
-                        else if (this.label57.Text == "浙江")
+                        else if (this.label57.Text == "浙江" || this.label57.Text == "江西")
                         {
                             this.label88.Text = "厂家:烽火通信科技股份有限公司,型号:" + this.label56.Text + ",SN:" + this.label40.Text +
                                                 ",生产日期:" + this.label59.Text.Replace("/", ".") + ",用户无线默认SSID:" + this.label69.Text +
