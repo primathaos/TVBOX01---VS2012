@@ -4719,7 +4719,7 @@ namespace TVBOX01
                 {
                     if (PrintChange == "1")
                     {
-                        Thread.Sleep(int.Parse(Itype_PrintDelay));
+                        //Thread.Sleep(int.Parse(Itype_PrintDelay));
                         report.PrintSettings.Printer = this.Itype_printset.Text;//双打功能
                     }
                     report.Print();
@@ -4910,7 +4910,7 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1 && this.QR_printset.Text != "")
                 {
-                    Thread.Sleep(int.Parse(QR_PrintDelay));
+                    //Thread.Sleep(int.Parse(QR_PrintDelay));
                     report.PrintSettings.Printer = this.QR_printset.Text;
                     report.Print();
                     report.Save(tt_path2);
@@ -5120,7 +5120,7 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
-                    Thread.Sleep(int.Parse(BOX_PrintDelay));
+                    //Thread.Sleep(int.Parse(BOX_PrintDelay));
                     report.PrintSettings.Printer = this.Box_printset.Text;                    
                     report.Print();
                     report.Save(tt_path3);
