@@ -632,9 +632,15 @@ namespace TVBOX01
         //电源锁定
         private void checkBox7_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (this.checkBox7.Checked)
+            {
+                this.textBox30.Enabled = false;
+            }
+            else
+            {
+                this.textBox30.Enabled = true;
+            }
         }
-
 
         #endregion
 
@@ -4539,6 +4545,7 @@ namespace TVBOX01
                     //条码信息
 
                     this.label44.Text = tt_intgetno.ToString();  //过站返回的最大值
+                    this.label43.Text = tt_boxlable; //复制生产序列号
 
                     //生产节拍
                     getProductRhythm("1");
@@ -4551,7 +4558,10 @@ namespace TVBOX01
                     if (tt_checkflag == 1)
                     {
                         GetParaDataPrint1(0);
-                        GetParaDataPrint2(0);
+                        if (this.label41.Text != "")
+                        {
+                            GetParaDataPrint2(0);
+                        }
                         GetParaDataPrint3(0);
                         GetParaDataPrint4(0);
 
@@ -4559,10 +4569,13 @@ namespace TVBOX01
                     }
                     else
                     {
-                        GetParaDataPrint3(1);
-                        GetParaDataPrint2(1);
-                        GetParaDataPrint4(1);
                         GetParaDataPrint1(1);
+                        if (this.label41.Text != "")
+                        {
+                            GetParaDataPrint2(1);
+                        }
+                        GetParaDataPrint3(1);
+                        GetParaDataPrint4(1);
                         PutLableInfor("OK 电源关联成功，请扫描下一产品！");
                     }
                     GetProductNumInfo();
