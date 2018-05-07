@@ -19,7 +19,7 @@ namespace TVBOX01
         #region 1、属性设置
         static string tt_databasecheck = "";
         static string tt_conn;
-        static string tt_version = "20180115";
+        static string tt_version = "20180504";
         static string tt_progranname = "PR001";
         static string tt_prodescrib = "自动升级";
 

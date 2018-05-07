@@ -471,6 +471,8 @@ namespace TVBOX01
 
                     this.tabPage4.Parent = tabControl2;
 
+                    this.comboBox4.Text = "0.3";
+
                     //获取调试开始时间
                     tt_reprintstattime = DateTime.Now;
                 }
@@ -4254,10 +4256,28 @@ namespace TVBOX01
                         CheckStation(tt_shortmac, tt_gyid_Use);
                         this.richTextBox1.BackColor = Color.Chartreuse;
                     }
+                    else
+                    {
+                        //多打方案光标转移
+                        PutLableInfor("请继续扫描电源！");
+                        this.Mac_input.Enabled = false;
+                        this.Power_input.Enabled = true;
+                        Power_input.Focus();
+                        Power_input.SelectAll();
+                    }
                 }
                 else
                 {
                     this.richTextBox1.BackColor = Color.Red;
+
+                    if (int.Parse(PrintChange) >= 2)//多打方案光标转移
+                    {
+                        //光标转移
+                        this.Mac_input.Enabled = false;
+                        this.EQP_input.Enabled = true;
+                        EQP_input.Focus();
+                        EQP_input.SelectAll();
+                    }
                 }
 
                 if (int.Parse(PrintChange) < 2)//非多打方案光标转移
@@ -4278,15 +4298,7 @@ namespace TVBOX01
                         EQP_input.SelectAll();
                     }
                 }
-                else if (int.Parse(PrintChange) >= 2)//多打方案光标转移
-                {
-                    //光标转移
-                    PutLableInfor("请继续扫描电源！");
-                    this.Mac_input.Enabled = false;
-                    this.Power_input.Enabled = true;
-                    Power_input.Focus();
-                    Power_input.SelectAll();
-                }
+
                 #endregion
             }
 
@@ -4465,7 +4477,7 @@ namespace TVBOX01
                         }
                     }
                 }
-                else
+                else if (tt_mate1 == "" && tt_mate2 == "")
                 {
                     setRichtexBox("6、物料填写为空值！,over");
                     PutLableInfor("物料填写为空值");
@@ -5425,7 +5437,7 @@ namespace TVBOX01
                                 this.comboBox1.Text = "下拉选择";
                             }
 
-                            string tt_sql4 = "select fusername from odc_fhpartitionpass where fdepart in ('工程','0') and fpermission in ('0') order by id";
+                            string tt_sql4 = "select fusername from odc_fhpartitionpass where fdepart in ('工程','0') and fpermission in ('0','9') order by id";
                             DataSet ds4 = Dataset1.GetDataSet(tt_sql4, tt_conn);
                             if (ds4.Tables.Count > 0 && ds4.Tables[0].Rows.Count > 0)
                             {

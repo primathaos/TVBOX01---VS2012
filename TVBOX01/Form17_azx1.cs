@@ -3715,6 +3715,10 @@ namespace TVBOX01
                                 {
                                     GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                                     GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
+                                    if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U") //如果是联通，那么再打印一张
+                                    {
+                                        GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
+                                    }
                                 }
                                 ClearLabelInfo3();
                             }
@@ -3732,6 +3736,10 @@ namespace TVBOX01
                         {
                             GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                             GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
+                            if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U") //如果是联通，那么再打印一张
+                            {
+                                GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
+                            }
                         }
                         string tt_taskscode = this.textBox1.Text.Trim().ToUpper();
                         string tt_host = tt_gesn;
@@ -5788,7 +5796,7 @@ namespace TVBOX01
 
         }
 
-        //----以下是ZX04数据采集----烽火天翼标签新
+        //----以下是ZX04数据采集----烽火天翼标签新/移动单频中箱
         private void GetParaDataPrint_ZX04(string tt_path, int tt_itemtype)
         {
             //第一步数据准备
@@ -5860,7 +5868,7 @@ namespace TVBOX01
 
             string CMCC_QR = "";
 
-            if (tt_areacode == "四川")
+            if (tt_areacode == "四川" && tt_CMCCQR_DateCheck <= 20180424)
             {
                 CMCC_QR = GetQR_SICHUAN(GetListViewItem(2, 1)) + GetListViewItem(2, 1) + GetQR_SEPARATOR(GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(2, 2))
                         + GetQR_SICHUAN(GetListViewItem(2, 2)) + GetListViewItem(2, 2) + GetQR_SEPARATOR(GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(2, 3))
@@ -5873,21 +5881,35 @@ namespace TVBOX01
                         + GetQR_SICHUAN(GetListViewItem(2, 9)) + GetListViewItem(2, 9) + GetQR_SEPARATOR(GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(2, 10))
                         + GetQR_SICHUAN(GetListViewItem(2, 10)) + GetListViewItem(2, 10) + GetQR_SEPARATOR(GetListViewItem(4, 10)) + GetListViewItem(4, 10);
             }
+            else if (tt_areacode == "四川" && tt_CMCCQR_DateCheck > 20180424)
+            {
+                CMCC_QR = GetQR_SICHUAN(GetListViewItem(2, 1)) + GetQR_LINE_BREAK(GetListViewItem(2, 1))
+                        + GetListViewItem(2, 1) + GetQR_SEPARATOR(GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(2, 2))
+                        + GetListViewItem(2, 2) + GetQR_SEPARATOR(GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(2, 3))
+                        + GetListViewItem(2, 3) + GetQR_SEPARATOR(GetListViewItem(4, 3)) + GetListViewItem(4, 3) + GetQR_LINE_BREAK(GetListViewItem(2, 4))
+                        + GetListViewItem(2, 4) + GetQR_SEPARATOR(GetListViewItem(4, 4)) + GetListViewItem(4, 4) + GetQR_LINE_BREAK(GetListViewItem(2, 5))
+                        + GetListViewItem(2, 5) + GetQR_SEPARATOR(GetListViewItem(4, 5)) + GetListViewItem(4, 5) + GetQR_LINE_BREAK(GetListViewItem(2, 6))
+                        + GetListViewItem(2, 6) + GetQR_SEPARATOR(GetListViewItem(4, 6)) + GetListViewItem(4, 6) + GetQR_LINE_BREAK(GetListViewItem(2, 7))
+                        + GetListViewItem(2, 7) + GetQR_SEPARATOR(GetListViewItem(4, 7)) + GetListViewItem(4, 7) + GetQR_LINE_BREAK(GetListViewItem(2, 8))
+                        + GetListViewItem(2, 8) + GetQR_SEPARATOR(GetListViewItem(4, 8)) + GetListViewItem(4, 8) + GetQR_LINE_BREAK(GetListViewItem(2, 9))
+                        + GetListViewItem(2, 9) + GetQR_SEPARATOR(GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(2, 10))
+                        + GetListViewItem(2, 10) + GetQR_SEPARATOR(GetListViewItem(4, 10)) + GetListViewItem(4, 10);
+            }
             else if (tt_areacode == "浙江")
             {
-                CMCC_QR = "厂家:烽火通信科技股份有限公司,型号:" + this.label10.Text 
+                CMCC_QR = "厂家:烽火通信科技股份有限公司,型号:" + this.label10.Text
                         + GetQR_COMMA(GetListViewItem(4, 1)) + GetListViewItem(4, 1)
-                        + GetQR_COMMA(GetListViewItem(4, 2)) + GetListViewItem(4, 2) 
+                        + GetQR_COMMA(GetListViewItem(4, 2)) + GetListViewItem(4, 2)
                         + GetQR_COMMA(GetListViewItem(4, 3)) + GetListViewItem(4, 3)
-                        + GetQR_COMMA(GetListViewItem(4, 4)) + GetListViewItem(4, 4) 
+                        + GetQR_COMMA(GetListViewItem(4, 4)) + GetListViewItem(4, 4)
                         + GetQR_COMMA(GetListViewItem(4, 5)) + GetListViewItem(4, 5)
-                        + GetQR_COMMA(GetListViewItem(4, 6)) + GetListViewItem(4, 6) 
+                        + GetQR_COMMA(GetListViewItem(4, 6)) + GetListViewItem(4, 6)
                         + GetQR_COMMA(GetListViewItem(4, 7)) + GetListViewItem(4, 7)
-                        + GetQR_COMMA(GetListViewItem(4, 8)) + GetListViewItem(4, 8) 
+                        + GetQR_COMMA(GetListViewItem(4, 8)) + GetListViewItem(4, 8)
                         + GetQR_COMMA(GetListViewItem(4, 9)) + GetListViewItem(4, 9)
                         + GetQR_COMMA(GetListViewItem(4, 10)) + GetListViewItem(4, 10);
             }
-            else
+            else if (tt_CMCCQR_DateCheck <= 20180424)
             {
                 CMCC_QR = GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(4, 2))
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(4, 3))
@@ -5900,7 +5922,21 @@ namespace TVBOX01
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(4, 10))
                         + GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 10)) + GetListViewItem(4, 10);
             }
-           
+            else
+            {
+                CMCC_QR = GetQR_NORMAL(this.label10.Text, GetListViewItem(4, 1)) + GetQR_LINE_BREAK(GetListViewItem(4, 1))
+                        + GetListViewItem(4, 1) + GetQR_LINE_BREAK(GetListViewItem(4, 2))
+                        + GetListViewItem(4, 2) + GetQR_LINE_BREAK(GetListViewItem(4, 3))
+                        + GetListViewItem(4, 3) + GetQR_LINE_BREAK(GetListViewItem(4, 4))
+                        + GetListViewItem(4, 4) + GetQR_LINE_BREAK(GetListViewItem(4, 5))
+                        + GetListViewItem(4, 5) + GetQR_LINE_BREAK(GetListViewItem(4, 6))
+                        + GetListViewItem(4, 6) + GetQR_LINE_BREAK(GetListViewItem(4, 7))
+                        + GetListViewItem(4, 7) + GetQR_LINE_BREAK(GetListViewItem(4, 8))
+                        + GetListViewItem(4, 8) + GetQR_LINE_BREAK(GetListViewItem(4, 9))
+                        + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(4, 10))
+                        + GetListViewItem(4, 10);
+            }
+
 
             dst.Tables.Add(dt);
             dt.Columns.Add("参数");
@@ -6641,6 +6677,14 @@ namespace TVBOX01
             row50["内容"] = tt_pon_name;
             dt.Rows.Add(row50);
 
+            //------地区------
+
+            DataRow row51 = dt.NewRow();
+            row51["参数"] = "D01";
+            row51["名称"] = "地区";
+            row51["内容"] = tt_areacode;
+            dt.Rows.Add(row51);
+
             //第二步加载到表格显示
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
@@ -6716,6 +6760,8 @@ namespace TVBOX01
                 report.SetParameterValue("R01", dst.Tables[0].Rows[48][2].ToString());
 
                 report.SetParameterValue("S09", dst.Tables[0].Rows[49][2].ToString());
+
+                report.SetParameterValue("D01", dst.Tables[0].Rows[50][2].ToString());
 
 
                 for (int i = 0; i < 500; ++i)

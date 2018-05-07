@@ -450,7 +450,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1473, 853);
+            this.tabControl1.Size = new System.Drawing.Size(1764, 853);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -471,7 +471,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1465, 824);
+            this.tabPage1.Size = new System.Drawing.Size(1756, 824);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "I型标签";
             // 
@@ -3410,7 +3410,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(1243, 8);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(217, 777);
+            this.richTextBox1.Size = new System.Drawing.Size(503, 777);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
@@ -3431,7 +3431,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(5, 795);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1455, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1746, 25);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -3504,7 +3504,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.tabPage2.Size = new System.Drawing.Size(1465, 824);
+            this.tabPage2.Size = new System.Drawing.Size(1756, 824);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "数据查询";
             // 
@@ -3763,7 +3763,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1465, 824);
+            this.tabPage5.Size = new System.Drawing.Size(1756, 824);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "工单查询";
             // 
@@ -3932,7 +3932,7 @@
             this.tabPage6.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.tabPage6.Size = new System.Drawing.Size(1465, 824);
+            this.tabPage6.Size = new System.Drawing.Size(1756, 824);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "自助分单";
             // 
@@ -4490,13 +4490,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1473, 853);
+            this.ClientSize = new System.Drawing.Size(1764, 853);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "Form15_ayx";
             this.Text = "Form15_ayx_烽火I型标签 20171214";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form15_ayx_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
