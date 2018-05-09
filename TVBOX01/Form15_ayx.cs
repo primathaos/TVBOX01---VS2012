@@ -483,15 +483,19 @@ namespace TVBOX01
                 {
                     this.textBox1.Enabled = false;
                     this.textBox9.Enabled = false;
-                    
+
                     if (tt_parenttask != "小型化方案")
                     {
                         this.EQP_input.Visible = true;
                         this.EQP_input.Enabled = true;
+                        this.Mac_input.Visible = true;
+                        this.Mac_input.Enabled = false;
                     }
-
-                    this.Mac_input.Visible = true;
-                    this.Mac_input.Enabled = false;
+                    else
+                    {
+                        this.Mac_input.Visible = true;
+                        this.Mac_input.Enabled = true;
+                    }
 
                     if (int.Parse(PrintChange) >= 2)
                     {
