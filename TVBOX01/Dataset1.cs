@@ -1770,9 +1770,6 @@ namespace TVBOX01
                     command.Connection = connection;
                     command.Transaction = transaction;
 
-
-
-
                     try
                     {
                         string tt_sql1 = "UPDATE ODC_ROUTINGTASKLIST  " +
@@ -1788,17 +1785,50 @@ namespace TVBOX01
                         command.CommandText = tt_sql2;
                         command.ExecuteNonQuery();
 
-                        string tt_sql3 = "INSERT INTO ODC_STAJUMP (TASKSCODE,MAC,LASTNCODE,JUMPTIME,NOWCODE) " +
-                                         "VALUES ('" + tt_task + "','" + tt_mac + "','" + tt_ncode + "',getdate(),'" + tt_skipcode + "') ";
 
-                        command.CommandText = tt_sql3;
-                        command.ExecuteNonQuery();
+                        string tt_sql3 = "SELECT MAC,LASTNCODE,TASKSCODE FROM ODC_STAJUMP WHERE MAC = '" + tt_mac + "'";
+                        DataSet ds3 = GetDataSet(tt_sql3, con);
+                        if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
+                        {
+                            string old_lastncode = "";
+                            string old_taskscode = "";
+                            for (int i = 0; i < ds3.Tables[0].Rows.Count; i++)
+                            {
+                                old_lastncode = ds3.Tables[0].Rows[i][1].ToString();
+                                old_taskscode = ds3.Tables[0].Rows[i][2].ToString();
+
+                                if (old_lastncode == tt_ncode && old_taskscode == tt_task)
+                                {
+                                    string tt_sql4 = "UPDATE ODC_STAJUMP SET TESTCOUNT = TESTCOUNT + '1' FROM ODC_STAJUMP " +
+                                                     "WHERE MAC = '" + tt_mac + "' AND LASTNCODE = '" + tt_ncode + "' AND TASKSCODE = '" + tt_task + "'";
+
+                                    command.CommandText = tt_sql4;
+                                    command.ExecuteNonQuery();
+                                    break;
+                                }
+                            }
+
+                            if (old_lastncode != tt_ncode)
+                            {
+                                string tt_sql5 = "INSERT INTO ODC_STAJUMP (TASKSCODE,MAC,LASTNCODE,JUMPTIME,NOWCODE,TESTCOUNT) " +
+                                                 "VALUES ('" + tt_task + "','" + tt_mac + "','" + tt_ncode + "',getdate(),'" + tt_skipcode + "','1') ";
+
+                                command.CommandText = tt_sql5;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        else
+                        {
+                            string tt_sql6 = "INSERT INTO ODC_STAJUMP (TASKSCODE,MAC,LASTNCODE,JUMPTIME,NOWCODE,TESTCOUNT) " +
+                                             "VALUES ('" + tt_task + "','" + tt_mac + "','" + tt_ncode + "',getdate(),'" + tt_skipcode + "','1') ";
+
+                            command.CommandText = tt_sql6;
+                            command.ExecuteNonQuery();
+                        }
 
 
                         transaction.Commit();
                         tt_flag = true;
-
-
                     }
                     catch (Exception ex)
                     {

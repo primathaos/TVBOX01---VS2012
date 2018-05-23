@@ -642,7 +642,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label20.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label20.Location = new System.Drawing.Point(84, 96);
             this.label20.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label20.Name = "label20";
@@ -1084,7 +1084,7 @@
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Font = new System.Drawing.Font("SimSun", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label59.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label59.ForeColor = System.Drawing.Color.Red;
             this.label59.Location = new System.Drawing.Point(105, 52);
             this.label59.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1096,7 +1096,7 @@
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Font = new System.Drawing.Font("SimSun", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label58.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label58.ForeColor = System.Drawing.Color.Red;
             this.label58.Location = new System.Drawing.Point(105, 22);
             this.label58.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1151,7 +1151,7 @@
             // label75
             // 
             this.label75.AutoSize = true;
-            this.label75.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label75.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label75.ForeColor = System.Drawing.Color.Blue;
             this.label75.Location = new System.Drawing.Point(249, 123);
             this.label75.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1163,7 +1163,7 @@
             // label74
             // 
             this.label74.AutoSize = true;
-            this.label74.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label74.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label74.ForeColor = System.Drawing.Color.Orange;
             this.label74.Location = new System.Drawing.Point(249, 87);
             this.label74.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1195,7 +1195,7 @@
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label57.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label57.ForeColor = System.Drawing.Color.Blue;
             this.label57.Location = new System.Drawing.Point(65, 55);
             this.label57.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1207,7 +1207,7 @@
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label56.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label56.ForeColor = System.Drawing.Color.Blue;
             this.label56.Location = new System.Drawing.Point(65, 121);
             this.label56.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1219,7 +1219,7 @@
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label55.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label55.ForeColor = System.Drawing.Color.Orange;
             this.label55.Location = new System.Drawing.Point(65, 85);
             this.label55.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1231,7 +1231,7 @@
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label54.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label54.ForeColor = System.Drawing.Color.Blue;
             this.label54.Location = new System.Drawing.Point(65, 19);
             this.label54.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1329,7 +1329,7 @@
             // 
             // button20
             // 
-            this.button20.Font = new System.Drawing.Font("SimSun", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button20.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button20.Location = new System.Drawing.Point(43, 169);
             this.button20.Margin = new System.Windows.Forms.Padding(4);
             this.button20.Name = "button20";
@@ -1388,7 +1388,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label36.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label36.ForeColor = System.Drawing.Color.Red;
             this.label36.Location = new System.Drawing.Point(8, 165);
             this.label36.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1399,7 +1399,7 @@
             // 
             // Itype_button_down
             // 
-            this.Itype_button_down.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Itype_button_down.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Itype_button_down.ForeColor = System.Drawing.Color.Red;
             this.Itype_button_down.Location = new System.Drawing.Point(131, 115);
             this.Itype_button_down.Margin = new System.Windows.Forms.Padding(4);
@@ -1412,7 +1412,7 @@
             // 
             // Itype_button_up
             // 
-            this.Itype_button_up.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Itype_button_up.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Itype_button_up.ForeColor = System.Drawing.Color.Red;
             this.Itype_button_up.Location = new System.Drawing.Point(131, 41);
             this.Itype_button_up.Margin = new System.Windows.Forms.Padding(4);
@@ -1425,7 +1425,7 @@
             // 
             // Itype_button_right
             // 
-            this.Itype_button_right.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Itype_button_right.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Itype_button_right.ForeColor = System.Drawing.Color.Red;
             this.Itype_button_right.Location = new System.Drawing.Point(214, 78);
             this.Itype_button_right.Margin = new System.Windows.Forms.Padding(4);
@@ -1438,7 +1438,7 @@
             // 
             // Itype_button_left
             // 
-            this.Itype_button_left.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Itype_button_left.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Itype_button_left.ForeColor = System.Drawing.Color.Red;
             this.Itype_button_left.Location = new System.Drawing.Point(50, 78);
             this.Itype_button_left.Margin = new System.Windows.Forms.Padding(4);
@@ -1467,7 +1467,7 @@
             // 
             // QR_button_down
             // 
-            this.QR_button_down.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.QR_button_down.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.QR_button_down.ForeColor = System.Drawing.Color.Red;
             this.QR_button_down.Location = new System.Drawing.Point(131, 115);
             this.QR_button_down.Margin = new System.Windows.Forms.Padding(4);
@@ -1480,7 +1480,7 @@
             // 
             // QR_button_up
             // 
-            this.QR_button_up.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.QR_button_up.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.QR_button_up.ForeColor = System.Drawing.Color.Red;
             this.QR_button_up.Location = new System.Drawing.Point(131, 41);
             this.QR_button_up.Margin = new System.Windows.Forms.Padding(4);
@@ -1493,7 +1493,7 @@
             // 
             // QR_button_right
             // 
-            this.QR_button_right.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.QR_button_right.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.QR_button_right.ForeColor = System.Drawing.Color.Red;
             this.QR_button_right.Location = new System.Drawing.Point(214, 78);
             this.QR_button_right.Margin = new System.Windows.Forms.Padding(4);
@@ -1506,7 +1506,7 @@
             // 
             // QR_button_left
             // 
-            this.QR_button_left.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.QR_button_left.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.QR_button_left.ForeColor = System.Drawing.Color.Red;
             this.QR_button_left.Location = new System.Drawing.Point(50, 78);
             this.QR_button_left.Margin = new System.Windows.Forms.Padding(4);
@@ -1520,7 +1520,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label39.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label39.ForeColor = System.Drawing.Color.Red;
             this.label39.Location = new System.Drawing.Point(5, 165);
             this.label39.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1545,7 +1545,7 @@
             // 
             // Box_button_down
             // 
-            this.Box_button_down.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Box_button_down.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Box_button_down.ForeColor = System.Drawing.Color.Red;
             this.Box_button_down.Location = new System.Drawing.Point(131, 115);
             this.Box_button_down.Margin = new System.Windows.Forms.Padding(4);
@@ -1558,7 +1558,7 @@
             // 
             // Box_button_up
             // 
-            this.Box_button_up.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Box_button_up.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Box_button_up.ForeColor = System.Drawing.Color.Red;
             this.Box_button_up.Location = new System.Drawing.Point(131, 41);
             this.Box_button_up.Margin = new System.Windows.Forms.Padding(4);
@@ -1571,7 +1571,7 @@
             // 
             // Box_button_right
             // 
-            this.Box_button_right.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Box_button_right.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Box_button_right.ForeColor = System.Drawing.Color.Red;
             this.Box_button_right.Location = new System.Drawing.Point(214, 78);
             this.Box_button_right.Margin = new System.Windows.Forms.Padding(4);
@@ -1584,7 +1584,7 @@
             // 
             // Box_button_left
             // 
-            this.Box_button_left.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Box_button_left.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Box_button_left.ForeColor = System.Drawing.Color.Red;
             this.Box_button_left.Location = new System.Drawing.Point(50, 78);
             this.Box_button_left.Margin = new System.Windows.Forms.Padding(4);
@@ -1598,7 +1598,7 @@
             // label119
             // 
             this.label119.AutoSize = true;
-            this.label119.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label119.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label119.ForeColor = System.Drawing.Color.Red;
             this.label119.Location = new System.Drawing.Point(5, 165);
             this.label119.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1623,7 +1623,7 @@
             // 
             // IItype_button_down
             // 
-            this.IItype_button_down.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.IItype_button_down.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.IItype_button_down.ForeColor = System.Drawing.Color.Red;
             this.IItype_button_down.Location = new System.Drawing.Point(131, 115);
             this.IItype_button_down.Margin = new System.Windows.Forms.Padding(4);
@@ -1636,7 +1636,7 @@
             // 
             // IItype_button_up
             // 
-            this.IItype_button_up.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.IItype_button_up.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.IItype_button_up.ForeColor = System.Drawing.Color.Red;
             this.IItype_button_up.Location = new System.Drawing.Point(131, 41);
             this.IItype_button_up.Margin = new System.Windows.Forms.Padding(4);
@@ -1649,7 +1649,7 @@
             // 
             // IItype_button_right
             // 
-            this.IItype_button_right.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.IItype_button_right.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.IItype_button_right.ForeColor = System.Drawing.Color.Red;
             this.IItype_button_right.Location = new System.Drawing.Point(214, 78);
             this.IItype_button_right.Margin = new System.Windows.Forms.Padding(4);
@@ -1662,7 +1662,7 @@
             // 
             // IItype_button_left
             // 
-            this.IItype_button_left.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.IItype_button_left.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.IItype_button_left.ForeColor = System.Drawing.Color.Red;
             this.IItype_button_left.Location = new System.Drawing.Point(50, 78);
             this.IItype_button_left.Margin = new System.Windows.Forms.Padding(4);
@@ -1676,7 +1676,7 @@
             // label121
             // 
             this.label121.AutoSize = true;
-            this.label121.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label121.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label121.ForeColor = System.Drawing.Color.Red;
             this.label121.Location = new System.Drawing.Point(5, 165);
             this.label121.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -1710,7 +1710,7 @@
             // 
             this.comboBox4.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox4.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox4.FormattingEnabled = true;
             this.comboBox4.IntegralHeight = false;
             this.comboBox4.ItemHeight = 17;
@@ -1746,7 +1746,7 @@
             // 
             // IItype_printset
             // 
-            this.IItype_printset.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.IItype_printset.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.IItype_printset.ForeColor = System.Drawing.SystemColors.WindowText;
             this.IItype_printset.Location = new System.Drawing.Point(275, 71);
             this.IItype_printset.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -1757,7 +1757,7 @@
             // 
             // Box_printset
             // 
-            this.Box_printset.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Box_printset.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Box_printset.ForeColor = System.Drawing.SystemColors.WindowText;
             this.Box_printset.Location = new System.Drawing.Point(92, 71);
             this.Box_printset.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -1788,7 +1788,7 @@
             // 
             // QR_printset
             // 
-            this.QR_printset.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.QR_printset.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.QR_printset.ForeColor = System.Drawing.SystemColors.WindowText;
             this.QR_printset.Location = new System.Drawing.Point(275, 29);
             this.QR_printset.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -1799,7 +1799,7 @@
             // 
             // Itype_printset
             // 
-            this.Itype_printset.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Itype_printset.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Itype_printset.ForeColor = System.Drawing.SystemColors.WindowText;
             this.Itype_printset.Location = new System.Drawing.Point(92, 29);
             this.Itype_printset.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -1905,7 +1905,7 @@
             // 
             // textBox27
             // 
-            this.textBox27.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox27.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox27.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox27.Location = new System.Drawing.Point(83, 87);
             this.textBox27.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -1939,7 +1939,7 @@
             // 
             this.comboBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox5.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox5.FormattingEnabled = true;
             this.comboBox5.IntegralHeight = false;
             this.comboBox5.ItemHeight = 17;
@@ -1963,7 +1963,7 @@
             // 
             // textBox28
             // 
-            this.textBox28.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox28.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox28.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox28.Location = new System.Drawing.Point(83, 53);
             this.textBox28.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -2053,7 +2053,7 @@
             this.IItype_dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2062,7 +2062,7 @@
             this.IItype_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2074,7 +2074,7 @@
             this.IItype_dataGridView.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2093,7 +2093,7 @@
             this.Box_dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2102,7 +2102,7 @@
             this.Box_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2114,7 +2114,7 @@
             this.Box_dataGridView.ReadOnly = true;
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2173,7 +2173,7 @@
             this.QR_dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2182,7 +2182,7 @@
             this.QR_dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2194,7 +2194,7 @@
             this.QR_dataGridView.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -2282,7 +2282,7 @@
             // label93
             // 
             this.label93.AutoSize = true;
-            this.label93.Font = new System.Drawing.Font("SimSun", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label93.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label93.ForeColor = System.Drawing.Color.ForestGreen;
             this.label93.Location = new System.Drawing.Point(569, 20);
             this.label93.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2345,7 +2345,7 @@
             // label89
             // 
             this.label89.AutoSize = true;
-            this.label89.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label89.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label89.ForeColor = System.Drawing.Color.ForestGreen;
             this.label89.Location = new System.Drawing.Point(706, 32);
             this.label89.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2357,7 +2357,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("SimSun", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label12.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label12.ForeColor = System.Drawing.Color.Red;
             this.label12.Location = new System.Drawing.Point(192, 20);
             this.label12.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2389,7 +2389,7 @@
             // label87
             // 
             this.label87.AutoSize = true;
-            this.label87.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label87.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label87.ForeColor = System.Drawing.Color.ForestGreen;
             this.label87.Location = new System.Drawing.Point(706, 12);
             this.label87.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2432,7 +2432,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Font = new System.Drawing.Font("SimSun", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label44.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label44.ForeColor = System.Drawing.Color.ForestGreen;
             this.label44.Location = new System.Drawing.Point(388, 20);
             this.label44.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2528,7 +2528,7 @@
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label77.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label77.ForeColor = System.Drawing.Color.Red;
             this.label77.Location = new System.Drawing.Point(456, 151);
             this.label77.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -2551,7 +2551,7 @@
             // 
             this.label67.AutoSize = true;
             this.label67.BackColor = System.Drawing.Color.LightCyan;
-            this.label67.Font = new System.Drawing.Font("SimSun", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label67.Font = new System.Drawing.Font("宋体", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label67.ForeColor = System.Drawing.Color.Maroon;
             this.label67.Location = new System.Drawing.Point(513, 19);
             this.label67.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2844,7 +2844,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("SimSun", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label35.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label35.ForeColor = System.Drawing.Color.Red;
             this.label35.Location = new System.Drawing.Point(10, 22);
             this.label35.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -2971,7 +2971,7 @@
             // 
             // Power_input
             // 
-            this.Power_input.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Power_input.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Power_input.ForeColor = System.Drawing.Color.Red;
             this.Power_input.Location = new System.Drawing.Point(58, 85);
             this.Power_input.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3041,7 +3041,7 @@
             // 
             // EQP_input
             // 
-            this.EQP_input.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.EQP_input.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.EQP_input.ForeColor = System.Drawing.Color.Red;
             this.EQP_input.Location = new System.Drawing.Point(58, 7);
             this.EQP_input.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3111,7 +3111,7 @@
             // 
             // Mac_input
             // 
-            this.Mac_input.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Mac_input.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Mac_input.ForeColor = System.Drawing.Color.Red;
             this.Mac_input.Location = new System.Drawing.Point(58, 46);
             this.Mac_input.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3199,7 +3199,7 @@
             // 
             // Mac_reprint_input
             // 
-            this.Mac_reprint_input.Font = new System.Drawing.Font("SimSun", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Mac_reprint_input.Font = new System.Drawing.Font("宋体", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Mac_reprint_input.ForeColor = System.Drawing.Color.Red;
             this.Mac_reprint_input.Location = new System.Drawing.Point(65, 42);
             this.Mac_reprint_input.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3240,7 +3240,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label28.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label28.ForeColor = System.Drawing.Color.Navy;
             this.label28.Location = new System.Drawing.Point(681, 24);
             this.label28.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -3252,7 +3252,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label27.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label27.ForeColor = System.Drawing.Color.Navy;
             this.label27.Location = new System.Drawing.Point(516, 24);
             this.label27.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -3264,7 +3264,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label26.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label26.ForeColor = System.Drawing.Color.Navy;
             this.label26.Location = new System.Drawing.Point(254, 24);
             this.label26.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -3276,7 +3276,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label25.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label25.ForeColor = System.Drawing.Color.Navy;
             this.label25.Location = new System.Drawing.Point(75, 24);
             this.label25.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -3344,7 +3344,7 @@
             // 
             // textBox9
             // 
-            this.textBox9.Font = new System.Drawing.Font("SimSun", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox9.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox9.ForeColor = System.Drawing.Color.Red;
             this.textBox9.Location = new System.Drawing.Point(389, 19);
             this.textBox9.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3387,7 +3387,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("SimSun", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox1.Font = new System.Drawing.Font("宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox1.ForeColor = System.Drawing.Color.Red;
             this.textBox1.Location = new System.Drawing.Point(72, 19);
             this.textBox1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3601,7 +3601,7 @@
             this.dataGridView5.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3610,7 +3610,7 @@
             this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3631,7 +3631,7 @@
             this.dataGridView4.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3640,7 +3640,7 @@
             this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3661,7 +3661,7 @@
             this.dataGridView3.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3670,7 +3670,7 @@
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3738,7 +3738,7 @@
             // 
             // textBox12
             // 
-            this.textBox12.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox12.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox12.ForeColor = System.Drawing.Color.Red;
             this.textBox12.Location = new System.Drawing.Point(160, 19);
             this.textBox12.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3791,7 +3791,7 @@
             // 
             // textBox17
             // 
-            this.textBox17.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox17.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox17.ForeColor = System.Drawing.Color.Red;
             this.textBox17.Location = new System.Drawing.Point(792, 31);
             this.textBox17.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3811,7 +3811,7 @@
             // 
             // textBox16
             // 
-            this.textBox16.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox16.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox16.ForeColor = System.Drawing.Color.Red;
             this.textBox16.Location = new System.Drawing.Point(458, 31);
             this.textBox16.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3832,7 +3832,7 @@
             // label79
             // 
             this.label79.AutoSize = true;
-            this.label79.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label79.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label79.ForeColor = System.Drawing.Color.Red;
             this.label79.Location = new System.Drawing.Point(1223, 17);
             this.label79.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -3859,7 +3859,7 @@
             this.dataGridView6.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3868,7 +3868,7 @@
             this.dataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -3906,7 +3906,7 @@
             // 
             // textBox13
             // 
-            this.textBox13.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox13.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox13.ForeColor = System.Drawing.Color.Red;
             this.textBox13.Location = new System.Drawing.Point(86, 31);
             this.textBox13.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -3971,7 +3971,7 @@
             // 
             // textBox25
             // 
-            this.textBox25.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox25.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox25.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox25.Location = new System.Drawing.Point(59, 104);
             this.textBox25.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4005,7 +4005,7 @@
             // 
             this.comboBox3.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.IntegralHeight = false;
             this.comboBox3.ItemHeight = 17;
@@ -4029,7 +4029,7 @@
             // 
             // textBox26
             // 
-            this.textBox26.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox26.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox26.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox26.Location = new System.Drawing.Point(59, 68);
             this.textBox26.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4079,7 +4079,7 @@
             // 
             // textBox23
             // 
-            this.textBox23.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox23.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox23.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox23.Location = new System.Drawing.Point(59, 98);
             this.textBox23.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4113,7 +4113,7 @@
             // 
             this.comboBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox2.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.IntegralHeight = false;
             this.comboBox2.ItemHeight = 17;
@@ -4137,7 +4137,7 @@
             // 
             // textBox24
             // 
-            this.textBox24.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox24.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox24.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox24.Location = new System.Drawing.Point(59, 65);
             this.textBox24.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4187,7 +4187,7 @@
             // 
             // textBox22
             // 
-            this.textBox22.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox22.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox22.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox22.Location = new System.Drawing.Point(59, 98);
             this.textBox22.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4221,7 +4221,7 @@
             // 
             this.comboBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.IntegralHeight = false;
             this.comboBox1.ItemHeight = 17;
@@ -4245,7 +4245,7 @@
             // 
             // textBox21
             // 
-            this.textBox21.Font = new System.Drawing.Font("SimSun", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox21.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox21.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox21.Location = new System.Drawing.Point(59, 65);
             this.textBox21.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4332,7 +4332,7 @@
             // label100
             // 
             this.label100.AutoSize = true;
-            this.label100.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label100.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label100.ForeColor = System.Drawing.Color.Red;
             this.label100.Location = new System.Drawing.Point(21, 95);
             this.label100.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -4389,7 +4389,7 @@
             // 
             // textBox20
             // 
-            this.textBox20.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox20.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox20.ForeColor = System.Drawing.Color.Red;
             this.textBox20.Location = new System.Drawing.Point(225, 31);
             this.textBox20.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4425,7 +4425,7 @@
             // label101
             // 
             this.label101.AutoSize = true;
-            this.label101.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label101.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label101.ForeColor = System.Drawing.Color.Red;
             this.label101.Location = new System.Drawing.Point(21, 25);
             this.label101.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
@@ -4467,7 +4467,7 @@
             // 
             // textBox19
             // 
-            this.textBox19.Font = new System.Drawing.Font("SimSun", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox19.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBox19.ForeColor = System.Drawing.Color.Red;
             this.textBox19.Location = new System.Drawing.Point(75, 20);
             this.textBox19.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -4492,7 +4492,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1764, 853);
             this.Controls.Add(this.tabControl1);
-            this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "Form15_ayx";

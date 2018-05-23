@@ -727,7 +727,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form18_azx2";
-            this.Text = "Form18_azx2_烽火扫描进入2111-20180207";
+            this.Text = "Form18_azx2_烽火扫描进入2111吞吐量测试-20180517";
             this.Load += new System.EventHandler(this.Form18_azx2_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

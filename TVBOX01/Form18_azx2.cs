@@ -528,7 +528,6 @@ namespace TVBOX01
                     string tt_sql6 = "select count(1),min(ccode),min(ncode) from odc_routingtasklist " +
                                      "where  pcba_pn = '" + tt_shortmac + "' and napplytype is null ";
 
-
                     string[] tt_array6 = new string[3];
                     tt_array6 = Dataset1.GetDatasetArray(tt_sql6, tt_conn);
                     if (tt_array6[0] == "1")
@@ -538,12 +537,16 @@ namespace TVBOX01
                             tt_flag6 = true;
                             setRichtexBox("6、该单板有待测站位，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",可以过站 goon");
                         }
+                        else if (int.Parse(tt_array6[2]) < int.Parse(tt_ccode) || "2200,2205".Contains(tt_array6[2]))
+                        {
+                            setRichtexBox("6、该单板待测站位不在" + tt_ccode + "，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",不可以过站 goon");
+                            PutLableInfor("该单板当前站位：" + tt_array6[2] + "不在" + tt_ccode + "站位，产品尚未测试耦合，不允许进站");
+                        }
                         else
                         {
                             setRichtexBox("6、该单板待测站位不在" + tt_ccode + "，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",不可以过站 goon");
                             PutLableInfor("该单板当前站位：" + tt_array6[2] + "不在" + tt_ccode + "站位！");
                         }
-
                     }
                     else
                     {

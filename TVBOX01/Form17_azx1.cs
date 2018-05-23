@@ -64,6 +64,9 @@ namespace TVBOX01
         static string tt_gyid_Old = "";
         static string tt_gyid_Use = "";
 
+        //读取的打印设置
+        static string BoxPrintMode = "";
+
         //小型化方案装箱兼容用
         static string tt_MiniType = "";
         
@@ -1765,6 +1768,23 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini"))
+                {
+                    MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini" + "文件不存在");
+                    return;
+                }
+
+                //读取配置文件，选择打印方式
+                string[] lines = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini", System.Text.Encoding.GetEncoding("GB2312"));
+
+                foreach (string line in lines)
+                {
+                    if (line.Contains("BoxPrintMode"))
+                    {
+                        BoxPrintMode = line.Substring(line.IndexOf("=") + 1).Trim();
+                    }
+                }
+
                 if (str.Contains("FH105") || str.Contains("FH106"))
                 {
                     this.button3.Visible = true;
@@ -1934,7 +1954,16 @@ namespace TVBOX01
                             tt_flag11_2 = CheckStrContain(tt_sbxh, "常规");
                             PutLableInfor("");
 
-                            if(str.Contains("FH005") || str.Contains("FH105"))
+                            if (BoxPrintMode == "1")
+                            {
+                                this.checkBox8.Checked = true;
+                                this.checkBox5.Visible = true;
+                                this.checkBox5.Checked = true;
+                                this.checkBox6.Visible = true;
+                                this.checkBox6.Checked = true;
+                                tt_flag11 = true;
+                            }
+                            else if (str.Contains("FH005") || str.Contains("FH105"))
                             {
                                 this.checkBox8.Checked = true;
 
@@ -1981,6 +2010,7 @@ namespace TVBOX01
 
                                 tt_flag11 = true;
                             }
+
                         }
                         else
                         {
@@ -2702,7 +2732,7 @@ namespace TVBOX01
                     //    this.button3.Visible = true;
                     //}
                     this.button4.Visible = true;
-                    if (str.Contains("FH006"))
+                    if (str.Contains("FH006") || BoxPrintMode == "1")
                     {
                         this.button7.Visible = true;
                     }
@@ -3820,19 +3850,19 @@ namespace TVBOX01
 
                 if (tt_datatype2 == "ZX01")
                 {
-                    GetParaDataPrint_ZX01(tt_path2, tt_itemtype);
+                    GetParaDataPrint_ZX01(tt_path2, tt_itemtype, "中箱二");
                 }
                 else if (tt_datatype2 == "ZX02")
                 {
-                    GetParaDataPrint_ZX02(tt_path2, tt_itemtype);
+                    GetParaDataPrint_ZX02(tt_path2, tt_itemtype, "中箱二");
                 }
                 else if (tt_datatype2 == "ZX03")   //烽火移动双频中箱模板一
                 {
-                    GetParaDataPrint_ZX03(tt_path2, tt_itemtype);
+                    GetParaDataPrint_ZX03(tt_path2, tt_itemtype, "中箱二");
                 }
                 else if (tt_datatype2 == "GP03")   //烽火移动双频中箱模板一
                 {
-                    GetParaDataPrint_GP03(tt_path2, tt_itemtype);
+                    GetParaDataPrint_GP03(tt_path2, tt_itemtype, "中箱二");
                 }
 
             }
@@ -3876,27 +3906,27 @@ namespace TVBOX01
 
                 if (tt_datatype1 == "ZX01")   //烽火天翼中箱模板一
                 {
-                    GetParaDataPrint_ZX01(tt_path1, tt_itemtype);
+                    GetParaDataPrint_ZX01(tt_path1, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype1 == "ZX02")
                 {
-                    GetParaDataPrint_ZX02(tt_path1, tt_itemtype);
+                    GetParaDataPrint_ZX02(tt_path1, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype1 == "ZX03")   //烽火移动双频中箱模板一
                 {
-                    GetParaDataPrint_ZX03(tt_path1, tt_itemtype);
+                    GetParaDataPrint_ZX03(tt_path1, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype1 == "GP03")   //烽火移动双频中箱模板一
                 {
-                    GetParaDataPrint_GP03(tt_path1, tt_itemtype);
+                    GetParaDataPrint_GP03(tt_path1, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype1 == "ZX04")   //烽火天翼中箱模板新
                 {
-                    GetParaDataPrint_ZX04(tt_path1, tt_itemtype);
+                    GetParaDataPrint_ZX04(tt_path1, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype1 == "ZX05")   //烽火广电中箱模板
                 {
-                    GetParaDataPrint_ZX05(tt_path1, tt_itemtype);
+                    GetParaDataPrint_ZX05(tt_path1, tt_itemtype, "中箱一");
                 }
 
             }
@@ -3940,11 +3970,11 @@ namespace TVBOX01
 
                 if (tt_datatype3 == "ZX01")
                 {
-                    GetParaDataPrint_ZX01(tt_path3, tt_itemtype);
+                    GetParaDataPrint_ZX01(tt_path3, tt_itemtype, "中箱一");
                 }
                 else if (tt_datatype3 == "ZX02")
                 {
-                    GetParaDataPrint_ZX02(tt_path3, tt_itemtype);
+                    GetParaDataPrint_ZX02(tt_path3, tt_itemtype, "中箱一");
                 }
 
 
@@ -5265,7 +5295,7 @@ namespace TVBOX01
 
 
         //----以下是ZX01数据采集----烽火天翼标签一
-        private void GetParaDataPrint_ZX01(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_ZX01(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -5525,6 +5555,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;
@@ -5539,25 +5573,17 @@ namespace TVBOX01
                     PutLableInfor("预览完毕");
                 }
 
-
-
-
                 setRichtexBox("99、打印或预览完毕，请检查铭牌，OK");
-
-
             }
             else
             {
                 setRichtexBox("99、获取信息失败，不能打印或预览，请检查数据,over");
                 PutLableInfor("获取信息失败，不能打印或预览，请检查数据！");
             }
-
-
-
         }
         
         //----以下是ZX01数据采集----烽火天翼标签二
-        private void GetParaDataPrint_ZX02(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_ZX02(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -5688,17 +5714,11 @@ namespace TVBOX01
             row19["内容"] = GetListViewItem(1, 19);
             dt.Rows.Add(row19);
 
-
             DataRow row20 = dt.NewRow();
             row20["参数"] = "P20";
             row20["名称"] = "序列号20";
             row20["内容"] = GetListViewItem(1, 20);
             dt.Rows.Add(row20);
-
-
-
-
-
 
 
             //第二步加载到表格显示
@@ -5765,6 +5785,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;
@@ -5797,7 +5821,7 @@ namespace TVBOX01
         }
 
         //----以下是ZX04数据采集----烽火天翼标签新/移动单频中箱
-        private void GetParaDataPrint_ZX04(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_ZX04(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -6307,6 +6331,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;
@@ -6334,7 +6362,7 @@ namespace TVBOX01
         }
 
         //----以下是ZX05数据采集----烽火广电标签/联通单频标签
-        private void GetParaDataPrint_ZX05(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_ZX05(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -6787,6 +6815,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;
@@ -6816,7 +6848,7 @@ namespace TVBOX01
         }
 
         //----以下是ZX03数据采集----烽火移动标签一
-        private void GetParaDataPrint_ZX03(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_ZX03(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -7375,6 +7407,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;
@@ -7407,7 +7443,7 @@ namespace TVBOX01
         }
 
         //----以下是GP03数据采集----烽火移动标签\安徽电信标签二
-        private void GetParaDataPrint_GP03(string tt_path, int tt_itemtype)
+        private void GetParaDataPrint_GP03(string tt_path, int tt_itemtype, string tt_printname)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -7969,6 +8005,10 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (BoxPrintMode == "1")
+                    {
+                        report.PrintSettings.Printer = tt_printname;
+                    }
                     report.Print();
                     report.Save(tt_path);
                     tt_top = 0;

@@ -19,7 +19,7 @@ namespace TVBOX01
         #region 1、属性设置
         static string tt_databasecheck = "";
         static string tt_conn;
-        static string tt_version = "20180504";
+        static string tt_version = "20180521";
         static string tt_progranname = "PR001";
         static string tt_prodescrib = "自动升级";
 
@@ -906,7 +906,7 @@ namespace TVBOX01
                     bool tt_flag2 = false;
                     if (tt_flag1)
                     {
-                        string tt_uiversion = "20180419";
+                        string tt_uiversion = "20180521";
                         string tt_setuiversion = GetProgramVersion2(tt_username);
                         if (getStringToInt(tt_uiversion) >= getStringToInt(tt_setuiversion))
                         {
