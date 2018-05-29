@@ -37,6 +37,7 @@ namespace TVBOX01
         string tt_ncode = "";
         string tt_pon_name = "";
         string tt_areacode = "";
+        string tt_beforstranhui = "";
         int tt_QRDZ = 0;
         int tt_scanboxnum = 0;
         //标签微调
@@ -69,7 +70,7 @@ namespace TVBOX01
 
         //小型化方案装箱兼容用
         static string tt_MiniType = "";
-        
+
         //临时参数
 
         //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
@@ -954,6 +955,23 @@ namespace TVBOX01
             return tt_WORD;
         }
 
+        //安徽移动符号处理
+        private string GetQR_ANHUI(string ListViewItem)
+        {
+            string tt_WORD = "";
+
+            if (ListViewItem != "")
+            {
+                tt_WORD = "#";
+            }
+            else
+            {
+                tt_WORD = "";
+            }
+
+            return tt_WORD;
+        }
+
         #endregion
 
 
@@ -1150,6 +1168,125 @@ namespace TVBOX01
 
 
             return tt_boxnumber;
+        }
+
+
+        //获取箱号  烽火wifi箱号 安徽装箱
+        private string GetBoxNumber5(string tt_beforstr, string tt_tosn, string tt_setunitnum)//获取箱号  烽火wifi箱号 正常装箱
+        {
+            string tt_boxnumber = "";
+            decimal tt_unitint = decimal.Parse(tt_setunitnum);
+            decimal tt_snnumber = int.Parse(tt_tosn.Substring(tt_tosn.Length - 4, 4));
+            //decimal tt_boxnum2 = Math.Ceiling(tt_snnumber / tt_unitint);
+            decimal tt_boxnum2 = (tt_snnumber / tt_unitint);
+            string tt_boxnum3 = tt_boxnum2.ToString();
+            if (tt_boxnum3.Contains(".") == false)
+            {
+                tt_boxnumber = tt_beforstr + tt_boxnum3.PadLeft(3, '0') + "-" + tt_setunitnum;
+            }
+            return tt_boxnumber;
+        }
+
+
+        //获取箱号  烽火wifi箱号 生成尾箱分箱 安徽分箱
+        private string GetBoxNumber6(string tt_beforstr, string tt_taskscode, string tt_setunitnum)
+        {
+            string tt_boxnumber = "";
+            decimal tt_unitint = 0;
+            decimal tt_snnumber = 0;
+            decimal tt_boxnum2 = 0;
+            string tt_boxnum3 = "";
+            bool tt_flag = false;
+
+            try
+            {
+                tt_unitint = decimal.Parse(tt_setunitnum);
+                tt_snnumber = int.Parse(GetAnhuiHOSTLAST(tt_taskscode));
+                tt_boxnum2 = Math.Ceiling(tt_snnumber / tt_unitint);
+                tt_boxnum3 = tt_boxnum2.ToString();
+                tt_flag = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("生成尾箱，计算箱号错误：" + ex.Message);
+            }
+            if (tt_flag)
+            {
+                tt_boxnumber = tt_beforstr + tt_boxnum3.PadLeft(3, '0') + "-" + tt_setunitnum;
+            }
+
+            return tt_boxnumber;
+        }
+
+
+        //获取、生成安徽尾箱序号
+        private string GetAnhuiHOSTLAST(string tt_taskscode)
+        {
+            string tt_hostlastnow = "";
+            string tt_hostlast = "";
+            string tt_id = "";
+            string tt_tasksquantity = "";
+
+            string tt_sql = "select count(1),min(hostlast),min(id) from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_taskscode + "' ";
+            string[] tt_array = new string[3];
+            tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
+            if (tt_array[0] == "1")
+            {
+                tt_hostlast = tt_array[1];
+                tt_id = tt_array[2];
+            }
+
+            if (tt_hostlast != "")
+            {
+                string tt_update1 = "update ODC_HOSTLABLEOPTIOAN set hostlast = '" + (int.Parse(tt_hostlast) + 10).ToString() + "' " +
+                                    "where taskscode = '" + tt_taskscode + "' and id = " + tt_id;
+                int tt_int = Dataset1.ExecCommand(tt_update1, tt_conn);
+                if (tt_int == 1)
+                {
+                    string tt_sql0 = "select count(1),min(hostlast),min(id) from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_taskscode + "' ";
+                    string[] tt_array0 = new string[3];
+                    tt_array0 = Dataset1.GetDatasetArray(tt_sql0, tt_conn);
+                    if (tt_array0[0] == "1")
+                    {
+                        tt_hostlastnow = tt_array0[1];
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("更新尾箱数据失败!");
+                }
+            }
+            else
+            {
+                string tt_sql1 = "select count(1),min(tasksquantity),min(taskscode) from odc_tasks where taskscode = '" + tt_taskscode + "' ";
+                string[] tt_array1 = new string[3];
+                tt_array1 = Dataset1.GetDatasetArray(tt_sql1, tt_conn);
+
+                if (tt_array1[0] == "1")
+                {
+                    tt_tasksquantity = tt_array1[1];
+                }
+
+                string tt_update2 = "update ODC_HOSTLABLEOPTIOAN set hostlast = '" + (int.Parse(tt_tasksquantity) + 10).ToString() + "' " +
+                                    "where taskscode = '" + tt_taskscode + "' and id = " + tt_id;
+                int tt_int = Dataset1.ExecCommand(tt_update2, tt_conn);
+                if (tt_int == 1)
+                {
+                    string tt_sql2 = "select count(1),min(hostlast),min(id) from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_taskscode + "' ";
+                    string[] tt_array2 = new string[3];
+                    tt_array2 = Dataset1.GetDatasetArray(tt_sql2, tt_conn);
+                    if (tt_array2[0] == "1")
+                    {
+                        tt_hostlastnow = tt_array2[1];
+                    }
+                    else
+                    {
+                        MessageBox.Show("更新尾箱数据失败!");
+                    }
+                }
+            }
+
+            return tt_hostlastnow;
         }
 
 
@@ -1847,6 +1984,11 @@ namespace TVBOX01
                         tt_QRDZ = 1;
                     }
 
+                    if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && tt_areacode == "浙江")
+                    {
+                        tt_QRDZ = 1;
+                    }
+
                     if ((tt_productname == "HG6201U" || tt_productname == "HG2201U") && tt_areacode == "天津")
                     {
                         tt_QRDZ = 1;
@@ -2024,6 +2166,7 @@ namespace TVBOX01
                     Boolean tt_flag12 = false;
                     if (tt_flag11)
                     {
+                        bool tt_flag12_1 = false;
                         string tt_sql12 = "select hostqzwh from odc_hostlableoptioan where taskscode = '" + this.textBox1.Text + "' ";
                         DataSet ds12 = Dataset1.GetDataSetTwo(tt_sql12, tt_conn);
 
@@ -2034,12 +2177,46 @@ namespace TVBOX01
 
                             this.checkBox3.Checked = true;
                             this.checkBox4.Checked = true;
-                            tt_flag12 = true;
+                            tt_flag12_1 = true;
                         }
                         else
                         {
                             MessageBox.Show("无法获取生产序列号，请确认制造单填写是否正确");
                         }
+
+                        if (tt_flag12_1)
+                        {
+                            if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && tt_areacode == "安徽")
+                            {
+                                string tt_sql12_2 = "select count(1),min(hostmode),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
+                                                    "where taskscode = '" + this.textBox1.Text + "' ";
+                                string[] tt_array12_2 = new string[3];
+                                tt_array12_2 = Dataset1.GetDatasetArray(tt_sql12_2, tt_conn);
+                                if (tt_array12_2[0] == "1")
+                                {
+                                    tt_beforstranhui = tt_array12_2[1].ToUpper().Trim();
+                                    string tt_beforstrCheck = tt_beforstranhui.Substring(tt_beforstranhui.Length - 10, 8);
+                                    if (tt_beforstrCheck != this.label12.Text.Replace("-", ""))
+                                    {
+                                        MessageBox.Show("子工单" + this.textBox1.Text + "的安徽箱号前段号信息" + tt_beforstranhui + "日期与制造单日期不一致，请确认！");
+                                    }
+                                    else
+                                    {
+                                        tt_flag12 = true;
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("没有找到子工单" + this.textBox1.Text + "的安徽箱号前段号信息，或有子工单号配置表重复,查询结果返回值" + tt_array12_2[0] + "请确认！");
+                                }
+                            }
+                            else
+                            {
+                                tt_flag12 = true;
+                            }
+                        }
+
+
                     }
                     #endregion
 
@@ -2355,7 +2532,16 @@ namespace TVBOX01
             {
                 //第一步获取箱号
                 string tt_package = "";
-                tt_package = GetBoxNumber4(label15.Text, this.label47.Text, this.textBox2.Text);  //中箱分箱
+                //第一步获取箱号
+                if ((this.label10.Text == "HG6201M" || this.label10.Text == "HG6821M") && tt_areacode == "安徽")
+                {
+                    tt_package = GetBoxNumber6(tt_beforstranhui, this.textBox1.Text, this.textBox2.Text);
+                }
+                else
+                {
+                    tt_package = GetBoxNumber4(label15.Text, this.label47.Text, this.textBox2.Text);  //中箱分箱
+                }
+
                 label46.Text = tt_package;
 
                 //第二步 装箱过站
@@ -3718,7 +3904,15 @@ namespace TVBOX01
                         if (this.textBox2.Text == this.textBox3.Text)
                         {
                             //第一步获取箱号
-                            tt_package = GetBoxNumber3(label15.Text, this.label48.Text, this.textBox2.Text);
+                            if ((this.label10.Text == "HG6201M" || this.label10.Text == "HG6821M") && tt_areacode == "安徽")
+                            {
+                                tt_package = GetBoxNumber5(tt_beforstranhui, this.label48.Text, this.textBox2.Text);
+                            }
+                            else
+                            {
+                                tt_package = GetBoxNumber3(label15.Text, this.label48.Text, this.textBox2.Text);
+                            }
+
                             if (tt_package != "")
                             {
                                 this.label46.Text = tt_package.ToUpper();
@@ -5918,6 +6112,20 @@ namespace TVBOX01
                         + GetListViewItem(2, 8) + GetQR_SEPARATOR(GetListViewItem(4, 8)) + GetListViewItem(4, 8) + GetQR_LINE_BREAK(GetListViewItem(2, 9))
                         + GetListViewItem(2, 9) + GetQR_SEPARATOR(GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_LINE_BREAK(GetListViewItem(2, 10))
                         + GetListViewItem(2, 10) + GetQR_SEPARATOR(GetListViewItem(4, 10)) + GetListViewItem(4, 10);
+            }
+            else if (tt_areacode == "安徽")
+            {
+                CMCC_QR = this.label46.Text + GetQR_LINE_BREAK(GetListViewItem(4, 1))
+                        + GetQR_ANHUI(GetListViewItem(4, 1)) + GetListViewItem(4, 1) + GetQR_ANHUI(GetListViewItem(4, 1)) + GetQR_LINE_BREAK(GetListViewItem(4, 2))
+                        + GetQR_ANHUI(GetListViewItem(4, 2)) + GetListViewItem(4, 2) + GetQR_ANHUI(GetListViewItem(4, 2)) + GetQR_LINE_BREAK(GetListViewItem(4, 3))
+                        + GetQR_ANHUI(GetListViewItem(4, 3)) + GetListViewItem(4, 3) + GetQR_ANHUI(GetListViewItem(4, 3)) + GetQR_LINE_BREAK(GetListViewItem(4, 4))
+                        + GetQR_ANHUI(GetListViewItem(4, 4)) + GetListViewItem(4, 4) + GetQR_ANHUI(GetListViewItem(4, 4)) + GetQR_LINE_BREAK(GetListViewItem(4, 5))
+                        + GetQR_ANHUI(GetListViewItem(4, 5)) + GetListViewItem(4, 5) + GetQR_ANHUI(GetListViewItem(4, 5)) + GetQR_LINE_BREAK(GetListViewItem(4, 6))
+                        + GetQR_ANHUI(GetListViewItem(4, 6)) + GetListViewItem(4, 6) + GetQR_ANHUI(GetListViewItem(4, 6)) + GetQR_LINE_BREAK(GetListViewItem(4, 7))
+                        + GetQR_ANHUI(GetListViewItem(4, 7)) + GetListViewItem(4, 7) + GetQR_ANHUI(GetListViewItem(4, 7)) + GetQR_LINE_BREAK(GetListViewItem(4, 8))
+                        + GetQR_ANHUI(GetListViewItem(4, 8)) + GetListViewItem(4, 8) + GetQR_ANHUI(GetListViewItem(4, 8)) + GetQR_LINE_BREAK(GetListViewItem(4, 9))
+                        + GetQR_ANHUI(GetListViewItem(4, 9)) + GetListViewItem(4, 9) + GetQR_ANHUI(GetListViewItem(4, 9)) + GetQR_LINE_BREAK(GetListViewItem(4, 10))
+                        + GetQR_ANHUI(GetListViewItem(4, 10)) + GetListViewItem(4, 10) + GetQR_ANHUI(GetListViewItem(4, 10));
             }
             else if (tt_areacode == "浙江")
             {

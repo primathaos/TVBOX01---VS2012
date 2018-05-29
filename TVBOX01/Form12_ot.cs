@@ -161,7 +161,7 @@ namespace TVBOX01
 
                 Boolean tt_flag = CheckCodeStation(tt_prientcode, tt_checkcode);
 
-                if (tt_flag)
+                if (tt_flag || tt_checkcode == "9990")
                 {
                     GetParaDataPrint(2);  //预览
                 }
@@ -214,7 +214,7 @@ namespace TVBOX01
 
                     Boolean tt_flag = CheckCodeStation(tt_prientcode, tt_checkcode);
 
-                    if (tt_flag)
+                    if (tt_flag || tt_checkcode == "9990")
                     {
                         Reprint form1 = new Reprint();
                         form1.StartPosition = FormStartPosition.CenterScreen;
@@ -233,7 +233,7 @@ namespace TVBOX01
                             tt_local = "二维码I";
                             tt_username = this.comboBox2.Text;
                         }
-                        else if (str.Contains("MP003"))
+                        else if (str.Contains("MP003") || str.Contains("MP004"))
                         {
                             tt_local = "定制二维码";
                             tt_username = this.comboBox2.Text;
@@ -243,7 +243,7 @@ namespace TVBOX01
                             tt_local = "二维码I";
                             tt_username = "工程账号重打";
                         }
-                        else if (str.Contains("MP103"))
+                        else if (str.Contains("MP103") || str.Contains("MP104"))
                         {
                             tt_local = "定制二维码";
                             tt_username = "工程账号重打";
@@ -470,7 +470,7 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
-                if (str.Contains("MP101") || str.Contains("MP102") || str.Contains("MP103"))
+                if (str.Contains("MP101") || str.Contains("MP102") || str.Contains("MP103") || str.Contains("MP104"))
                 {
                     this.button3.Visible = true;
                     this.tabPage4.Parent = tabControl2;
@@ -531,7 +531,7 @@ namespace TVBOX01
                         this.label9.Text = "Fpath07";
                         tt_sql2 = "select  docdesc,Fpath07,Fdata07,Macxp  from odc_ec where zjbm = '" + tt_eccode + "' "; 
                     }
-                    else if (str.Contains("MP003") || str.Contains("MP103"))
+                    else if (str.Contains("MP003") || str.Contains("MP103") || str.Contains("MP004") || str.Contains("MP104"))
                     {
                         this.label67.Text = "附加二维码";
                         this.label8.Text = "Fdata08";
@@ -1612,7 +1612,7 @@ namespace TVBOX01
                             tt_flag8 = true;
                             setRichtexBox("8、该单板有待测站位，站位：" + tt_array8[1] + "，" + tt_array8[2] + ",可以过站 goon");
                         }
-                        else if (tt_array8[1] == tt_ccode && (str.Contains("MP003") || str.Contains("MP103")) && tt_flag8_1 == false)
+                        else if (tt_array8[1] == tt_ccode && (str.Contains("MP003") || str.Contains("MP103") || str.Contains("MP004") || str.Contains("MP104")) && tt_flag8_1 == false)
                         {
                             tt_flag8 = true;
                             setRichtexBox("8、该单板有待测站位，站位：" + tt_array8[1] + "，" + tt_array8[2] + ",可以过站 goon");
@@ -1697,7 +1697,7 @@ namespace TVBOX01
                 Boolean tt_flag12 = false;
                 if (tt_flag11)
                 {
-                    if (str.Contains("MP003") || str.Contains("MP103"))
+                    if (str.Contains("MP003") || str.Contains("MP103") || str.Contains("MP004") || str.Contains("MP104"))
                     {
                         tt_flag12 = true;
                         string tt_taskscode = this.textBox1.Text.Trim().ToUpper();

@@ -270,6 +270,14 @@ namespace TVBOX01
                     //获取调试开始时间
                     tt_reprintstattime = DateTime.Now;
                 }
+                else if (str.Contains("FH112") && this.textBox1.Text == "BB1815002")
+                {
+                    this.button3.Visible = true;
+                    this.tabPage4.Parent = tabControl2;
+                    this.tabPage3.Parent = null;
+                    //获取调试开始时间
+                    tt_reprintstattime = DateTime.Now;
+                }
 
                 tt_computermac = Dataset1.GetHostIpName();
 
@@ -877,6 +885,10 @@ namespace TVBOX01
             tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
 
             if (tt_array[0] == "1")
+            {
+                tt_routnum = tt_array[1];
+            }
+            else if (tt_array[0] == "2" && str.Contains("FH112"))
             {
                 tt_routnum = tt_array[1];
             }
@@ -1833,7 +1845,7 @@ namespace TVBOX01
                     DataSet tt_dataset1 = Dataset2.getMacAllCodeInfo(tt_recordmac, tt_conn);
                     string tt_nowcode = Dataset2.getPcbaNowCode(tt_dataset1);
 
-                    if (tt_flag && tt_nowcode != "9990")
+                    if ((tt_flag && tt_nowcode != "9990") || (tt_flag && str.Contains("FH112")))
                     {
                         Reprint form1 = new Reprint();
                         form1.StartPosition = FormStartPosition.CenterScreen;
@@ -1849,6 +1861,11 @@ namespace TVBOX01
                         if (str.Contains("FH002"))
                         {
                             tt_username = this.comboBox2.Text;
+                        }
+                        else if (str.Contains("FH112"))
+                        {
+                            tt_username = "浙江标签返工";
+                            tt_local = "返浙江标签";
                         }
                         else
                         {
@@ -1875,6 +1892,28 @@ namespace TVBOX01
                                 {
                                     setRichtexBox("重打完成，产品属于包装产品，已退回check站位,ok");
                                     PutLableInfor("重打完成，产品属于包装产品，已退回check站位");
+                                }
+                                else
+                                {
+                                    setRichtexBox("流程异常，产品未跳转也无法正常流线，请联系工程,NG");
+                                    PutLableInfor("流程异常，产品未跳转也无法正常流线，请联系工程");
+                                }
+                            }
+                        }
+
+                        if (str.Contains("FH112"))
+                        {
+                            if (int.Parse(tt_nowcode) >= 3000)
+                            {
+                                string tt_gyid = this.label47.Text;
+                                string tt_ccode = this.label71.Text;
+                                string tt_ncode = "3000";
+                                bool tt_flag1 = Dataset1.FhUnPassStationI(tt_taskscode, tt_username, tt_recordmac, tt_gyid, tt_ccode, tt_ncode, tt_conn);
+                                if (tt_flag1)
+                                {
+                                    int delete_checknum = Delete_Check(tt_recordmac);
+                                    setRichtexBox("重打完成，产品属于浙江返工产品，已退回3000站位,比对数据" + delete_checknum + "条已删除，需要重新条码比对,ok");
+                                    PutLableInfor("重打完成，属于浙江返工产品，已退回3000站位，条码比对数据已删除");
                                 }
                                 else
                                 {

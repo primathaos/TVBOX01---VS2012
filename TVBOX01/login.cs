@@ -158,7 +158,7 @@ namespace TVBOX01
 
             //2.2 烽火电信wifi打印铭牌标签及二维码标签(已用)
             #region
-            if (tt_username == "MP001" || tt_username == "MP101" || tt_username == "MP002" || tt_username == "MP102" || tt_username == "MP003" || tt_username == "MP103") 
+            if (tt_username == "MP001" || tt_username == "MP101" || tt_username == "MP002" || tt_username == "MP102" || tt_username == "MP003" || tt_username == "MP103" || tt_username == "MP004" || tt_username == "MP104") 
             {
                 string tt_password = GetUserPassword(tt_username);
 
@@ -386,7 +386,7 @@ namespace TVBOX01
 
             //3.2 烽火移动wifi  移动标签  //通用移动、电信标签 //杨浩
             #region
-            if (tt_username == "FH002" || tt_username == "FH102")
+            if (tt_username == "FH002" || tt_username == "FH102" || tt_username == "FH112")
             {
                 string tt_password = GetUserPassword(tt_username);
                 if (this.textBox2.Text == tt_password)

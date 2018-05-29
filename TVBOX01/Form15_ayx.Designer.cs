@@ -869,7 +869,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(233, 51);
+            this.label41.Location = new System.Drawing.Point(203, 51);
             this.label41.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(63, 15);
@@ -892,9 +892,9 @@
             this.label117.Location = new System.Drawing.Point(13, 51);
             this.label117.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label117.Name = "label117";
-            this.label117.Size = new System.Drawing.Size(210, 15);
+            this.label117.Size = new System.Drawing.Size(180, 15);
             this.label117.TabIndex = 24;
-            this.label117.Text = "二维码\\上海资产编码模板路径";
+            this.label117.Text = "二维码\\定制地区模板路径";
             // 
             // label40
             // 

@@ -1029,21 +1029,21 @@ namespace TVBOX01
             bool tt_flag11 = false;
             if(tt_flag10)
             {
-                this.label44.Text = setMetrialCheck(this.label30.Text, this.label29.Text, tt_telecustomer);
-                if (this.label44.Text == this.label49.Text)
+                if (this.label49.Text != "")
                 {
-                    if (this.label49.Text != "")
+                    this.label44.Text = SetMetrialCheck(this.label30.Text, this.label29.Text, tt_telecustomer, this.label49.Text);
+                    if (this.label44.Text == this.label49.Text)
                     {
                         tt_flag11 = true;
                     }
                     else
                     {
-                        MessageBox.Show("该工单物料编码为空，请检查工单设置！");
+                        MessageBox.Show("该工单物料编码:" + this.label49.Text + ",与设定物料编码:" + this.label44.Text + ",不一致，请确认");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("该工单物料编码:" + this.label49.Text + ",与设定物料编码:" + this.label44.Text + ",不一致，请确认");
+                    MessageBox.Show("该工单物料编码为空，请检查工单设置！");
                 }
             }
             #endregion
@@ -1594,11 +1594,11 @@ namespace TVBOX01
         }
 
         //工单检查设定物料编码检查
-        private string setMetrialCheck(string tt_area, string tt_product, string tt_telecustomer)
+        private string SetMetrialCheck(string tt_area, string tt_product, string tt_telecustomer, string tt_tasktype)
         {
             string tt_setmetrial = "";
             string tt_sql = "select count(1),min(product_code),0 from odc_fhspec " +
-                      "where aear = '" + tt_area + "' and product_name = '" + tt_product + "' and operator = '" + tt_telecustomer + "' ";
+                      "where aear = '" + tt_area + "' and product_name = '" + tt_product + "' and operator = '" + tt_telecustomer + "' and product_code = '" + tt_tasktype + "'";
 
             string[] tt_array = new string[3];
             tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);

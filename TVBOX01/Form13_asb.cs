@@ -26,8 +26,9 @@ namespace TVBOX01
         #region 1、属性设置
         static string tt_conn;
         static string tt_code = "0000";
-        static string tt_path = "";
-        static string tt_md5 = "";
+        static string tt_path1 = "";
+        static string tt_path2 = "";
+        //static string tt_md5 = "";
         string tt_productname = "";
         string tt_telecustomer = "";
         string tt_setusername = "";
@@ -38,12 +39,17 @@ namespace TVBOX01
         int tt_downlip = 0; //下盖数量
         static int tt_reprinttime = 0; //重打次数
         //标签微调
-        static float tt_top = 0; //上下偏移量
-        static float tt_left = 0; //左右偏移量
+        static float tt_top1 = 0; //铭牌上下偏移量
+        static float tt_left1 = 0; //铭牌左右偏移量
+        static float tt_top2 = 0; //运营商上下偏移量
+        static float tt_left2 = 0; //运营商左右偏移量
+        //读取的打印设置
+        static string PlatePrintPattern = "";
         //重打限制标识
         string tt_reprintmark = "1";
         //重打限数
-        int tt_reprintchang = 0;
+        int tt_reprintchang1 = 0;
+        int tt_reprintchang2 = 0;
         //重打计时
         DateTime tt_reprintstattime;
         DateTime tt_reprintendtime;
@@ -79,15 +85,19 @@ namespace TVBOX01
             this.groupBox14.Visible = false;            
 
             //隐藏线长调试按钮
-            this.button14.Visible = false;
+            this.LineManger.Visible = false;
+
+            this.tabPage10.Parent = null;
 
             //员工账号分离
             if (str.Contains("FH011"))
             {
-                this.button2.Visible = false;
-                this.button3.Visible = false;
+                this.Plate_View.Visible = false;
+                this.Plate_Print.Visible = false;
+                this.Operator_View.Visible = false;
+                this.Operator_Print.Visible = false;
                 this.tabPage4.Parent = null;
-                this.button14.Visible = true;
+                this.LineManger.Visible = true;
             }
 
 
@@ -151,7 +161,6 @@ namespace TVBOX01
             this.label33.Text = null;
             this.label34.Text = null;
             this.label49.Text = null;
-            this.label59.Text = null;
             this.label61.Text = null;
             this.label67.Text = null;
             this.label69.Text = null;
@@ -160,6 +169,8 @@ namespace TVBOX01
             this.label90.Text = null;
             this.label92.Text = null;
             this.label97.Text = null;
+            this.label121.Text = null;
+            this.label124.Text = null;
             this.textBox6.Text = null;
 
             //流程信息
@@ -218,6 +229,7 @@ namespace TVBOX01
             this.label106.Text = null;
             this.label104.Text = null;
             this.label101.Text = null;
+            this.label125.Text = null;
 
             //提示信息
             this.label12.Text = null;
@@ -228,12 +240,11 @@ namespace TVBOX01
             //表格
             this.dataGridView1.DataSource = null;
             this.dataGridView2.DataSource = null;
+            this.dataGridView6.DataSource = null;
 
             //richtext
             this.richTextBox1.Text = null;
             this.richTextBox1.BackColor = Color.White;
-
-
         }
 
 
@@ -274,9 +285,32 @@ namespace TVBOX01
         {
             if( this.checkBox1.Checked)
             {
+                if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini"))
+                {
+                    MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini" + "文件不存在");
+                    return;
+                }
+
+                //读取配置文件，选择打印方式
+                string[] lines = File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini", System.Text.Encoding.GetEncoding("GB2312"));
+
+                foreach (string line in lines)
+                {
+                    if (line.Contains("PlatePrintPattern"))
+                    {
+                        PlatePrintPattern = line.Substring(line.IndexOf("=") + 1).Trim();
+                    }
+                }
+
+                if (PlatePrintPattern == "1")
+                {
+                    this.tabPage10.Parent = tabControl5;
+                }
+
                 if (str.Contains("FH111"))
                 {
-                    this.button3.Visible = true;
+                    this.Plate_Print.Visible = true;
+                    this.Operator_Print.Visible = true;
                     this.tabPage4.Parent = tabControl2;
                     //获取调试开始时间
                     tt_reprintstattime = DateTime.Now;
@@ -318,6 +352,22 @@ namespace TVBOX01
                     else
                     {
                         this.label29.Text = tt_productname;
+                    }
+
+                    if (this.label30.Text == "河南")
+                    {
+                        this.label124.Text = "10086-5";
+                        this.label121.Text = "设备二维码信息";
+                    }
+                    else if (this.label30.Text == "江西")
+                    {
+                        this.label124.Text = "10086";
+                        this.label121.Text = "零配置";
+                    }
+                    else
+                    {
+                        this.label124.Text = "10086";
+                        this.label121.Text = "";
                     }
 
                     //锁死MAC特征码输入框
@@ -431,24 +481,26 @@ namespace TVBOX01
                     Boolean tt_flag5 = false;
                     if (tt_flag4)
                     {
-                            string tt_sql5 = "select  docdesc,Fpath01,Fdata01,Fmd01  from odc_ec where zjbm = '" + this.label31.Text + "' ";
+                        string tt_sql5 = "select  docdesc,Fpath01,Fdata01,Fmd01,Fpath02,Fdata02,Fmd02   from odc_ec where zjbm = '" + this.label31.Text + "' ";
 
-                            DataSet ds5 = Dataset1.GetDataSet(tt_sql5, tt_conn);
-                            if (ds5.Tables.Count > 0 && ds5.Tables[0].Rows.Count > 0)
-                            {
-                                this.label34.Text = ds5.Tables[0].Rows[0].ItemArray[0].ToString(); //EC描述
-                                this.label33.Text = ds5.Tables[0].Rows[0].ItemArray[1].ToString(); //模板路径
-                                this.label32.Text = ds5.Tables[0].Rows[0].ItemArray[2].ToString(); //数据类型
-                                this.label59.Text = ds5.Tables[0].Rows[0].ItemArray[3].ToString(); //MD5码
-                                tt_path = Application.StartupPath + ds5.Tables[0].Rows[0].ItemArray[1].ToString();
-                                tt_md5 = ds5.Tables[0].Rows[0].ItemArray[3].ToString();
-                                tt_flag5 = true;
-
-                            }
-                            else
-                            {
-                                MessageBox.Show("没有找到工单表的EC表配置信息，请确认！");
-                            }
+                        DataSet ds5 = Dataset1.GetDataSet(tt_sql5, tt_conn);
+                        if (ds5.Tables.Count > 0 && ds5.Tables[0].Rows.Count > 0)
+                        {
+                            this.label34.Text = ds5.Tables[0].Rows[0].ItemArray[0].ToString(); //EC描述
+                            this.label33.Text = ds5.Tables[0].Rows[0].ItemArray[1].ToString(); //铭牌模板路径
+                            this.label32.Text = ds5.Tables[0].Rows[0].ItemArray[2].ToString(); //铭牌数据类型
+                            this.label58.Text = ds5.Tables[0].Rows[0].ItemArray[4].ToString(); //运营商模板路径
+                            this.label113.Text = ds5.Tables[0].Rows[0].ItemArray[5].ToString(); //运营商数据类型
+                            //this.label59.Text = ds5.Tables[0].Rows[0].ItemArray[3].ToString(); //MD5码
+                            tt_path1 = Application.StartupPath + ds5.Tables[0].Rows[0].ItemArray[1].ToString();
+                            tt_path2 = Application.StartupPath + ds5.Tables[0].Rows[0].ItemArray[4].ToString();
+                            //tt_md5 = ds5.Tables[0].Rows[0].ItemArray[3].ToString();
+                            tt_flag5 = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("没有找到工单表的EC表配置信息，请确认！");
+                        }
                     }
 
                     //第六步 运营商检查
@@ -471,21 +523,21 @@ namespace TVBOX01
                     Boolean tt_flag7 = false;
                     if (tt_flag6)
                     {
-                        string tt_tasktype = SetMetrialCheck(this.label30.Text, this.label29.Text, tt_telecustomer);
-                        if (tt_tasktype == this.label49.Text)
+                        if (this.label49.Text != "")
                         {
-                            if (this.label49.Text != "")
+                            string tt_tasktype = SetMetrialCheck(this.label30.Text, this.label29.Text, tt_telecustomer, this.label49.Text);
+                            if (tt_tasktype == this.label49.Text)
                             {
                                 tt_flag7 = true;
                             }
                             else
                             {
-                                MessageBox.Show("该工单物料编码为空，请检查工单设置！");
+                                MessageBox.Show("该工单物料编码:" + this.label49.Text + ",与设定物料编码:" + tt_tasktype + ",不一致，请确认");
                             }
                         }
                         else
                         {
-                            MessageBox.Show("该工单物料编码:" + this.label49.Text + ",与设定物料编码:" + tt_tasktype + ",不一致，请确认");
+                            MessageBox.Show("该工单物料编码为空，请检查工单设置！");
                         }
                     }
 
@@ -521,10 +573,16 @@ namespace TVBOX01
                     Boolean tt_flag9 = false;
                     if( tt_flag8)
                     {
-                        tt_flag9 = getPathIstrue(tt_path);
-                        if (!tt_flag9)
+                        tt_flag9 = (getPathIstrue(tt_path1) && getPathIstrue(tt_path2));
+
+                        if (!getPathIstrue(tt_path1))
                         {
-                            MessageBox.Show(" 找不到模板文件：" + tt_path + "，请确认！");
+                            MessageBox.Show(" 找不到模板文件：" + tt_path1 + "，请确认！");
+                        }
+
+                        if (!getPathIstrue(tt_path2))
+                        {
+                            MessageBox.Show(" 找不到模板文件：" + tt_path2 + "，请确认！");
                         }
                     }
 
@@ -584,7 +642,7 @@ namespace TVBOX01
                 this.groupBox12.Visible = true;
                 this.groupBox5.Visible = true;
                 this.dataGridView1.Visible = true;
-                this.button3.Visible = false;
+                this.Plate_Print.Visible = false;
                 this.tabPage4.Parent = null;
                 this.tabPage3.Parent = tabControl2;
                 ClearLabelInfo();
@@ -1052,10 +1110,6 @@ namespace TVBOX01
                 {
                     MessageBox.Show("该工单流程配置异常,有前站位没有后站位，请检查流程位置工单表以及流程表!");
                 }
-
-
-
-
             }
 
 
@@ -1180,11 +1234,11 @@ namespace TVBOX01
         }
 
         //工单检查设定物料编码检查
-        private string SetMetrialCheck(string tt_area, string tt_product, string tt_telecustomer)
+        private string SetMetrialCheck(string tt_area, string tt_product, string tt_telecustomer, string tt_tasktype)
         {
             string tt_setmetrial = "";
             string tt_sql = "select count(1),min(product_code),0 from odc_fhspec " +
-                      "where aear = '" + tt_area + "' and product_name = '" + tt_product + "' and operator = '" + tt_telecustomer + "' ";
+                      "where aear = '" + tt_area + "' and product_name = '" + tt_product + "' and operator = '" + tt_telecustomer + "' and product_code = '" + tt_tasktype + "'";
 
             string[] tt_array = new string[3];
             tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
@@ -1397,14 +1451,14 @@ namespace TVBOX01
                 Boolean tt_flag3 = false;
                 if (tt_flag1 && tt_flag2)
                 {
-                    tt_flag3 = getPathIstrue(tt_path);
+                    tt_flag3 = getPathIstrue(tt_path1);
                     if (tt_flag3)
                     {
-                        setRichtexBox("3、已找到一个铭牌模板,：" + tt_path + ",goon");
+                        setRichtexBox("3、已找到一个铭牌模板,：" + tt_path1 + ",goon");
                     }
                     else
                     {
-                        setRichtexBox("3、没有找到铭牌模板,：" + tt_path + ",over");
+                        setRichtexBox("3、没有找到铭牌模板,：" + tt_path1 + ",over");
                         PutLableInfor("没有找到铭牌模板，请检查！");
                     }
 
@@ -1546,6 +1600,23 @@ namespace TVBOX01
                         this.label104.Text = ds5.Tables[0].Rows[0].ItemArray[5].ToString();  //5G密码
                         this.label101.Text = ds5.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();  //设备标示号暗码
 
+
+                        if (this.label30.Text == "河南")
+                        {
+                            this.label125.Text = "FIBER|" + this.label29.Text + "|" + this.label101.Text + "|" + tt_shortmac;
+                        }
+                        else if (this.label30.Text == "浙江" || this.label30.Text == "江西")
+                        {
+                            this.label125.Text = "厂家:烽火通信科技股份有限公司,型号:" + this.label29.Text + ",SN:" + this.label101.Text +
+                                                 ",生产日期:" + this.label28.Text.Replace("/", ".") + ",用户无线默认SSID:" + this.label108.Text +
+                                                 ",用户无线默认SSID密码:" + this.label110.Text + ",用户登陆默认账号:" + this.label112.Text +
+                                                 ",用户登陆默认密码:" + this.label111.Text + ",设备网卡MAC:" + tt_shortmac;
+                        }
+                        else
+                        {
+                            this.label125.Text = "";
+                        }
+
                         setRichtexBox("5、Macinfo表找到一条数据,goon");
 
                     }
@@ -1559,7 +1630,11 @@ namespace TVBOX01
                 //最后判断
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5)
                 {
-                    GetParaDataPrint(0);
+                    GetParaDataPrint1(0);
+                    if (PlatePrintPattern == "1")
+                    {
+                        GetParaDataPrint2(0);
+                    }
                     GetProductNumInfo();
                     CheckStation(tt_shortmac);
                     this.richTextBox1.BackColor = Color.Chartreuse;
@@ -1622,20 +1697,18 @@ namespace TVBOX01
                 if (tt_flag1 && tt_flag2)
                 {
 
-                    tt_flag3 = getPathIstrue(tt_path);
+                    tt_flag3 = getPathIstrue(tt_path1);
                     if (tt_flag3)
                     {
-                        setRichtexBox("3、已找到一个铭牌模板,：" + tt_path + ",goon");
+                        setRichtexBox("3、已找到一个铭牌模板,：" + tt_path1 + ",goon");
                     }
                     else
                     {
-                        setRichtexBox("3、没有找到铭牌模板,：" + tt_path + ",over");
+                        setRichtexBox("3、没有找到铭牌模板,：" + tt_path1 + ",over");
                         PutLableInfor("没有找到铭牌模板，请检查！");
                     }
 
                 }
-
-
 
                 //第四步扣数检查
                 Boolean tt_flag4 = false;
@@ -1814,6 +1887,22 @@ namespace TVBOX01
                         tt_5guser = ds9.Tables[0].Rows[0].ItemArray[4].ToString();  //5G账号
                         tt_5gpassword = ds9.Tables[0].Rows[0].ItemArray[5].ToString();  //5G密码
                         tt_barcode1 = ds9.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();  //设备标示号暗码
+
+                        if (this.label30.Text == "河南")
+                        {
+                            this.label125.Text = "FIBER|" + this.label29.Text + "|" + tt_gpsn + "|" + tt_shortmac;
+                        }
+                        else if (this.label30.Text == "浙江" || this.label30.Text == "江西")
+                        {
+                            this.label125.Text = "厂家:烽火通信科技股份有限公司,型号:" + this.label29.Text + ",SN:" + tt_gpsn +
+                                                 ",生产日期:" + this.label28.Text.Replace("/", ".") + ",用户无线默认SSID:" + tt_ssid +
+                                                 ",用户无线默认SSID密码:" + tt_wlanpas + ",用户登陆默认账号:" + tt_macusername +
+                                                 ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
+                        }
+                        else
+                        {
+                            this.label125.Text = "";
+                        }
 
                         setRichtexBox("9、Macinfo表找到一条数据，SSID=" + tt_ssid + ",username=" + tt_macusername + ",password=" + tt_password + ",wanlaps=" + tt_wlanpas + ",goon");
                     }
@@ -2026,7 +2115,11 @@ namespace TVBOX01
                     Dataset1.lablePrintRecord(tt_task,tt_shortmac,tt_hostlable,"设备铭牌",str,tt_computermac,tt_remark,tt_conn);
 
                     //打印
-                    GetParaDataPrint(1);
+                    GetParaDataPrint1(1);
+                    if (PlatePrintPattern == "1")
+                    {
+                        GetParaDataPrint2(1);
+                    }
                     GetProductNumInfo();
                     CheckStation(tt_shortmac);
                     this.richTextBox1.BackColor = Color.Chartreuse;
@@ -2195,8 +2288,8 @@ namespace TVBOX01
             textBox2.SelectAll();
         }
 
-        //模板预览
-        private void button2_Click(object sender, EventArgs e)
+        //铭牌模板预览
+        private void Plate_View_Click(object sender, EventArgs e)
         {
             if (this.dataGridView2.RowCount > 0)
             {
@@ -2208,7 +2301,7 @@ namespace TVBOX01
 
                 if (tt_flag)
                 {
-                    GetParaDataPrint(2);  //预览
+                    GetParaDataPrint1(2);  //预览
                 }
                 else
                 {
@@ -2225,8 +2318,8 @@ namespace TVBOX01
             textBox2.SelectAll();
         }
 
-        //打印
-        private void button3_Click(object sender, EventArgs e)
+        //铭牌打印
+        private void Plate_Print_Click(object sender, EventArgs e)
         {
             tt_reprintendtime = DateTime.Now;
 
@@ -2278,7 +2371,7 @@ namespace TVBOX01
                             tt_remark = Dataset1.Context.ContextData["Key1"].ToString();
                         }
 
-                        GetParaDataPrint(1);  //打印
+                        GetParaDataPrint1(1);  //打印
                         string tt_host = Gethostlable(tt_recordmac);
                         string tt_taskscode = Gettasks(tt_recordmac);
                         string tt_local = "铭牌标签";
@@ -2323,17 +2416,172 @@ namespace TVBOX01
 
                         if (tt_reprintmark == "0")
                         {
-                            tt_reprintchang++;
+                            tt_reprintchang1++;
 
-                            if (tt_reprintchang >= 5)
+                            if (tt_reprintchang1 >= 5)
                             {
                                 this.checkBox1.Checked = false;
                                 MessageBox.Show("非认证打印电脑，已达到打印上限，退出打印模式");
-                                tt_reprintchang = 0;
+                                tt_reprintchang1 = 0;
                             }
                             else
                             {
-                                MessageBox.Show("非认证打印电脑，已打印" + tt_reprintchang + "次，本次打印次数剩余" + (5 - tt_reprintchang) +"次");
+                                MessageBox.Show("非认证打印电脑，已打印" + tt_reprintchang1 + "次，本次打印次数剩余" + (5 - tt_reprintchang1) +"次");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("当前站位或序号：" + tt_prientcode + "必须大于待测站位或序号：" + tt_checkcode + ",或装箱产品已打散,才能重打标签");
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                PutLableInfor("参数表数据为空，不能打印！");
+            }
+
+            textBox3.Focus();
+            textBox3.SelectAll();
+            tt_reprintstattime = DateTime.Now;
+
+        }
+
+        //运营商模板预览
+        private void Operator_View_Click(object sender, EventArgs e)
+        {
+            if (this.dataGridView6.RowCount > 0)
+            {
+
+                string tt_prientcode = this.label65.Text;
+                string tt_checkcode = this.label66.Text;
+
+                Boolean tt_flag = CheckCodeStation(tt_prientcode, tt_checkcode);
+
+                if (tt_flag)
+                {
+                    GetParaDataPrint2(2);  //预览
+                }
+                else
+                {
+                    MessageBox.Show("当前站位或序号：" + tt_prientcode + "必须大于待测站位或序号：" + tt_checkcode + ",才能重打标签");
+                }
+
+            }
+            else
+            {
+                PutLableInfor("参数表数据为空，不能预览，输入21条码查询数据后，再预览模板");
+            }
+
+            textBox2.Focus();
+            textBox2.SelectAll();
+        }
+
+        //运营商打印
+        private void Operator_Print_Click(object sender, EventArgs e)
+        {
+            tt_reprintendtime = DateTime.Now;
+
+            TimeSpan tt_diffre;
+
+            tt_diffre = tt_reprintendtime - tt_reprintstattime;
+
+            if (tt_diffre.Minutes > 5)
+            {
+                this.checkBox1.Checked = false;
+                MessageBox.Show("5分钟内未进行任何打印动作，退出打印模式");
+                return;
+            }
+
+            if (this.dataGridView6.RowCount > 0)
+            {
+                MessageBoxButtons messButton = MessageBoxButtons.OKCancel;
+                string tt_info = "";
+                if (str.Contains("FH011"))
+                {
+                    tt_info = "，包装产品会被退回check站位";
+                }
+                DialogResult dr = MessageBox.Show("确定要重打运营商标签吗，打印信息被记录" + tt_info, "运营商重打", messButton);
+
+                if (dr == DialogResult.OK)//如果点击“确定”按钮
+                {
+                    string tt_prientcode = this.label65.Text;
+                    string tt_checkcode = this.label66.Text;
+                    string tt_recordmac = this.textBox3.Text;
+
+                    Boolean tt_flag = CheckCodeStation(tt_prientcode, tt_checkcode);
+
+                    DataSet tt_dataset1 = Dataset2.getMacAllCodeInfo(tt_recordmac, tt_conn);
+                    string tt_nowcode = Dataset2.getPcbaNowCode(tt_dataset1);
+
+                    if (tt_flag && tt_nowcode != "9990")
+                    {
+                        Reprint form1 = new Reprint();
+                        form1.StartPosition = FormStartPosition.CenterScreen;
+                        form1.ShowDialog();
+
+                        string tt_remark = Dataset1.Context.ContextData["Key1"].ToString();
+
+                        GetParaDataPrint2(1);  //打印
+                        string tt_host = Gethostlable(tt_recordmac);
+                        string tt_taskscode = Gettasks(tt_recordmac);
+                        string tt_local = "运营商标签";
+                        string tt_username = "";
+                        if (str.Contains("FH011"))
+                        {
+                            tt_username = this.comboBox2.Text;
+                        }
+                        else
+                        {
+                            tt_username = "工程账号重打";
+                        }
+
+                        SetPrintRecord(tt_taskscode, tt_recordmac, tt_host, tt_local, tt_username, tt_computermac, tt_remark);
+
+                        if (str.Contains("FH011"))
+                        {
+                            if (int.Parse(tt_nowcode) >= 3000)
+                            {
+                                string tt_gyid = this.label79.Text;
+                                string tt_ccode = this.label85.Text;
+                                string tt_ncode = "2230";
+                                bool tt_flag1 = Dataset1.FhUnPassStationI(tt_taskscode, tt_username, tt_recordmac, tt_gyid, tt_ccode, tt_ncode, tt_conn);
+                                if (tt_flag1 && tt_nowcode == "3201")
+                                {
+                                    int delete_checknum = Delete_Check(tt_recordmac);
+                                    setRichtexBox("重打完成，产品属于待装箱产品，已退回check站位，产品为待装箱产品，比对数据" + delete_checknum + "条已删除，需要重新条码比对,ok");
+                                    PutLableInfor("重打完成，产品属于待装箱产品，已退回check站位，条码比对数据已删除");
+                                }
+                                else if (tt_flag1)
+                                {
+                                    setRichtexBox("重打完成，产品属于包装产品，已退回check站位,ok");
+                                    PutLableInfor("重打完成，产品属于包装产品，已退回check站位");
+                                }
+                                else
+                                {
+                                    setRichtexBox("流程异常，产品未跳转也无法正常流线，请联系工程,NG");
+                                    PutLableInfor("流程异常，产品未跳转也无法正常流线，请联系工程");
+                                }
+                            }
+                        }
+
+                        if (tt_reprintmark == "0")
+                        {
+                            tt_reprintchang2++;
+
+                            if (tt_reprintchang2 >= 5)
+                            {
+                                this.checkBox1.Checked = false;
+                                MessageBox.Show("非认证打印电脑，已达到打印上限，退出打印模式");
+                                tt_reprintchang2 = 0;
+                            }
+                            else
+                            {
+                                MessageBox.Show("非认证打印电脑，已打印" + tt_reprintchang2 + "次，本次打印次数剩余" + (5 - tt_reprintchang2) + "次");
                             }
                         }
                     }
@@ -2359,7 +2607,7 @@ namespace TVBOX01
         }
 
         //线长调试模式
-        private void button14_Click(object sender, EventArgs e)
+        private void LineManger_Click(object sender, EventArgs e)
         {
             if (this.checkBox1.Checked == true)
             {
@@ -2385,7 +2633,7 @@ namespace TVBOX01
                     this.textBox21.Enabled = true;
                     this.textBox22.Enabled = true;                    
                     this.groupBox15.Visible = false;
-                    this.button3.Visible = false;
+                    this.Plate_Print.Visible = false;
                     this.tabPage4.Parent = null;
                     this.tabPage3.Parent = tabControl2;
                     this.textBox3.Enabled = true;
@@ -2425,7 +2673,11 @@ namespace TVBOX01
                     this.comboBox2.Enabled = false;
                     this.textBox21.Enabled = false;
                     this.textBox22.Enabled = false;
-                    this.button3.Visible = true;
+                    this.Plate_Print.Visible = true;
+                    if (PlatePrintPattern == "1")
+                    {
+                        this.Operator_Print.Visible = true;
+                    }
                     this.tabPage3.Parent = null;
                     this.tabPage4.Parent = tabControl2;
                     ScanDataInitial();
@@ -2450,7 +2702,7 @@ namespace TVBOX01
             this.textBox21.Enabled = true;
             this.textBox22.Enabled = true;
             this.groupBox15.Visible = false;
-            this.button3.Visible = false;
+            this.Plate_Print.Visible = false;
             this.tabPage4.Parent = null;
             this.tabPage3.Parent = tabControl2;
         }
@@ -2470,33 +2722,57 @@ namespace TVBOX01
             this.groupBox12.Visible = true;
             this.groupBox5.Visible = true;
             this.dataGridView1.Visible = true;
-            this.button3.Visible = false;
+            this.Plate_Print.Visible = false;
             this.tabPage4.Parent = null;
             this.tabPage3.Parent = tabControl2;
         }
 
         //上移按钮
-        private void button9_Click(object sender, EventArgs e)
+        private void Plate_Up_Click(object sender, EventArgs e)
         {
-            tt_top -= float.Parse(this.comboBox1.Text);
+            tt_top1 -= float.Parse(this.comboBox1.Text);
         }
 
         //下移按钮
-        private void button10_Click(object sender, EventArgs e)
+        private void Plate_Down_Click(object sender, EventArgs e)
         {
-            tt_top += float.Parse(this.comboBox1.Text);
+            tt_top1 += float.Parse(this.comboBox1.Text);
         }
 
         //左移按钮
-        private void button11_Click(object sender, EventArgs e)
+        private void Plate_Left_Click(object sender, EventArgs e)
         {
-            tt_left -= float.Parse(this.comboBox1.Text);
+            tt_left1 -= float.Parse(this.comboBox1.Text);
         }
 
         //右移按钮
-        private void button12_Click(object sender, EventArgs e)
+        private void Plate_Right_Click(object sender, EventArgs e)
         {
-            tt_left += float.Parse(this.comboBox1.Text);
+            tt_left1 += float.Parse(this.comboBox1.Text);
+        }
+
+        //上移按钮
+        private void Operator_Up_Click(object sender, EventArgs e)
+        {
+            tt_top2 -= float.Parse(this.comboBox1.Text);
+        }
+
+        //下移按钮
+        private void Operator_Down_Click(object sender, EventArgs e)
+        {
+            tt_top2 += float.Parse(this.comboBox1.Text);
+        }
+
+        //左移按钮
+        private void Operator_Left_Click(object sender, EventArgs e)
+        {
+            tt_left2 -= float.Parse(this.comboBox1.Text);
+        }
+
+        //右移按钮
+        private void Operator_Right_Click(object sender, EventArgs e)
+        {
+            tt_left2 += float.Parse(this.comboBox1.Text);
         }
 
         //结束设置
@@ -2514,7 +2790,7 @@ namespace TVBOX01
             this.groupBox12.Visible = true;
             this.groupBox5.Visible = true;
             this.dataGridView1.Visible = true;
-            this.button3.Visible = false;
+            this.Plate_Print.Visible = false;
             this.tabPage4.Parent = null;
             this.tabPage3.Parent = tabControl2;
         }
@@ -2522,34 +2798,34 @@ namespace TVBOX01
         #endregion
 
 
-        #region 11、数据采集及模板打印
+        #region 11、铭牌数据采集及模板打印
         //获取参数
-        private void GetParaDataPrint(int tt_itemtype)
+        private void GetParaDataPrint1(int tt_itemtype)
         {
-            string tt_fdata = this.label32.Text;
+            string tt_fdata1 = this.label32.Text;
 
             //mp01---数据类型一
-            if (tt_fdata == "MP01")
+            if (tt_fdata1 == "MP01")
             {
-                GetParaDataPrint_MP01(tt_itemtype);
+                GetParaDataPrint1_MP01(tt_itemtype);
             }
 
             //mp01---数据类型一
-            if (tt_fdata == "MC01")
+            if (tt_fdata1 == "MC01")
             {
-                GetParaDataPrint_MC01(tt_itemtype);
+                GetParaDataPrint1_MC01(tt_itemtype);
             }
 
             //md01---数据类型一
-            if (tt_fdata == "MD01")
+            if (tt_fdata1 == "MD01")
             {
-                GetParaDataPrint_MD01(tt_itemtype);
+                GetParaDataPrint1_MD01(tt_itemtype);
             }
 
             //me01---数据类型一
-            if (tt_fdata == "MF01")
+            if (tt_fdata1 == "MF01")
             {
-                GetParaDataPrint_MF01(tt_itemtype);
+                GetParaDataPrint1_MF01(tt_itemtype);
             }
 
         }
@@ -2604,7 +2880,7 @@ namespace TVBOX01
 
 
         //----以下是MP01数据采集----
-        private void GetParaDataPrint_MP01(int tt_itemtype)
+        private void GetParaDataPrint1_MP01(int tt_itemtype)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -2763,7 +3039,7 @@ namespace TVBOX01
                 FastReport.Report report = new FastReport.Report();
 
                 report.Prepare();
-                report.Load(tt_path);
+                report.Load(tt_path1);
                 report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
@@ -2793,15 +3069,15 @@ namespace TVBOX01
                     TextObject p1 = report.FindObject(s) as TextObject;
                     if (p1 != null)
                     {
-                        p1.Top += tt_top;
-                        p1.Left += tt_left;
+                        p1.Top += tt_top1;
+                        p1.Left += tt_left1;
                     }
                     s = string.Format("Barcode{0}", i + 1);
                     BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
                     if (p2 != null)
                     {
-                        p2.Top += tt_top;
-                        p2.Left += tt_left;
+                        p2.Top += tt_top1;
+                        p2.Left += tt_left1;
                     }
                 }
 
@@ -2810,10 +3086,14 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "铭牌";
+                    }
                     report.Print();
-                    report.Save(tt_path);
-                    tt_top = 0;
-                    tt_left = 0;
+                    report.Save(tt_path1);
+                    tt_top1 = 0;
+                    tt_left1 = 0;
                     PutLableInfor("打印完毕");
                 }
 
@@ -2836,7 +3116,7 @@ namespace TVBOX01
         }
 
         //----以下是MC01数据采集----
-        private void GetParaDataPrint_MC01(int tt_itemtype)
+        private void GetParaDataPrint1_MC01(int tt_itemtype)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -3007,7 +3287,7 @@ namespace TVBOX01
                 FastReport.Report report = new FastReport.Report();
 
                 report.Prepare();
-                report.Load(tt_path);
+                report.Load(tt_path1);
                 report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
@@ -3038,22 +3318,22 @@ namespace TVBOX01
                     TextObject p1 = report.FindObject(s) as TextObject;
                     if (p1 != null)
                     {
-                        p1.Top += tt_top;
-                        p1.Left += tt_left;
+                        p1.Top += tt_top1;
+                        p1.Left += tt_left1;
                     }
                     s = string.Format("Barcode{0}", i + 1);
                     BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
                     if (p2 != null)
                     {
-                        p2.Top += tt_top;
-                        p2.Left += tt_left;
+                        p2.Top += tt_top1;
+                        p2.Left += tt_left1;
                     }
                     s = string.Format("Picture{0}", i + 1);
                     PictureObject p3 = report.FindObject(s) as PictureObject;
                     if (p3 != null)
                     {
-                        p3.Top += tt_top;
-                        p3.Left += tt_left;
+                        p3.Top += tt_top1;
+                        p3.Left += tt_left1;
                     }
                 }
 
@@ -3061,11 +3341,15 @@ namespace TVBOX01
 
                 //--打印
                 if (tt_itemtype == 1)
-                {                  
+                {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "铭牌";
+                    }
                     report.Print();
-                    report.Save(tt_path);
-                    tt_top = 0;
-                    tt_left = 0;
+                    report.Save(tt_path1);
+                    tt_top1 = 0;
+                    tt_left1 = 0;
                     PutLableInfor("打印完毕");
                 }
 
@@ -3088,7 +3372,7 @@ namespace TVBOX01
         }
 
         //----以下是MD01数据采集----
-        private void GetParaDataPrint_MD01(int tt_itemtype)
+        private void GetParaDataPrint1_MD01(int tt_itemtype)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -3202,7 +3486,7 @@ namespace TVBOX01
                 FastReport.Report report = new FastReport.Report();
 
                 report.Prepare();
-                report.Load(tt_path);
+                report.Load(tt_path1);
                 report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
@@ -3224,15 +3508,15 @@ namespace TVBOX01
                     TextObject p1 = report.FindObject(s) as TextObject;
                     if (p1 != null)
                     {
-                        p1.Top += tt_top;
-                        p1.Left += tt_left;
+                        p1.Top += tt_top1;
+                        p1.Left += tt_left1;
                     }
                     s = string.Format("Barcode{0}", i + 1);
                     BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
                     if (p2 != null)
                     {
-                        p2.Top += tt_top;
-                        p2.Left += tt_left;
+                        p2.Top += tt_top1;
+                        p2.Left += tt_left1;
                     }
                 }
 
@@ -3241,10 +3525,14 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "铭牌";
+                    }
                     report.Print();
-                    report.Save(tt_path);
-                    tt_top = 0;
-                    tt_left = 0;
+                    report.Save(tt_path1);
+                    tt_top1 = 0;
+                    tt_left1 = 0;
                     PutLableInfor("打印完毕");
                 }
 
@@ -3267,7 +3555,7 @@ namespace TVBOX01
         }
 
         //----以下是MF01数据采集----
-        private void GetParaDataPrint_MF01(int tt_itemtype)
+        private void GetParaDataPrint1_MF01(int tt_itemtype)
         {
             //第一步数据准备
             DataSet dst = new DataSet();
@@ -3433,7 +3721,7 @@ namespace TVBOX01
                 FastReport.Report report = new FastReport.Report();
 
                 report.Prepare();
-                report.Load(tt_path);
+                report.Load(tt_path1);
                 report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
@@ -3464,22 +3752,22 @@ namespace TVBOX01
                     TextObject p1 = report.FindObject(s) as TextObject;
                     if (p1 != null)
                     {
-                        p1.Top += tt_top;
-                        p1.Left += tt_left;
+                        p1.Top += tt_top1;
+                        p1.Left += tt_left1;
                     }
                     s = string.Format("Barcode{0}", i + 1);
                     BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
                     if (p2 != null)
                     {
-                        p2.Top += tt_top;
-                        p2.Left += tt_left;
+                        p2.Top += tt_top1;
+                        p2.Left += tt_left1;
                     }
                     s = string.Format("Picture{0}", i + 1);
                     PictureObject p3 = report.FindObject(s) as PictureObject;
                     if (p3 != null)
                     {
-                        p3.Top += tt_top;
-                        p3.Left += tt_left;
+                        p3.Top += tt_top1;
+                        p3.Left += tt_left1;
                     }
                 }
 
@@ -3488,10 +3776,14 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "铭牌";
+                    }
                     report.Print();
-                    report.Save(tt_path);
-                    tt_top = 0;
-                    tt_left = 0;
+                    report.Save(tt_path1);
+                    tt_top1 = 0;
+                    tt_left1 = 0;
                     PutLableInfor("打印完毕");
                 }
 
@@ -3613,8 +3905,645 @@ namespace TVBOX01
 
 
         //}
-        
+
 
         #endregion
+
+        #region 10、运营商数据采集及模板打印
+        //获取参数
+        private void GetParaDataPrint2(int tt_itemtype)
+        {
+            string tt_fdata2 = this.label113.Text;
+
+            //MP01---数据类型一
+            if (tt_fdata2 == "YD01")
+            {
+                GetParaDataPrint2_YD01(tt_itemtype);
+            }
+
+            //DX01---数据类型一
+            if (tt_fdata2 == "DX01")
+            {
+                GetParaDataPrint2_DX01(tt_itemtype);
+            }
+
+            //CG01---数据类型一
+            if (tt_fdata2 == "CG01")
+            {
+                GetParaDataPrint2_CG01(tt_itemtype);
+            }
+        }
+
+        //----以下是YD01数据采集----
+        private void GetParaDataPrint2_YD01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst = new DataSet();
+            DataTable dt = new DataTable();
+            dst.Tables.Add(dt);
+            dt.Columns.Add("参数");
+            dt.Columns.Add("名称");
+            dt.Columns.Add("内容");
+
+
+            DataRow row1 = dt.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "设备型号";
+            row1["内容"] = this.label29.Text;
+            dt.Rows.Add(row1);
+
+
+            DataRow row2 = dt.NewRow();
+            row2["参数"] = "S02";
+            row2["名称"] = "设备标识";
+            row2["内容"] = this.label42.Text;
+            dt.Rows.Add(row2);
+
+
+            DataRow row3 = dt.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "配置账号";
+            row3["内容"] = this.label112.Text;
+            dt.Rows.Add(row3);
+
+            DataRow row4 = dt.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "配置密码";
+            row4["内容"] = this.label111.Text;
+            dt.Rows.Add(row4);
+
+            DataRow row5 = dt.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "网络名称";
+            row5["内容"] = this.label108.Text;
+            dt.Rows.Add(row5);
+
+            DataRow row6 = dt.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "网络密匙";
+            row6["内容"] = this.label110.Text;
+            dt.Rows.Add(row6);
+
+
+            DataRow row7 = dt.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "5G账号";
+            row7["内容"] = this.label106.Text;
+            dt.Rows.Add(row7);
+
+            DataRow row8 = dt.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "5G密码";
+            row8["内容"] = this.label104.Text;
+            dt.Rows.Add(row8);
+
+            DataRow row9 = dt.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "设备标示暗码";
+            row9["内容"] = this.label101.Text;
+            dt.Rows.Add(row9);
+
+            DataRow row10 = dt.NewRow();
+            row10["参数"] = "S10";
+            row10["名称"] = "PON类型";
+            row10["内容"] = this.label69.Text;
+            dt.Rows.Add(row10);
+
+            DataRow row11 = dt.NewRow();
+            row11["参数"] = "S11";
+            row11["名称"] = "移动服务热线";
+            row11["内容"] = this.label124.Text;
+            dt.Rows.Add(row11);
+
+            DataRow row12 = dt.NewRow();
+            row12["参数"] = "S12";
+            row12["名称"] = "移动文字变量";
+            row12["内容"] = this.label121.Text;
+            dt.Rows.Add(row12);
+
+            DataRow row13 = dt.NewRow();
+            row13["参数"] = "S13";
+            row13["名称"] = "移动二维码";
+            row13["内容"] = this.label125.Text;
+            dt.Rows.Add(row13);
+
+            this.dataGridView6.DataSource = null;
+            this.dataGridView6.Rows.Clear();
+
+            this.dataGridView6.DataSource = dst.Tables[0];
+            this.dataGridView6.Update();
+
+            this.dataGridView6.Columns[0].Width = 50;
+            this.dataGridView6.Columns[1].Width = 80;
+            this.dataGridView6.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst.Tables[0].Rows[8][2].ToString());
+                report.SetParameterValue("S10", dst.Tables[0].Rows[9][2].ToString());
+                report.SetParameterValue("S11", dst.Tables[0].Rows[10][2].ToString());
+                report.SetParameterValue("S12", dst.Tables[0].Rows[11][2].ToString());
+                report.SetParameterValue("S13", dst.Tables[0].Rows[12][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "运营商";
+                    }
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查铭牌，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+
+
+        }
+
+        //----以下是DX01数据采集----
+        private void GetParaDataPrint2_DX01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst = new DataSet();
+            DataTable dt = new DataTable();
+            dst.Tables.Add(dt);
+            dt.Columns.Add("参数");
+            dt.Columns.Add("名称");
+            dt.Columns.Add("内容");
+
+            string tt_ltponword = "";
+            if (this.label85.Text == "GPON")
+            {
+                tt_ltponword = "&sn=";
+            }
+            else if (this.label85.Text == "EPON")
+            {
+                tt_ltponword = "&mac=";
+            }
+
+            string tt_LTQR = "http://op.smartont.net/app/download?ssid1=" + this.label108.Text + "&password=" + this.label110.Text +
+                             "&username=" + this.label108.Text + "&pwd=" + this.label110.Text + "&model=" + this.label69.Text +
+                             "&type=" + this.label29.Text + tt_ltponword + this.label71.Text + "&serialnumber=" + this.label101.Text +
+                             "&ip=192.168.1.1";
+
+            string tt_XJDZ = "";
+            if ((this.label29.Text == "HG6201T" || this.label29.Text == "HG2201T") && this.label30.Text == "新疆")
+            {
+                tt_XJDZ = "此终端所有权归新疆电信公司所有";
+            }
+
+            string tt_HNDZ = "";
+            if ((this.label29.Text == "HG6201T" || this.label29.Text == "HG2201T") && this.label30.Text == "海南")
+            {
+                tt_HNDZ = "　双协议\r\n防雷4KV";
+            }
+
+            DataRow row1 = dt.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "设备型号";
+            row1["内容"] = this.label29.Text;
+            dt.Rows.Add(row1);
+
+            DataRow row2 = dt.NewRow();
+            row2["参数"] = "S02";
+            row2["名称"] = "设备标识";
+            row2["内容"] = this.label42.Text;
+            dt.Rows.Add(row2);
+
+            DataRow row3 = dt.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "配置账号";
+            row3["内容"] = this.label112.Text;
+            dt.Rows.Add(row3);
+
+            DataRow row4 = dt.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "配置密码";
+            row4["内容"] = this.label111.Text;
+            dt.Rows.Add(row4);
+
+            DataRow row5 = dt.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "网络名称";
+            row5["内容"] = this.label108.Text;
+            dt.Rows.Add(row5);
+
+            DataRow row6 = dt.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "网络密匙";
+            row6["内容"] = this.label109.Text;
+            dt.Rows.Add(row6);
+
+            DataRow row7 = dt.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "5G账号";
+            row7["内容"] = this.label106.Text;
+            dt.Rows.Add(row7);
+
+            DataRow row8 = dt.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "5G密码";
+            row8["内容"] = this.label104.Text;
+            dt.Rows.Add(row8);
+
+            DataRow row9 = dt.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "设备标示暗码";
+            row9["内容"] = this.label101.Text;
+            dt.Rows.Add(row9);
+
+            DataRow row10 = dt.NewRow();
+            row10["参数"] = "S10";
+            row10["名称"] = "PON类型";
+            row10["内容"] = this.label69.Text;
+            dt.Rows.Add(row10);
+
+            DataRow row11 = dt.NewRow();
+            row11["参数"] = "S11";
+            row11["名称"] = "SN";
+            row11["内容"] = this.label71.Text;
+            dt.Rows.Add(row11);
+
+            DataRow row12 = dt.NewRow();
+            row12["参数"] = "S12";
+            row12["名称"] = "QR";
+            row12["内容"] = tt_LTQR;
+            dt.Rows.Add(row12);
+
+            DataRow row13 = dt.NewRow();
+            row13["参数"] = "S13";
+            row13["名称"] = "XJDZ";
+            row13["内容"] = tt_XJDZ;
+            dt.Rows.Add(row13);
+
+            DataRow row14 = dt.NewRow();
+            row14["参数"] = "S14";
+            row14["名称"] = "HNDZ";
+            row14["内容"] = tt_HNDZ;
+            dt.Rows.Add(row14);
+
+            DataRow row15 = dt.NewRow();
+            row15["参数"] = "S15";
+            row15["名称"] = "网络类型";
+            row15["内容"] = this.label88.Text;
+            dt.Rows.Add(row15);
+
+            DataRow row16 = dt.NewRow();
+            row16["参数"] = "S16";
+            row16["名称"] = "电流";
+            row16["内容"] = this.label92.Text;
+            dt.Rows.Add(row16);
+
+            DataRow row17 = dt.NewRow();
+            row17["参数"] = "S17";
+            row17["名称"] = "电压";
+            row17["内容"] = this.label90.Text;
+            dt.Rows.Add(row17);
+
+            DataRow row18 = dt.NewRow();
+            row18["参数"] = "S18";
+            row18["名称"] = "COMITID";
+            row18["内容"] = this.label61.Text;
+            dt.Rows.Add(row18);
+
+            this.dataGridView6.DataSource = null;
+            this.dataGridView6.Rows.Clear();
+
+            this.dataGridView6.DataSource = dst.Tables[0];
+            this.dataGridView6.Update();
+
+            this.dataGridView6.Columns[0].Width = 50;
+            this.dataGridView6.Columns[1].Width = 80;
+            this.dataGridView6.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst.Tables[0].Rows[8][2].ToString());
+                report.SetParameterValue("S10", dst.Tables[0].Rows[9][2].ToString());
+                report.SetParameterValue("S11", dst.Tables[0].Rows[10][2].ToString());
+                report.SetParameterValue("S12", dst.Tables[0].Rows[11][2].ToString());
+                report.SetParameterValue("S13", dst.Tables[0].Rows[12][2].ToString());
+                report.SetParameterValue("S14", dst.Tables[0].Rows[13][2].ToString());
+                report.SetParameterValue("S15", dst.Tables[0].Rows[14][2].ToString());
+                report.SetParameterValue("S16", dst.Tables[0].Rows[15][2].ToString());
+                report.SetParameterValue("S17", dst.Tables[0].Rows[16][2].ToString());
+                report.SetParameterValue("S18", dst.Tables[0].Rows[17][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "运营商";
+                    }
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查铭牌，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+        }
+
+        //----以下是CG01数据采集----
+        private void GetParaDataPrint2_CG01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst = new DataSet();
+            DataTable dt = new DataTable();
+            dst.Tables.Add(dt);
+            dt.Columns.Add("参数");
+            dt.Columns.Add("名称");
+            dt.Columns.Add("内容");
+
+
+            DataRow row1 = dt.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "设备型号";
+            row1["内容"] = this.label29.Text;
+            dt.Rows.Add(row1);
+
+
+            DataRow row2 = dt.NewRow();
+            row2["参数"] = "S02";
+            row2["名称"] = "设备标识";
+            row2["内容"] = this.label42.Text;
+            dt.Rows.Add(row2);
+
+
+            DataRow row3 = dt.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "配置账号";
+            row3["内容"] = this.label112.Text;
+            dt.Rows.Add(row3);
+
+            DataRow row4 = dt.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "配置密码";
+            row4["内容"] = this.label111.Text;
+            dt.Rows.Add(row4);
+
+            DataRow row5 = dt.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "网络名称";
+            row5["内容"] = this.label108.Text;
+            dt.Rows.Add(row5);
+
+            DataRow row6 = dt.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "网络密匙";
+            row6["内容"] = this.label110.Text;
+            dt.Rows.Add(row6);
+
+
+            DataRow row7 = dt.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "5G账号";
+            row7["内容"] = this.label106.Text;
+            dt.Rows.Add(row7);
+
+            DataRow row8 = dt.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "5G密码";
+            row8["内容"] = this.label104.Text;
+            dt.Rows.Add(row8);
+
+            DataRow row9 = dt.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "设备标示暗码";
+            row9["内容"] = this.label101.Text;
+            dt.Rows.Add(row9);
+
+            DataRow row10 = dt.NewRow();
+            row10["参数"] = "S10";
+            row10["名称"] = "PON类型";
+            row10["内容"] = this.label69.Text;
+            dt.Rows.Add(row10);
+
+            DataRow row11 = dt.NewRow();
+            row11["参数"] = "S11";
+            row11["名称"] = "移动服务热线";
+            row11["内容"] = this.label124.Text;
+            dt.Rows.Add(row11);
+
+            DataRow row12 = dt.NewRow();
+            row12["参数"] = "S12";
+            row12["名称"] = "移动文字变量";
+            row12["内容"] = this.label121.Text;
+            dt.Rows.Add(row12);
+
+            DataRow row13 = dt.NewRow();
+            row13["参数"] = "S13";
+            row13["名称"] = "移动二维码";
+            row13["内容"] = this.label125.Text;
+            dt.Rows.Add(row13);
+
+            this.dataGridView6.DataSource = null;
+            this.dataGridView6.Rows.Clear();
+
+            this.dataGridView6.DataSource = dst.Tables[0];
+            this.dataGridView6.Update();
+
+            this.dataGridView6.Columns[0].Width = 50;
+            this.dataGridView6.Columns[1].Width = 80;
+            this.dataGridView6.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S01", dst.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst.Tables[0].Rows[8][2].ToString());
+                report.SetParameterValue("S10", dst.Tables[0].Rows[9][2].ToString());
+                report.SetParameterValue("S11", dst.Tables[0].Rows[10][2].ToString());
+                report.SetParameterValue("S12", dst.Tables[0].Rows[11][2].ToString());
+                report.SetParameterValue("S13", dst.Tables[0].Rows[12][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    if (PlatePrintPattern == "1")
+                    {
+                        report.PrintSettings.Printer = "运营商";
+                    }
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查铭牌，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+        }
+
+        #endregion
+
     }
 }

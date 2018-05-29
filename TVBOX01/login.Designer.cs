@@ -242,7 +242,11 @@
             "ZX101_21_烽火天翼中箱标签工程账号(不用)",
             "******",
             "FH007_34_延迟制造离线标签打印(不用)",
-            "FH107_35_延迟制造离线标签打印(不用)"});
+            "FH107_35_延迟制造离线标签打印(不用)",
+            "******",
+            "FH112_浙江运营商标签返工重打账号(不用)",
+            "MP004_36_浙江二维码返工打印员工账号",
+            "MP104_37_浙江二维码返工打印工程账号"});
             this.comboBox1.Location = new System.Drawing.Point(87, 101);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.MaxDropDownItems = 25;

@@ -802,6 +802,11 @@ namespace TVBOX01
                 string tt_sql3_3 = "select  docdesc,Fpath04,Fdata04,Fmd04  from odc_ec where zjbm = '" + tt_ec + "' ";
                 string tt_sql3_4 = "select  docdesc,Fpath10,Fdata10,Fmd10  from odc_ec where zjbm = '" + tt_ec + "' ";
 
+                if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽")
+                {
+                    tt_sql3_2 = "select  docdesc,Fpath09,Fdata09,Fmd09  from odc_ec where zjbm = '" + tt_ec + "' ";
+                }
+
                 if (tt_parenttask == "小型化方案")
                 {
                     tt_sql3_4 = "select  docdesc,Fpath09,Fdata09,Fmd09  from odc_ec where zjbm = '" + tt_ec + "' ";
@@ -831,12 +836,10 @@ namespace TVBOX01
                 {
                     this.label20.Text = ds3_1.Tables[0].Rows[0].ItemArray[0].ToString(); //EC描述
                     this.label18.Text = ds3_1.Tables[0].Rows[0].ItemArray[2].ToString(); //I型标签数据类型
-                    //tt_md5_1 = ds3_1.Tables[0].Rows[0].ItemArray[3].ToString();
                     tt_path1 = Application.StartupPath + ds3_1.Tables[0].Rows[0].ItemArray[1].ToString(); //I型标签模板路径
                     this.label19.Text = ds3_1.Tables[0].Rows[0].ItemArray[1].ToString(); //I型标签模板路径
 
                     this.label37.Text = ds3_2.Tables[0].Rows[0].ItemArray[2].ToString(); //二维码数据类型
-                    //tt_md5_2 = ds3_2.Tables[0].Rows[0].ItemArray[3].ToString();
                     tt_path2 = Application.StartupPath + ds3_2.Tables[0].Rows[0].ItemArray[1].ToString(); //二维码模板路径
                     this.label41.Text = ds3_2.Tables[0].Rows[0].ItemArray[1].ToString(); //二维码模板路径
 
@@ -993,7 +996,16 @@ namespace TVBOX01
                         MessageBox.Show("没有找到子工单" + tt_task1 + "的上海资产编码配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
                     }
                 }
-                else if ((tt_productname != "HG6821M" || this.label14.Text != "上海") && tt_flag8_1)
+                else if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽" && tt_flag8_1)
+                {
+                    this.QR_view.Text = "预览SN码";
+                    this.QR_print.Text = "打印SN码";
+                    this.QR_label.Text = "SN码标签";
+                    this.label115.Text = "SN 码";
+                    this.label39.Text = "SN码标签";
+                    tt_flag8 = true;
+                }                
+                else
                 {
                     this.QR_view.Text = "预览二维码";
                     this.QR_print.Text = "打印二维码";
@@ -1062,7 +1074,7 @@ namespace TVBOX01
             if(tt_flag9)
             {
                 string tt_area = this.label14.Text;
-                tt_serialsets = GetProductSerialSet(tt_area,tt_productname);
+                tt_serialsets = GetProductSerialSet(tt_area,tt_productname,this.label15.Text);
                 if (!tt_serialsets.Equals(""))
                 {
                     tt_flag11 = true;
@@ -1810,12 +1822,12 @@ namespace TVBOX01
         }
 
         //获取串号约束
-        private string GetProductSerialSet(string tt_area,string tt_productname)
+        private string GetProductSerialSet(string tt_area,string tt_productname,string tt_tasktype)
         {
             string tt_serialset = "";
 
             string tt_sql = "select count(1),min(hostlable_code),0 from odc_fhspec " +
-                            "where aear = '" + tt_area + "' and product_name = '" + tt_productname + "' ";
+                            "where aear = '" + tt_area + "' and product_name = '" + tt_productname + "' and product_code = '" + tt_tasktype + "' ";
 
             string[] tt_array = new string[3];
             tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
@@ -4752,7 +4764,7 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1 && this.Itype_printset.Text != "")
                 {
-                    if (PrintChange == "1")
+                    if (int.Parse(PrintChange) >= 1)
                     {
                         //Thread.Sleep(int.Parse(Itype_PrintDelay));
                         report.PrintSettings.Printer = this.Itype_printset.Text;//双打功能
@@ -4794,6 +4806,12 @@ namespace TVBOX01
             if (tt_fdata2 == "EW01")
             {
                 GetParaDataPrint2_EW01(tt_itemtype);
+            }
+
+            //MP01---数据类型一
+            if (tt_fdata2 == "SN01")
+            {
+                GetParaDataPrint2_SN01(tt_itemtype);
             }
         }
 
@@ -4946,7 +4964,14 @@ namespace TVBOX01
                 if (tt_itemtype == 1 && this.QR_printset.Text != "")
                 {
                     //Thread.Sleep(int.Parse(QR_PrintDelay));
-                    report.PrintSettings.Printer = this.QR_printset.Text;
+                    if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽")
+                    {
+                        report.PrintSettings.Printer = this.Itype_printset.Text;
+                    }
+                    else
+                    {
+                        report.PrintSettings.Printer = this.QR_printset.Text;
+                    }
                     report.Print();
                     report.Save(tt_path2);
                     tt_top2 = 0;
@@ -4971,6 +4996,109 @@ namespace TVBOX01
 
         }
 
+        //----以下是SN01数据采集----
+        private void GetParaDataPrint2_SN01(int tt_itemtype)
+        {
+            //第一步数据准备
+
+            //数据收集
+
+            DataSet dst2 = new DataSet();
+            DataTable dt2 = new DataTable();
+            dst2.Tables.Add(dt2);
+            dt2.Columns.Add("参数");
+            dt2.Columns.Add("名称");
+            dt2.Columns.Add("内容");
+
+            DataRow row1 = dt2.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "SN序列号";
+            row1["内容"] = this.label47.Text;
+            dt2.Rows.Add(row1);
+
+            this.QR_dataGridView.DataSource = null;
+            this.QR_dataGridView.Rows.Clear();
+
+            this.QR_dataGridView.DataSource = dst2.Tables[0];
+            this.QR_dataGridView.Update();
+
+            this.QR_dataGridView.Columns[0].Width = 50;
+            this.QR_dataGridView.Columns[1].Width = 80;
+            this.QR_dataGridView.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst2.Tables.Count > 0 && dst2.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S01", dst2.Tables[0].Rows[0][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1 && this.QR_printset.Text != "")
+                {
+                    //Thread.Sleep(int.Parse(QR_PrintDelay));
+                    if ((this.label13.Text == "HG6201M" || this.label13.Text == "HG6821M") && this.label14.Text == "安徽")
+                    {
+                        report.PrintSettings.Printer = this.Itype_printset.Text;
+                    }
+                    else
+                    {
+                        report.PrintSettings.Printer = this.QR_printset.Text;
+                    }
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+                setRichtexBox("99、打印或预览二维码完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+
+
+        }
         #endregion
 
         #region 彩盒标签打印
