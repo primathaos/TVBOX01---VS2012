@@ -55,6 +55,9 @@ namespace TVBOX01
         static string PrintChange = "";
         static string IItype_PrintDelay = "";
 
+        //小型化产品用参数
+        static string tt_parenttask = "";
+
         //本机MAC
         static string tt_computermac = "";
 		
@@ -316,7 +319,7 @@ namespace TVBOX01
                 }
 
                 tt_computermac = Dataset1.GetHostIpName();
-                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 111) fdate,gyid,Tasktype,softwareversion,pon_name,fhcode " +
+                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 111) fdate,gyid,Tasktype,softwareversion,pon_name,fhcode,Parenttask " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
 
@@ -333,6 +336,7 @@ namespace TVBOX01
                     this.label84.Text = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //软件版本
                     this.label87.Text = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //PON类型        
                     string tt_power_old = ds1.Tables[0].Rows[0].ItemArray[9].ToString();//旧电源适配器标识
+                    tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[10].ToString();  //小型化产品用参数
 
                     if (tt_productname == "HG6201G" || tt_productname == "HG6201GW" || tt_productname == "HG6201GS")
                     {
@@ -342,7 +346,27 @@ namespace TVBOX01
                     {
                         this.label13.Text = tt_productname;
                     }
-                    
+
+                    if (tt_parenttask == "小型化方案")
+                    {
+                        this.label83.Text = "彩盒2模板路径";
+                        this.label102.Text = "彩盒2标签";
+                        this.label115.Text = "彩2标签";
+                        this.button19.Text = "预览彩盒2标签";
+                        this.button18.Text = "打印彩盒2标签";
+                        this.tabPage6.Text = "彩盒2标签模板打印微调";
+                    }
+                    else
+                    {
+                        this.label83.Text = "II型模板路径";
+                        this.label102.Text = "II型标签";
+                        this.label115.Text = "II型标签";
+                        this.button19.Text = "预览II型标签";
+                        this.button18.Text = "打印II型标签";
+                        this.tabPage6.Text = "II型标签模板打印微调";
+                    }
+
+
                     //第一步、流程检查
                     Boolean tt_flag1 = false;
                     if (!this.label71.Text.Equals(""))
@@ -463,13 +487,12 @@ namespace TVBOX01
                         string tt_ec = this.label16.Text;
 
                         string tt_sql5_1 = "select docdesc,Fpath04,Fdata04,Fmd04 from odc_ec where zjbm = '" + tt_ec + "' ";
-
-                        if (str.Contains("FH204") || str.Contains("FH214"))//小型化方案彩盒II
-                        {
-                            tt_sql5_1 = "select docdesc,Fpath09,Fdata09,Fmd09 from odc_ec where zjbm = '" + tt_ec + "' ";
-                        }
-
                         string tt_sql5_2 = "select docdesc,Fpath10,Fdata10,Fmd10 from odc_ec where zjbm = '" + tt_ec + "' ";
+
+                        if (tt_parenttask == "小型化方案")//小型化方案彩盒II
+                        {
+                            tt_sql5_2 = "select docdesc,Fpath09,Fdata09,Fmd09 from odc_ec where zjbm = '" + tt_ec + "' ";
+                        }
 
                         DataSet ds5_1 = Dataset1.GetDataSet(tt_sql5_1, tt_conn);
                         DataSet ds5_2 = Dataset1.GetDataSet(tt_sql5_2, tt_conn);
@@ -2836,6 +2859,11 @@ namespace TVBOX01
             {
                 GetParaDataPrint2_YX01(tt_itemtype);
             }
+
+            if (tt_fdata2 == "CH01")
+            {
+                GetParaDataPrint2_CH01(tt_itemtype);
+            }
         }
 
         //----以下是YX01数据采集----
@@ -2923,6 +2951,122 @@ namespace TVBOX01
             {
                 setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
                 PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+        }
+
+        //----以下是CH01数据采集----小型化彩盒II
+        private void GetParaDataPrint2_CH01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst4 = new DataSet();
+            DataTable dt4 = new DataTable();
+
+            dst4.Tables.Add(dt4);
+            dt4.Columns.Add("参数");
+            dt4.Columns.Add("名称");
+            dt4.Columns.Add("内容");
+
+            DataRow row5 = dt4.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "长MAC";
+            row5["内容"] = this.label59.Text;
+            dt4.Rows.Add(row5);
+
+            DataRow row6 = dt4.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "短MAC";
+            row6["内容"] = this.label46.Text;
+            dt4.Rows.Add(row6);
+
+            DataRow row7 = dt4.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "设备标识";
+            row7["内容"] = this.label47.Text;
+            dt4.Rows.Add(row7);
+
+            DataRow row14 = dt4.NewRow();
+            row14["参数"] = "S14";
+            row14["名称"] = "设备标示码暗码";
+            row14["内容"] = this.label98.Text;
+            dt4.Rows.Add(row14);
+
+            //第二步加载到表格显示
+            this.dataGridView6.DataSource = null;
+            this.dataGridView6.Rows.Clear();
+
+            this.dataGridView6.DataSource = dst4.Tables[0];
+            this.dataGridView6.Update();
+
+            this.dataGridView6.Columns[0].Width = 60;
+            this.dataGridView6.Columns[1].Width = 80;
+            this.dataGridView6.Columns[2].Width = 200;
+
+            //第三步 打印或预览
+
+            if (dst4.Tables.Count > 0 && dst4.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S05", dst4.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S06", dst4.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S07", dst4.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S14", dst4.Tables[0].Rows[3][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1 && this.textBox29.Text != "")
+                {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
+                    report.PrintSettings.Printer = this.textBox30.Text;
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                    setRichtexBox("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印！");
             }
         }
 

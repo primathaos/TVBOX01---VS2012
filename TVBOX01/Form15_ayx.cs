@@ -3743,6 +3743,12 @@ namespace TVBOX01
                     {
                         bool tt_flag11_1 = CheckPrintRecord(tt_shortmac,"铭牌标签");
                         bool tt_flag11_2 = CheckPrintRecord(tt_shortmac, "运营商标签");
+
+                        if (tt_parenttask == "小型化方案")
+                        {
+                            tt_flag11_2 = true;
+                        }
+
                         DataSet tt_dataset = Dataset2.getMacAllCodeInfo(tt_shortmac, tt_conn);
                         string tt_nowcode = Dataset2.getPcbaNowCode(tt_dataset);
 

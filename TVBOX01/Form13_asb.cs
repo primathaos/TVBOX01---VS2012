@@ -1486,7 +1486,7 @@ namespace TVBOX01
                         this.label44.Text = ds3.Tables[0].Rows[0].ItemArray[4].ToString().ToUpper();
                         tt_gpsn0 = ds3.Tables[0].Rows[0].ItemArray[5].ToString().ToUpper();
 
-                        if (tt_productname == "HG6201T")
+                        if (tt_productname == "HG6201T" || tt_productname == "HG6543C1")
                         {
                             if (tt_gpsn0.Substring(0, 8) == "46485454")
                             {
@@ -1537,7 +1537,7 @@ namespace TVBOX01
                             this.label44.Text = ds3_1.Tables[0].Rows[0].ItemArray[4].ToString().ToUpper();
                             tt_gpsn0 = ds3_1.Tables[0].Rows[0].ItemArray[5].ToString().ToUpper();
 
-                            if (tt_productname == "HG6201T")
+                            if (tt_productname == "HG6201T" || tt_productname == "HG6543C1")
                             {
                                 if (tt_gpsn0.Substring(0, 8) == "46485454")
                                 {
@@ -1765,7 +1765,6 @@ namespace TVBOX01
                     }
                 }
 
-
                 //第七步查找关联表数据
                 Boolean tt_flag7 = false;
                 string tt_hostlable = "";
@@ -1776,10 +1775,11 @@ namespace TVBOX01
                 string tt_gpsn = "";
                 string tt_onumac = "";
                 string tt_taskscheck = "";
+                //string tt_fsegment2 = "";//小型化EPON信息写入临时措施
                 string tt_ponname = this.label69.Text;
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6)
                 {
-                    string tt_sql7 = "select hostlable,maclable,smtaskscode,bprintuser,id,shelllable,taskscode from odc_alllable " +
+                    string tt_sql7 = "select hostlable,maclable,smtaskscode,bprintuser,id,shelllable,taskscode,fsegment2 from odc_alllable " +
                                      "where hprintman = '" + tt_task + "' and pcbasn = '" + tt_scanpcba + "' ";
 
                     DataSet ds7 = Dataset1.GetDataSet(tt_sql7, tt_conn);
@@ -1793,8 +1793,21 @@ namespace TVBOX01
                         tt_id = ds7.Tables[0].Rows[0].ItemArray[4].ToString();      //行ID
                         tt_gpsn0 = ds7.Tables[0].Rows[0].ItemArray[5].ToString().ToUpper();   //GPONSN
                         tt_taskscheck = ds7.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();   //子工单判断
+                        //tt_fsegment2 = ds7.Tables[0].Rows[0].ItemArray[7].ToString().ToUpper();   //小型化EPON信息写入临时措施
 
-                        if (tt_productname == "HG6201T")
+                        ////小型化EPON信息写入临时措施
+                        //if (tt_fsegment2 == "" && tt_ponname == "EPON" && tt_power_re.Contains("小型化"))
+                        //{
+                        //    string tt_update1 = "update odc_alllable set fsegment2 = '育辰飞EPON BOSA' where taskscode = '" + tt_task + "' and maclable = '" + tt_shortmac + "'";
+                        //    int tt_int = Dataset1.ExecCommand(tt_update1, tt_conn);
+                        //    if (tt_int != 1)
+                        //    {
+                        //        tt_flag7 = false;
+                        //        MessageBox.Show("小型化EPON信息更新失败!");
+                        //    }
+                        //}
+
+                        if (tt_productname == "HG6201T" || tt_productname == "HG6543C1")
                         {
                             if (tt_gpsn0.Substring(0, 8) == "46485454")
                             {
@@ -1827,7 +1840,6 @@ namespace TVBOX01
                         setRichtexBox("7、关联表没有查询到数据，over");
                         PutLableInfor("关联表没有查询到数据，请检查！");
                     }
-
                 }
 
                 //第八步 查找站位信息

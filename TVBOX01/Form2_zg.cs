@@ -328,6 +328,20 @@ namespace TVBOX01
             return tt_flag;
         }
 
+        //数字判断
+        static bool IsNumeric(string value)
+        {
+            try
+            {
+                int var1 = Convert.ToInt32(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         //逐字比较，若遇见X判断为true
         private bool BosaCheck(string tt_BosaNum, string tt_BosaKeyWord)
         {
@@ -355,7 +369,7 @@ namespace TVBOX01
             {
                 tt_BosaNumChars = tt_BosaNum.Substring((tt_BosaNum.Length - 1) - i, 1);
                 tt_BosaKeyWordChars = tt_BosaKeyWord.Substring((tt_BosaKeyWord.Length - 1) - i, 1);
-                if (tt_BosaNumChars == tt_BosaKeyWordChars || tt_BosaKeyWordChars == "X") //如果字符相同，或者数据库取值为X，返回true
+                if (tt_BosaNumChars == tt_BosaKeyWordChars || tt_BosaKeyWordChars == "x") //如果字符相同，或者数据库取值为x，返回true
                 {
                     tt_flag = true;
                 }
@@ -365,6 +379,11 @@ namespace TVBOX01
                 }
                 if (!tt_flag) break;
             }
+
+            //if (!tt_flag && !IsNumeric(tt_BosaNum.Substring(0, 2)) && IsNumeric(tt_BosaNum.Substring(2, 12)))
+            //{
+            //    tt_flag = true;
+            //}
 
             return tt_flag;
         }
@@ -782,6 +801,27 @@ namespace TVBOX01
                 Boolean tt_flag2_1 = false;
                 if (tt_flag2)
                 {
+                    //临时
+                    //string tt_sql = "select bosaname,message from odc_bosa_message where remark is null";
+                    //string tt_BosaMessage = "";
+                    //DataSet ds = Dataset1.GetDataSetTwo(tt_sql, tt_conn);
+                    //if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                    //{
+                    //    bool tt_flag = false;
+                    //    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    //    {
+                    //        string tt_BosaKeyWord = ds.Tables[0].Rows[i].ItemArray[0].ToString();
+                    //        tt_flag = BosaCheck(tt_scanbosa, tt_BosaKeyWord); //按照规则逐个比较数据库取值和扫描条码的字符，相同返回ture
+                    //        if (tt_flag)
+                    //        {
+                    //            tt_BosaMessage = ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    //临时
+
+
                     string tt_pcba_num = tt_scanpcba.Substring(4, 4) + "-" + tt_scanpcba.Substring(8, 1); //从单板扫描条码提取单板条码特征
 
                     tt_bosatype_explicit = ""; //BOSA相关信息

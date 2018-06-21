@@ -519,6 +519,7 @@ namespace TVBOX01
                 if (String.Compare(tt_newitem, tt_sn) == 0)
                 {
                     tt_flag = true;
+                    break;
                 }
             }
 
@@ -1984,7 +1985,7 @@ namespace TVBOX01
                         tt_QRDZ = 1;
                     }
 
-                    if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && tt_areacode == "浙江")
+                    if ((tt_productname == "HG6201M") && tt_areacode == "浙江")
                     {
                         tt_QRDZ = 1;
                     }

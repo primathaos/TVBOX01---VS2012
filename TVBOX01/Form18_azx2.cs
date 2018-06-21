@@ -537,6 +537,11 @@ namespace TVBOX01
                             tt_flag6 = true;
                             setRichtexBox("6、该单板有待测站位，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",可以过站 goon");
                         }
+                        else if (tt_array6[2] == "2220")
+                        {
+                            tt_flag6 = true;
+                            setRichtexBox("6、该单板有待测站位，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",可以过站 goon");
+                        }
                         else if (int.Parse(tt_array6[2]) < int.Parse(tt_ccode) || "2200,2205".Contains(tt_array6[2]))
                         {
                             setRichtexBox("6、该单板待测站位不在" + tt_ccode + "，站位：" + tt_array6[1] + "，" + tt_array6[2] + ",不可以过站 goon");
@@ -559,7 +564,7 @@ namespace TVBOX01
                 Boolean tt_flag6_1 = false;
                 if (tt_flag6)
                 {
-                    string tt_sql6_1 = "select ncode,napplytype from dbo.odc_routingtasklist where pcba_pn = '" + tt_shortmac + "' and ncode = '2115'";
+                    string tt_sql6_1 = "select ncode,napplytype from dbo.odc_routingtasklist where pcba_pn = '" + tt_shortmac + "' and ccode = '2115'";
 
                     string tt_allprocesses = Dataset2.getGyidAllProcess(tt_gyid, tt_conn);                    
                     DataSet ds6_1 = Dataset1.GetDataSetTwo(tt_sql6_1, tt_conn);
@@ -595,8 +600,40 @@ namespace TVBOX01
                     }
                     else
                     {
-                        setRichtexBox("6.1、没有找到2115站位状态，流程异常，over");
-                        PutLableInfor("没有找到2115站位状态，流程异常！");
+                        string tt_sql6_2 = "select ncode,napplytype from dbo.odc_routingtasklist where pcba_pn = '" + tt_shortmac + "' and ccode = '2185'";
+
+                        tt_allprocesses = Dataset2.getGyidAllProcess(tt_gyid, tt_conn);
+                        DataSet ds6_2 = Dataset1.GetDataSetTwo(tt_sql6_2, tt_conn);
+                        tt_processcheck = true;
+                        if (ds6_2.Tables.Count > 0 && ds6_2.Tables[0].Rows.Count > 0)
+                        {
+                            string tt_napplytype = "1";
+                            for (int i = 0; i < ds6_2.Tables[0].Rows.Count; i++)
+                            {
+                                tt_napplytype = ds6_2.Tables[0].Rows[i].ItemArray[1].ToString();
+                                if (tt_napplytype == "0")
+                                {
+                                    tt_processcheck = false;
+                                    break;
+                                }
+                            }
+
+                            if ((tt_allprocesses.Contains("2111") && tt_napplytype == "1") || tt_processcheck)
+                            {
+                                tt_flag6_1 = true;
+                                setRichtexBox("6.1、该产品产品耦合测试没有出现过不良，或者有2111站位，且当前已通过耦合测试，可以过站，goon");
+                            }
+                            else if (!tt_allprocesses.Contains("2111") && !tt_processcheck)
+                            {
+                                setRichtexBox("6.1、该产品流程没有2111站位，且耦合测试曾经出现过测试失败，不允许过站，over");
+                                PutLableInfor("该产品2111不是必测站位，且耦合测试曾经出现过测试失败，不建议测试吞吐量！");
+                            }
+                        }
+                        else
+                        {
+                            setRichtexBox("6.1、没有找到耦合站位状态，流程异常，over");
+                            PutLableInfor("没有找到耦合站位状态，流程异常！");
+                        }
                     }
                 }
 
