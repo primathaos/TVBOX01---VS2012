@@ -4095,6 +4095,13 @@ namespace TVBOX01
                         p3.Top += tt_top2;
                         p3.Left += tt_left2;
                     }
+                    s = string.Format("Line{0}", i + 1);
+                    LineObject p4 = report.FindObject(s) as LineObject;
+                    if (p4 != null)
+                    {
+                        p4.Top += tt_top2;
+                        p4.Left += tt_left2;
+                    }
                 }
 
                 report.PrintSettings.ShowDialog = false;
@@ -4338,6 +4345,13 @@ namespace TVBOX01
                         p3.Top += tt_top2;
                         p3.Left += tt_left2;
                     }
+                    s = string.Format("Line{0}", i + 1);
+                    LineObject p4 = report.FindObject(s) as LineObject;
+                    if (p4 != null)
+                    {
+                        p4.Top += tt_top2;
+                        p4.Left += tt_left2;
+                    }
                 }
 
                 report.PrintSettings.ShowDialog = false;
@@ -4520,6 +4534,13 @@ namespace TVBOX01
                     {
                         p3.Top += tt_top2;
                         p3.Left += tt_left2;
+                    }
+                    s = string.Format("Line{0}", i + 1);
+                    LineObject p4 = report.FindObject(s) as LineObject;
+                    if (p4 != null)
+                    {
+                        p4.Top += tt_top2;
+                        p4.Left += tt_left2;
                     }
                 }
 
