@@ -57,13 +57,15 @@ namespace TVBOX01
         DateTime tt_productstarttime = DateTime.Now; //开始时间
         DateTime tt_productprimtime; //上一次时间
 
-        //临时参数
+        //其它参数
 
         //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
         string tt_power_old = "";
         //1.5A电源物料不足问题重打标识
         string tt_power_re = "";
-
+        //四川地区时间参数
+        string tt_SichuanTime = "";
+        string tt_Sichuanlongmac = "";
         //本机MAC
         static string tt_computermac = "";
 
@@ -331,7 +333,7 @@ namespace TVBOX01
                     this.label30.Text = ds1.Tables[0].Rows[0].ItemArray[2].ToString();  //地区
                     this.label31.Text = ds1.Tables[0].Rows[0].ItemArray[3].ToString(); //EC编码
                     this.label28.Text = ds1.Tables[0].Rows[0].ItemArray[4].ToString();  //生产日期
-                    
+
                     this.label79.Text = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //流程配置
                     this.label49.Text = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //物料编码
                     this.label61.Text = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //COMMID
@@ -342,6 +344,8 @@ namespace TVBOX01
 
                     tt_power_old = ds1.Tables[0].Rows[0].ItemArray[13].ToString().Trim();//旧电源适配器标识
                     tt_power_re = ds1.Tables[0].Rows[0].ItemArray[14].ToString().Trim();//旧电源适配器标识(需重打检查)
+
+                    tt_SichuanTime = (this.label28.Text.Replace(".", "/")).Substring(2, 5); //四川电信铭牌时间参数
 
                     int tt_idnum1 = Convert.ToInt32(tt_idnum);
 
@@ -1514,6 +1518,10 @@ namespace TVBOX01
                             this.label71.Text = this.label80.Text;
                         }
 
+                        if ((tt_productname == "HG2201T" || tt_productname == "HG6201T") && this.label30.Text == "四川")
+                        {
+                            tt_Sichuanlongmac = this.label44.Text.Replace("-", ":");
+                        }
 
                         tt_longmac = this.label44.Text;
                         setRichtexBox("3、关联表查询到一条数据，goon");
@@ -1563,8 +1571,12 @@ namespace TVBOX01
                             else
                             {
                                 this.label71.Text = this.label80.Text;
-                            }
+                            }                        
 
+                            if ((tt_productname == "HG2201T" || tt_productname == "HG6201T") && this.label30.Text == "四川")
+                            {
+                                tt_Sichuanlongmac = this.label44.Text.Replace("-", ":");
+                            }
 
                             tt_longmac = this.label44.Text;
                             setRichtexBox("3、关联表查询到一条数据，goon");
@@ -1830,6 +1842,11 @@ namespace TVBOX01
                         else
                         {
                             tt_onumac = tt_gpsn;
+                        }
+
+                        if ((tt_productname == "HG2201T" || tt_productname == "HG6201T") && this.label30.Text == "四川")
+                        {
+                            tt_Sichuanlongmac = tt_longmac.Replace("-", ":");
                         }
 
                         setRichtexBox("7、关联表查询到一条数据，hostlable=" + tt_hostlable + ",mac=" + tt_shortmac + ",smtaskscode=" + tt_smtaskscode + ",id=" + tt_id + ",GPSN=" + tt_gpsn + ",goon");
@@ -3034,6 +3051,18 @@ namespace TVBOX01
             row22["内容"] = this.label101.Text;
             dt.Rows.Add(row22);
 
+            DataRow row23 = dt.NewRow();
+            row23["参数"] = "S23";
+            row23["名称"] = "四川电信日期";
+            row23["内容"] = tt_SichuanTime;
+            dt.Rows.Add(row23);
+
+            DataRow row24 = dt.NewRow();
+            row24["参数"] = "S24";
+            row24["名称"] = "四川电信LongMAC";
+            row24["内容"] = tt_Sichuanlongmac;
+            dt.Rows.Add(row24);
+
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
 
@@ -3074,6 +3103,8 @@ namespace TVBOX01
                 report.SetParameterValue("S20", dst.Tables[0].Rows[19][2].ToString());
                 report.SetParameterValue("S21", dst.Tables[0].Rows[20][2].ToString());
                 report.SetParameterValue("S22", dst.Tables[0].Rows[21][2].ToString());
+                report.SetParameterValue("S23", dst.Tables[0].Rows[22][2].ToString());
+                report.SetParameterValue("S24", dst.Tables[0].Rows[23][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
@@ -3090,6 +3121,20 @@ namespace TVBOX01
                     {
                         p2.Top += tt_top1;
                         p2.Left += tt_left1;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top1;
+                        p3.Left += tt_left1;
+                    }
+                    s = string.Format("Line{0}", i + 1);
+                    LineObject p4 = report.FindObject(s) as LineObject;
+                    if (p4 != null)
+                    {
+                        p4.Top += tt_top1;
+                        p4.Left += tt_left1;
                     }
                 }
 
@@ -3281,6 +3326,18 @@ namespace TVBOX01
             row23["内容"] = this.label95.Text;
             dt.Rows.Add(row23);
 
+            DataRow row24 = dt.NewRow();
+            row24["参数"] = "S24";
+            row24["名称"] = "四川电信日期";
+            row24["内容"] = tt_SichuanTime;
+            dt.Rows.Add(row24);
+
+            DataRow row25 = dt.NewRow();
+            row25["参数"] = "S25";
+            row25["名称"] = "四川电信LongMAC";
+            row25["内容"] = tt_Sichuanlongmac;
+            dt.Rows.Add(row25);
+
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
 
@@ -3323,6 +3380,8 @@ namespace TVBOX01
                 report.SetParameterValue("S21", dst.Tables[0].Rows[20][2].ToString());
                 report.SetParameterValue("S22", dst.Tables[0].Rows[21][2].ToString());
                 report.SetParameterValue("S23", dst.Tables[0].Rows[22][2].ToString());
+                report.SetParameterValue("S24", dst.Tables[0].Rows[23][2].ToString());
+                report.SetParameterValue("S25", dst.Tables[0].Rows[24][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
@@ -3346,6 +3405,13 @@ namespace TVBOX01
                     {
                         p3.Top += tt_top1;
                         p3.Left += tt_left1;
+                    }
+                    s = string.Format("Line{0}", i + 1);
+                    LineObject p4 = report.FindObject(s) as LineObject;
+                    if (p4 != null)
+                    {
+                        p4.Top += tt_top1;
+                        p4.Left += tt_left1;
                     }
                 }
 

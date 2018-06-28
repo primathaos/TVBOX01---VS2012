@@ -347,6 +347,11 @@ namespace TVBOX01
                         this.label13.Text = tt_productname;
                     }
 
+                    if ((tt_productname == "HG2201T" || tt_productname == "HG6201T") && this.label14.Text == "四川")
+                    {
+                        this.label15.Text = this.label15.Text.Replace("/", "-");
+                    }
+
                     if (tt_parenttask == "小型化方案")
                     {
                         this.label83.Text = "彩盒2模板路径";
@@ -693,6 +698,7 @@ namespace TVBOX01
         }
         
         #endregion
+
 
         #region 4、非数据辅助功能
 
@@ -2864,6 +2870,11 @@ namespace TVBOX01
             {
                 GetParaDataPrint2_CH01(tt_itemtype);
             }
+
+            if (tt_fdata2 == "EW01")
+            {
+                GetParaDataPrint2_EW01(tt_itemtype);
+            }
         }
 
         //----以下是YX01数据采集----
@@ -3068,6 +3079,107 @@ namespace TVBOX01
                 setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
                 PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印！");
             }
+        }
+
+        //----以下是EW01数据采集----
+        private void GetParaDataPrint2_EW01(int tt_itemtype)
+        {
+            //第一步数据准备
+
+            //数据收集
+
+            string tt_sichuan_QR = "http://fuwu.51awifi.com/oms/pang/bind.htm?mac=" + this.label46.Text;
+           
+
+            DataSet dst2 = new DataSet();
+            DataTable dt2 = new DataTable();
+            dst2.Tables.Add(dt2);
+            dt2.Columns.Add("参数");
+            dt2.Columns.Add("名称");
+            dt2.Columns.Add("内容");
+
+
+            DataRow row1 = dt2.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "四川电信二维码";
+            row1["内容"] = tt_sichuan_QR;
+            dt2.Rows.Add(row1);
+
+            this.dataGridView6.DataSource = null;
+            this.dataGridView6.Rows.Clear();
+
+            this.dataGridView6.DataSource = dst2.Tables[0];
+            this.dataGridView6.Update();
+
+            this.dataGridView6.Columns[0].Width = 50;
+            this.dataGridView6.Columns[1].Width = 80;
+            this.dataGridView6.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst2.Tables.Count > 0 && dst2.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path2);
+                report.SetParameterValue("S01", dst2.Tables[0].Rows[0][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
+                    report.PrintSettings.Printer = this.textBox30.Text;
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+                setRichtexBox("99、打印或预览二维码完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+
+
         }
 
         #endregion
