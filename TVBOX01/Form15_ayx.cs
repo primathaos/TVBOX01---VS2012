@@ -484,17 +484,17 @@ namespace TVBOX01
                     this.textBox1.Enabled = false;
                     this.textBox9.Enabled = false;
 
-                    if (tt_parenttask != "小型化方案")
+                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                    {
+                        this.Mac_input.Visible = true;
+                        this.Mac_input.Enabled = true;
+                    }
+                    else
                     {
                         this.EQP_input.Visible = true;
                         this.EQP_input.Enabled = true;
                         this.Mac_input.Visible = true;
                         this.Mac_input.Enabled = false;
-                    }
-                    else
-                    {
-                        this.Mac_input.Visible = true;
-                        this.Mac_input.Enabled = true;
                     }
 
                     if (int.Parse(PrintChange) >= 2)
@@ -2283,7 +2283,17 @@ namespace TVBOX01
                 EQP_input.SelectAll();
             }
 
-            if (tt_parenttask == "小型化方案")
+            if (!(tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+            {
+                this.EQP_input.Enabled = true;
+                this.Mac_input.Enabled = false;
+                this.Power_input.Enabled = false;
+                this.Mac_reprint_input.Enabled = true;
+                EQP_input.Focus();
+                EQP_input.SelectAll();
+            }
+
+            if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
             {
                 this.Mac_input.Enabled = true;
                 this.Power_input.Enabled = false;
@@ -2292,7 +2302,7 @@ namespace TVBOX01
                 Mac_input.SelectAll();
             }
 
-            SetTaskcodeList();
+            //SetTaskcodeList();
         }
 
 
@@ -2309,7 +2319,15 @@ namespace TVBOX01
                 this.EQP_input.Text = null;
                 this.Power_input.Text = null;
 
-                if (tt_parenttask != "小型化方案")
+                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                {
+                    this.Mac_input.Enabled = true;
+                    this.Power_input.Enabled = false;
+                    this.Mac_reprint_input.Enabled = true;
+                    Mac_input.Focus();
+                    Mac_input.SelectAll();
+                }
+                else
                 {
                     this.EQP_input.Enabled = true;
                     this.Mac_input.Enabled = false;
@@ -2317,15 +2335,6 @@ namespace TVBOX01
                     this.Mac_reprint_input.Enabled = true;
                     EQP_input.Focus();
                     EQP_input.SelectAll();
-                }
-
-                if (tt_parenttask == "小型化方案")
-                {
-                    this.Mac_input.Enabled = true;
-                    this.Power_input.Enabled = false;
-                    this.Mac_reprint_input.Enabled = true;
-                    Mac_input.Focus();
-                    Mac_input.SelectAll();
                 }
             }
 
@@ -2339,7 +2348,15 @@ namespace TVBOX01
                 this.EQP_input.Text = null;
                 this.Power_input.Text = null;
 
-                if (tt_parenttask != "小型化方案")
+                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                {
+                    this.Mac_input.Enabled = true;
+                    this.Power_input.Enabled = false;
+                    this.Mac_reprint_input.Enabled = true;
+                    Mac_input.Focus();
+                    Mac_input.SelectAll();
+                }
+                else
                 {
                     this.EQP_input.Enabled = true;
                     this.Mac_input.Enabled = false;
@@ -2347,15 +2364,6 @@ namespace TVBOX01
                     this.Mac_reprint_input.Enabled = true;
                     EQP_input.Focus();
                     EQP_input.SelectAll();
-                }
-
-                if (tt_parenttask == "小型化方案")
-                {
-                    this.Mac_input.Enabled = true;
-                    this.Power_input.Enabled = false;
-                    this.Mac_reprint_input.Enabled = true;
-                    Mac_input.Focus();
-                    Mac_input.SelectAll();
                 }
             }
         }
@@ -3707,24 +3715,28 @@ namespace TVBOX01
                 #region
                 Boolean tt_flag10 = false;
                 string tt_unitnum = this.EQP_input.Text.Trim().ToUpper().Replace(" ","");
-                if (tt_flag9 && tt_parenttask != "小型化方案")
+                if (tt_flag9)
                 {
-                    if (tt_barcode1.Contains(tt_unitnum) || tt_gpsn == tt_unitnum)
+                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
                     {
                         tt_flag10 = true;
-                        setRichtexBox("10、设备标示码验证正确，系统正确验证码为：" + tt_barcode1 + "，扫描设备码为:" + tt_unitnum + ",gong");
+                        setRichtexBox("10、小型化 or 四川电信方案不检查,gong");
                     }
                     else
                     {
-                        setRichtexBox("10、设备标示码验证不正确，系统正确验证码为：" + tt_barcode1 + "，扫描设备码为:" + tt_unitnum + ",gong");
-                        PutLableInfor("设备标示码验证不正确，与系统记录不一致！");
+                        if (tt_barcode1.Contains(tt_unitnum) || tt_gpsn == tt_unitnum)
+                        {
+                            tt_flag10 = true;
+                            setRichtexBox("10、设备标示码验证正确，系统正确验证码为：" + tt_barcode1 + "，扫描设备码为:" + tt_unitnum + ",gong");
+                        }
+                        else
+                        {
+                            setRichtexBox("10、设备标示码验证不正确，系统正确验证码为：" + tt_barcode1 + "，扫描设备码为:" + tt_unitnum + ",gong");
+                            PutLableInfor("设备标示码验证不正确，与系统记录不一致！");
+                        }
                     }
                 }
-                else if (tt_flag9 && tt_parenttask == "小型化方案")
-                {
-                    tt_flag10 = true;
-                    setRichtexBox("10、小型化方案不检查,gong");
-                }
+
                 #endregion
                 
 
@@ -3744,7 +3756,7 @@ namespace TVBOX01
                         bool tt_flag11_1 = CheckPrintRecord(tt_shortmac,"铭牌标签");
                         bool tt_flag11_2 = CheckPrintRecord(tt_shortmac, "运营商标签");
 
-                        if (tt_parenttask == "小型化方案")
+                        if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
                         {
                             tt_flag11_2 = true;
                         }
@@ -4323,7 +4335,7 @@ namespace TVBOX01
 
                 if (int.Parse(PrintChange) < 2)//非多打方案光标转移
                 {
-                    if (tt_parenttask == "小型化方案")
+                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
                     {
                         //光标转移
                         this.Mac_input.Enabled = true;
@@ -4640,7 +4652,7 @@ namespace TVBOX01
                     this.richTextBox1.BackColor = Color.Red;
                 }
 
-                if (tt_parenttask == "小型化方案")
+                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
                 {
                     //光标转移
                     this.Power_input.Enabled = false;
@@ -5192,20 +5204,20 @@ namespace TVBOX01
             DataRow row12 = dt.NewRow();
             row12["参数"] = "S12";
             row12["名称"] = "爱wifiMAC";
-            row12["内容"] = "aWiFI" + (this.label128.Text).Substring(this.label128.Text.Length - 4,4);
+            row12["内容"] = "aWiFi-" + (this.label128.Text).Substring(this.label128.Text.Length - 4,4);
             dt.Rows.Add(row12);
 
-            DataRow row15 = dt.NewRow();
-            row15["参数"] = "S15";
-            row15["名称"] = "网络类型";
-            row15["内容"] = this.label159.Text;
-            dt.Rows.Add(row15);
+            DataRow row13 = dt.NewRow();
+            row13["参数"] = "S13";
+            row13["名称"] = "网络类型";
+            row13["内容"] = this.label159.Text;
+            dt.Rows.Add(row13);
 
-            DataRow row16 = dt.NewRow();
-            row16["参数"] = "S16";
-            row16["名称"] = "产品特征";
-            row16["内容"] = this.label155.Text;
-            dt.Rows.Add(row16);
+            DataRow row14 = dt.NewRow();
+            row14["参数"] = "S14";
+            row14["名称"] = "产品特征";
+            row14["内容"] = this.label155.Text;
+            dt.Rows.Add(row14);
 
             this.QR_dataGridView.DataSource = null;
             this.QR_dataGridView.Rows.Clear();
@@ -5238,9 +5250,8 @@ namespace TVBOX01
                 report.SetParameterValue("S10", dst.Tables[0].Rows[9][2].ToString());
                 report.SetParameterValue("S11", dst.Tables[0].Rows[10][2].ToString());
                 report.SetParameterValue("S12", dst.Tables[0].Rows[11][2].ToString());
-                report.SetParameterValue("S15", dst.Tables[0].Rows[14][2].ToString());
-                report.SetParameterValue("S16", dst.Tables[0].Rows[15][2].ToString());
-                report.SetParameterValue("S17", dst.Tables[0].Rows[16][2].ToString());
+                report.SetParameterValue("S13", dst.Tables[0].Rows[12][2].ToString());
+                report.SetParameterValue("S14", dst.Tables[0].Rows[13][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
