@@ -5281,8 +5281,17 @@ namespace TVBOX01
                 report.PrintSettings.ShowDialog = false;
 
                 //--打印
-                if (tt_itemtype == 1)
+                if (tt_itemtype == 1 && this.QR_printset.Text != "")
                 {
+                    //Thread.Sleep(int.Parse(QR_PrintDelay));
+                    if ((this.label13.Text == "HG6201M" || this.label13.Text == "HG6821M") && this.label14.Text == "安徽")
+                    {
+                        report.PrintSettings.Printer = this.Itype_printset.Text;
+                    }
+                    else
+                    {
+                        report.PrintSettings.Printer = this.QR_printset.Text;
+                    }
                     report.Print();
                     report.Save(tt_path2);
                     tt_top2 = 0;
