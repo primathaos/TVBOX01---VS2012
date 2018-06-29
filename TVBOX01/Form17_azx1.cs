@@ -1985,6 +1985,11 @@ namespace TVBOX01
                         tt_QRDZ = 1;
                     }
 
+                    if ((tt_productname == "HG6201T" || tt_productname == "HG2201T") && tt_areacode == "四川")
+                    {
+                        tt_QRDZ = 1;
+                    }
+
                     if ((tt_productname == "HG6201M") && tt_areacode == "浙江")
                     {
                         tt_QRDZ = 1;
