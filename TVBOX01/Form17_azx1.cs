@@ -1172,7 +1172,7 @@ namespace TVBOX01
         }
 
 
-        //获取箱号  烽火wifi箱号 安徽装箱
+        //获取箱号  烽火wifi箱号 安徽移动装箱
         private string GetBoxNumber5(string tt_beforstr, string tt_tosn, string tt_setunitnum)//获取箱号  烽火wifi箱号 正常装箱
         {
             string tt_boxnumber = "";
@@ -1189,7 +1189,7 @@ namespace TVBOX01
         }
 
 
-        //获取箱号  烽火wifi箱号 生成尾箱分箱 安徽分箱
+        //获取箱号  烽火wifi箱号 生成尾箱分箱 安徽移动分箱
         private string GetBoxNumber6(string tt_beforstr, string tt_taskscode, string tt_setunitnum)
         {
             string tt_boxnumber = "";
@@ -1220,7 +1220,7 @@ namespace TVBOX01
         }
 
 
-        //获取、生成安徽尾箱序号
+        //获取、生成安徽移动尾箱序号
         private string GetAnhuiHOSTLAST(string tt_taskscode)
         {
             string tt_hostlastnow = "";
@@ -1290,6 +1290,94 @@ namespace TVBOX01
             return tt_hostlastnow;
         }
 
+        //获取箱号  烽火wifi箱号 生成尾箱分箱
+        private string GetBoxNumber7(string tt_beforstr, string tt_fromsn, string tt_setunitnum)
+        {
+            string tt_boxnumber = "";
+
+            //第一步获取前七位箱号
+            string tt_beforstr7 = "";
+            bool tt_flag1 = false;
+            if (tt_beforstr.Length >= 7)
+            {
+                tt_flag1 = true;
+                tt_beforstr7 = tt_beforstr.Substring(0, 7);
+
+            }
+            else
+            {
+                MessageBox.Show("箱号的串号设置位数小于7位数，请确定");
+            }
+
+            //第二步获取箱号流水号
+            decimal tt_unitint = 0;
+            decimal tt_snnumber = 0;
+            decimal tt_boxnum2 = 0;
+            string tt_boxnum3 = "";
+            bool tt_flag2 = false;
+            if (tt_flag1)
+            {
+                try
+                {
+                    tt_unitint = decimal.Parse(tt_setunitnum);
+                    tt_snnumber = int.Parse(tt_fromsn.Substring(tt_fromsn.Length - 4, 4));
+                    tt_boxnum2 = Math.Ceiling(tt_snnumber / tt_unitint);
+                    tt_boxnum3 = tt_boxnum2.ToString();
+                    tt_flag2 = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("生成尾箱，计算箱号错误：" + ex.Message);
+                }
+            }
+
+            //第三步 获取分箱的批次号
+            string tt_middlelot = "Z";
+            int tt_model = 0;
+            int tt_unitint2 = Convert.ToInt32(tt_unitint);
+            int tt_snnumber2 = Convert.ToInt32(tt_snnumber);
+            Boolean tt_flag3 = false;
+            if (tt_flag2)
+            {
+                tt_model = (int)tt_snnumber2 % tt_unitint2;
+
+                switch (tt_model)
+                {
+                    case 0: tt_middlelot = "E"; break;
+                    case 1: tt_middlelot = "F"; break;
+                    case 2: tt_middlelot = "G"; break;
+                    case 3: tt_middlelot = "H"; break;
+                    case 4: tt_middlelot = "I"; break;
+                    case 5: tt_middlelot = "J"; break;
+                    case 6: tt_middlelot = "K"; break;
+                    case 7: tt_middlelot = "L"; break;
+                    case 8: tt_middlelot = "M"; break;
+                    case 9: tt_middlelot = "N"; break;
+                    case 10: tt_middlelot = "O"; break;
+                    case 11: tt_middlelot = "P"; break;
+                    case 12: tt_middlelot = "Q"; break;
+                    case 13: tt_middlelot = "R"; break;
+                    case 14: tt_middlelot = "S"; break;
+                    case 15: tt_middlelot = "T"; break;
+                    case 16: tt_middlelot = "U"; break;
+                    case 17: tt_middlelot = "V"; break;
+                    case 18: tt_middlelot = "W"; break;
+                    case 19: tt_middlelot = "X"; break;
+                    case 20: tt_middlelot = "Y"; break;
+                    default: tt_middlelot = "Z"; break;
+                }
+                tt_flag3 = true;
+
+            }
+
+            if (tt_flag3)
+            {
+                tt_boxnumber = tt_beforstr7 + tt_middlelot + "C" + tt_boxnum3.PadLeft(3, '0');
+            }
+
+
+            return tt_boxnumber;
+        }
 
         //流程检查，获取下一流程
         private bool GetNextCode(string tt_task, string tt_username)
@@ -2221,8 +2309,6 @@ namespace TVBOX01
                                 tt_flag12 = true;
                             }
                         }
-
-
                     }
                     #endregion
 

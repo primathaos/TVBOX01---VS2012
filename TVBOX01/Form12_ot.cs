@@ -1456,7 +1456,16 @@ namespace TVBOX01
                 ScanDataInitial();
                 setRichtexBox("-----开始MAC过站扫描--------");
                 string tt_task = this.textBox1.Text.Trim().ToUpper();
-                string tt_scanmac = this.textBox2.Text.Trim();
+                string tt_scanmac = "";
+                if (this.textBox2.Text.Trim().Length == 24)
+                {
+                    tt_scanmac = this.textBox2.Text.Trim().Substring(this.textBox2.Text.Trim().Length-12,12);
+                }
+                else
+                {
+                    tt_scanmac = this.textBox2.Text.Trim();
+                }
+
                 string tt_shortmac = tt_scanmac.Replace(":", "");
                 #endregion
 
