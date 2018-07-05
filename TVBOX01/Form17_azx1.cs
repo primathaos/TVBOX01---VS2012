@@ -1426,7 +1426,14 @@ namespace TVBOX01
 
                     tt_middlelot = tt_middlelot_old;
                     tt_boxnum = (int.Parse(tt_boxnum_old) + 1).ToString();
-                    tt_flag1 = true;
+                    if (tt_middlelot == "X" && int.Parse(tt_boxnum) > 999)
+                    {
+                        MessageBox.Show("已达尾箱分箱上限，改地区该产品本月已产生2997个尾箱，如需继续分箱，请联系工程");
+                    }
+                    else
+                    {
+                        tt_flag1 = true;
+                    }
                 }
                 catch (Exception ex)
                 {
