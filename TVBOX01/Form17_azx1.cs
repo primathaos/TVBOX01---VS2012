@@ -1368,7 +1368,7 @@ namespace TVBOX01
             return tt_hostlastnow;
         }
 
-        //获取箱号  烽火wifi箱号 生成安徽电信尾箱分箱(超大工单使用)
+        //获取箱号  烽火wifi箱号 超大工单尾箱分箱
         private string GetBoxNumber7(string tt_beforstr, string tt_taskscode, string tt_setunitnum)
         {
             string tt_boxnumber = "";
@@ -2704,9 +2704,12 @@ namespace TVBOX01
                 label46.Text = tt_package;
 
                 //第二步 装箱过站
+                Boolean tt_passflage = false;
 
-                Boolean tt_passflage = ListViewStatioPass(this.textBox1.Text, tt_gyid_Use, tt_ccode, tt_ncode, tt_package, tt_conn);
-
+                if (tt_package != "")
+                {
+                    tt_passflage = ListViewStatioPass(this.textBox1.Text, tt_gyid_Use, tt_ccode, tt_ncode, tt_package, tt_conn);
+                }
 
                 //第三步数据清理
                 if (tt_passflage)
