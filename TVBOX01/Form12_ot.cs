@@ -1710,7 +1710,7 @@ namespace TVBOX01
                     {
                         tt_flag12 = true;
                         string tt_taskscode = this.textBox1.Text.Trim().ToUpper();
-                        string tt_recordmac = this.textBox2.Text;
+                        string tt_recordmac = tt_shortmac;
                         string tt_host = Gethostlable(tt_recordmac);
                         string tt_local = "地区定制二维码";
                         string tt_remark = "定制二维码打印记录";

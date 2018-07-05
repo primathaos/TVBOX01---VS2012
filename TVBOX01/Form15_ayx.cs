@@ -1633,9 +1633,9 @@ namespace TVBOX01
         static string HostNum_AZ(int num)
         {
             string HostAZ = "";
-            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z".Split(',');
+            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W".Split(',');
 
-            if (num >= 10 && num < 36)
+            if (num >= 10 && num < 33)
             {
                 HostAZ = HostAZ_Temp[num - 10];
             }
@@ -3724,7 +3724,7 @@ namespace TVBOX01
                     }
                     else
                     {
-                        if (tt_barcode1.Contains(tt_unitnum) || tt_gpsn == tt_unitnum)
+                        if ((tt_barcode1.Contains(tt_unitnum) || tt_gpsn == tt_unitnum) && tt_unitnum != tt_scanmac)
                         {
                             tt_flag10 = true;
                             setRichtexBox("10、设备标示码验证正确，系统正确验证码为：" + tt_barcode1 + "，扫描设备码为:" + tt_unitnum + ",gong");
@@ -6222,7 +6222,7 @@ namespace TVBOX01
 
                         if (tt_HostAZ == "0")
                         {
-                            this.label101.Text = "分单数量导致生产序列号批次数大于最大值“Z”，请重新确认分单数";
+                            this.label101.Text = "分单数量导致生产序列号批次数大于最大值“W”，“X,Y,Z” 为分箱预留批次，请重新确认分单数";
                             ClearListView2();
                             this.checkBox6.Checked = false;
                             this.textBox20.Text = "";

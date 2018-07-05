@@ -973,6 +973,84 @@ namespace TVBOX01
             return tt_WORD;
         }
 
+        //字母-数字转换
+        static int HostAZ_Num(string AZ)
+        {
+            int HostNum = 0;
+            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z".Split(',');
+
+            if (("A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z").Contains(AZ))
+            {
+                for (int i = 0; i < 26; i++)
+                {
+                    if (AZ == HostAZ_Temp[i])
+                    {
+                        HostNum = i + 10;
+                    }
+                }
+            }
+            else
+            {
+                HostNum = 0;
+            }
+
+            return HostNum;
+        }
+
+        //数字-字母转换
+        static string HostNum_AZ(int num)
+        {
+            string HostAZ = "";
+            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z".Split(',');
+
+            if (num >= 10 && num < 36)
+            {
+                HostAZ = HostAZ_Temp[num - 10];
+            }
+            else
+            {
+                HostAZ = "0";
+            }
+
+            return HostAZ;
+        }
+
+        //生产年份-数字-字母转换
+        static string Host_Year_Num_AZ(int num)
+        {
+            string HostAZ = "";
+            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z".Split(',');
+
+            if (num >= 15 && num < 40)
+            {
+                HostAZ = HostAZ_Temp[num - 15];
+            }
+            else
+            {
+                HostAZ = "0";
+            }
+
+            return HostAZ;
+        }
+
+        //生产月-数字-字母转换
+        static string Host_Month_Num_AZ(int num)
+        {
+            string HostAZ = "";
+            string[] HostAZ_Temp = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z".Split(',');
+
+            if (num >= 10 && num < 36)
+            {
+                HostAZ = HostAZ_Temp[num - 10];
+            }
+            else
+            {
+                HostAZ = num.ToString();
+            }
+
+            return HostAZ;
+        }
+
         #endregion
 
 
@@ -1290,91 +1368,76 @@ namespace TVBOX01
             return tt_hostlastnow;
         }
 
-        //获取箱号  烽火wifi箱号 生成尾箱分箱
-        private string GetBoxNumber7(string tt_beforstr, string tt_fromsn, string tt_setunitnum)
+        //获取箱号  烽火wifi箱号 生成安徽电信尾箱分箱(超大工单使用)
+        private string GetBoxNumber7(string tt_beforstr, string tt_taskscode, string tt_setunitnum)
         {
             string tt_boxnumber = "";
 
             //第一步获取前七位箱号
             string tt_beforstr7 = "";
+            bool tt_flag = false;
             bool tt_flag1 = false;
             if (tt_beforstr.Length >= 7)
             {
-                tt_flag1 = true;
+                tt_flag = true;
                 tt_beforstr7 = tt_beforstr.Substring(0, 7);
-
             }
             else
             {
                 MessageBox.Show("箱号的串号设置位数小于7位数，请确定");
             }
 
-            //第二步获取箱号流水号
-            decimal tt_unitint = 0;
-            decimal tt_snnumber = 0;
-            decimal tt_boxnum2 = 0;
-            string tt_boxnum3 = "";
-            bool tt_flag2 = false;
-            if (tt_flag1)
+            if (tt_flag)
             {
+                string tt_middlelot = "";
+                string tt_boxnum = "";
+                string tt_middlelot_old = "";
+                string tt_boxnum_old = "";
+                string tt_Year = Host_Year_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(2, 2)));
+                string tt_Month = Host_Month_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(4, 2)));
+
                 try
                 {
-                    tt_unitint = decimal.Parse(tt_setunitnum);
-                    tt_snnumber = int.Parse(tt_fromsn.Substring(tt_fromsn.Length - 4, 4));
-                    tt_boxnum2 = Math.Ceiling(tt_snnumber / tt_unitint);
-                    tt_boxnum3 = tt_boxnum2.ToString();
-                    tt_flag2 = true;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        string AZ = "";
+                        if (i == 0) AZ = "Z";
+                        if (i == 1) AZ = "Y";
+                        if (i == 2) AZ = "X";
+
+                        string tt_sql0 = "select count(1),max(pagesn),max(fid) from odc_package where taskcode in " +
+                                         "(select taskscode from dbo.odc_tasks where areacode = '" + tt_areacode + "' " +
+                                         "and product_name = '" + this.label10.Text + "') " +
+                                         "and pagesn like '" + tt_beforstr7.Substring(0,5) + tt_Year + tt_Month + AZ + "C___' ";
+                        string[] tt_array0 = new string[3];
+                        tt_array0 = Dataset1.GetDatasetArray(tt_sql0, tt_conn);
+                        if (tt_array0[0] != "0")
+                        {
+                            tt_middlelot_old = tt_array0[1].Substring(tt_array0[1].Length - 5, 1);
+                            tt_boxnum_old = tt_array0[1].Substring(tt_array0[1].Length - 3, 3);
+                        }
+                        else
+                        {
+                            tt_middlelot_old = AZ;
+                            tt_boxnum_old = "0";
+                        }
+                        if (int.Parse(tt_boxnum_old) < 999) break;
+                    }
+
+                    tt_middlelot = tt_middlelot_old;
+                    tt_boxnum = (int.Parse(tt_boxnum_old) + 1).ToString();
+                    tt_flag1 = true;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("生成尾箱，计算箱号错误：" + ex.Message);
                 }
-            }
 
-            //第三步 获取分箱的批次号
-            string tt_middlelot = "Z";
-            int tt_model = 0;
-            int tt_unitint2 = Convert.ToInt32(tt_unitint);
-            int tt_snnumber2 = Convert.ToInt32(tt_snnumber);
-            Boolean tt_flag3 = false;
-            if (tt_flag2)
-            {
-                tt_model = (int)tt_snnumber2 % tt_unitint2;
-
-                switch (tt_model)
+                if (tt_flag1)
                 {
-                    case 0: tt_middlelot = "E"; break;
-                    case 1: tt_middlelot = "F"; break;
-                    case 2: tt_middlelot = "G"; break;
-                    case 3: tt_middlelot = "H"; break;
-                    case 4: tt_middlelot = "I"; break;
-                    case 5: tt_middlelot = "J"; break;
-                    case 6: tt_middlelot = "K"; break;
-                    case 7: tt_middlelot = "L"; break;
-                    case 8: tt_middlelot = "M"; break;
-                    case 9: tt_middlelot = "N"; break;
-                    case 10: tt_middlelot = "O"; break;
-                    case 11: tt_middlelot = "P"; break;
-                    case 12: tt_middlelot = "Q"; break;
-                    case 13: tt_middlelot = "R"; break;
-                    case 14: tt_middlelot = "S"; break;
-                    case 15: tt_middlelot = "T"; break;
-                    case 16: tt_middlelot = "U"; break;
-                    case 17: tt_middlelot = "V"; break;
-                    case 18: tt_middlelot = "W"; break;
-                    case 19: tt_middlelot = "X"; break;
-                    case 20: tt_middlelot = "Y"; break;
-                    default: tt_middlelot = "Z"; break;
+                    tt_boxnumber = tt_beforstr7 + tt_middlelot + "C" + tt_boxnum.PadLeft(3, '0');
                 }
-                tt_flag3 = true;
-
             }
-
-            if (tt_flag3)
-            {
-                tt_boxnumber = tt_beforstr7 + tt_middlelot + "C" + tt_boxnum3.PadLeft(3, '0');
-            }
-
 
             return tt_boxnumber;
         }
@@ -2628,6 +2691,10 @@ namespace TVBOX01
                 if ((this.label10.Text == "HG6201M" || this.label10.Text == "HG6821M") && tt_areacode == "安徽")
                 {
                     tt_package = GetBoxNumber6(tt_beforstranhui, this.textBox1.Text, this.textBox2.Text);
+                }
+                else if ((this.label10.Text == "HG6201T" || this.label10.Text == "HG2201T") && tt_areacode == "安徽")
+                {
+                    tt_package = GetBoxNumber7(label15.Text, this.textBox1.Text, this.textBox2.Text);
                 }
                 else
                 {
