@@ -101,6 +101,9 @@ namespace TVBOX01
         //旧电源适配器标识
         static string tt_power_old = "";
 
+        //地区代码
+        static string tt_areacode_AZ = "";
+
 
         private void Form15_ayx_Load(object sender, EventArgs e)
         {
@@ -666,7 +669,7 @@ namespace TVBOX01
             #region 第一步：子工单检查
             bool tt_flag1 = false;
             string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Pon_name,Gyid2,Parenttask," +
-                             "convert(varchar, taskdate, 111) fdate,softwareversion,fhcode " +
+                             "convert(varchar, taskdate, 111) fdate,softwareversion,fhcode,Teamgroupid " +
                              "from odc_tasks where taskscode = '" + tt_task1 + "' ";
              DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
             if (ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
@@ -690,6 +693,8 @@ namespace TVBOX01
                 this.label160.Text = ds1.Tables[0].Rows[0].ItemArray[13].ToString();  //软件版本
 
                 tt_power_old = ds1.Tables[0].Rows[0].ItemArray[14].ToString().Trim();//旧电源适配器标识
+
+                tt_areacode_AZ = ds1.Tables[0].Rows[0].ItemArray[15].ToString().Trim();//地区代码
 
                 tt_gyid_Use = "";
 
@@ -4736,6 +4741,12 @@ namespace TVBOX01
             row3["内容"] = tt_hebeiItypedate;
             dt1.Rows.Add(row3);
 
+            DataRow row4 = dt1.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "地区代码";
+            row4["内容"] = tt_areacode_AZ;
+            dt1.Rows.Add(row4);
+
             this.Itype_dataGridView.DataSource = null;
             this.Itype_dataGridView.Rows.Clear();
 
@@ -4758,6 +4769,7 @@ namespace TVBOX01
                 report.SetParameterValue("S01", dst1.Tables[0].Rows[0][2].ToString());
                 report.SetParameterValue("S02", dst1.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S03", dst1.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst1.Tables[0].Rows[3][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
