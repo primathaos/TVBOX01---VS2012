@@ -586,7 +586,7 @@ namespace TVBOX01
             if (tt_flag)
             {
                 string tt_sql2 = "select ccode 前站 ,Ncode 后站,napplytype 过站,taskscode 工单,pcba_pn MAC, createtime,fremark " +
-                            "from ODC_ROUTINGTASKLIST    where pcba_pn = '" + tt_mac + "' order by createtime desc";
+                            "from ODC_ROUTINGTASKLIST    where pcba_pn = '" + tt_mac + "' order by id desc";
 
                 DataSet ds2 = Dataset1.GetDataSet(tt_sql2, tt_conn);
 
