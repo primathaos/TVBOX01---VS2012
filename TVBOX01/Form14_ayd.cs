@@ -314,10 +314,15 @@ namespace TVBOX01
                         this.label86.Text = "10086-5";
                         this.label91.Text = "设备二维码信息";
                     }
-                    else if (this.label57.Text == "江西")
+                    else if (this.label57.Text == "江西" && int.Parse((this.label59.Text).Replace(".","")) < 20180718)
                     {
                         this.label86.Text = "10086";
                         this.label91.Text = "零配置";
+                    }
+                    else if (this.label57.Text == "江西" && int.Parse((this.label59.Text).Replace(".", "")) > 20180718)
+                    {
+                        this.label86.Text = "10086";
+                        this.label91.Text = "零 配 置 扫 码";
                     }
                     else
                     {

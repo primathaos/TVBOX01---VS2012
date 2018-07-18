@@ -1176,6 +1176,7 @@ namespace TVBOX01
                                                         tt_gpsn,tt_barcode, tt_scanbosa,
                                                         tt_gyid, tt_ccode, tt_ncode, tt_svers,
                                                         tt_bosatype_explicit,tt_conn);
+
                     if (tt_flag11)
                     {
                         setRichtexBox("11、单板MAC关联成功，请继续扫描");

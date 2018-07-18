@@ -566,7 +566,7 @@ namespace TVBOX01
                         this.textBox1.Enabled = false;
                         this.textBox2.Visible = true;
                         this.textBox7.Visible = true;
-                        GetProductNumInfo();  //生产信息
+                        GetProductNumInfo();  //生产信息 
 
                     }
                 }
