@@ -3915,7 +3915,7 @@ namespace TVBOX01
                             tt_gyid1 = this.label52.Text;
                         }
 
-                        string tt_codeserial = this.label63.Text;
+                        string tt_codeserial = GetCodeRoutNum(tt_ccode, tt_gyid1); //获取站位顺序
 
                         string tt_sql17_1 = "select pxid from odc_routing  where pid = " + tt_gyid1 + "  and LCBZ > 1 and LCBZ < '" + tt_codeserial + "' ";
                         tt_routdataset = Dataset1.GetDataSetTwo(tt_sql17_1, tt_conn);
