@@ -2816,6 +2816,13 @@ namespace TVBOX01
                         p2.Top += tt_top1;
                         p2.Left += tt_left1;
                     }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top1;
+                        p3.Left += tt_left1;
+                    }
                 }
 
                 report.PrintSettings.ShowDialog = false;
@@ -2930,6 +2937,13 @@ namespace TVBOX01
                     {
                         p2.Top += tt_top2;
                         p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
                     }
                 }
 
