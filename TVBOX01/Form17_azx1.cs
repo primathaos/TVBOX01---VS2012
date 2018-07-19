@@ -1291,7 +1291,7 @@ namespace TVBOX01
             }
             if (tt_flag)
             {
-                tt_boxnumber = tt_beforstr + tt_boxnum3.PadLeft(3, '0') + "-" + tt_setunitnum;
+                tt_boxnumber = tt_beforstr + tt_boxnum3.PadLeft(3, '0') + "-" + tt_setunitnum.PadLeft(2, '0');
             }
 
             return tt_boxnumber;
@@ -2697,7 +2697,7 @@ namespace TVBOX01
                 //第一步获取箱号
                 if ((this.label10.Text == "HG6201M" || this.label10.Text == "HG6821M") && tt_areacode == "安徽")
                 {
-                    tt_package = GetBoxNumber6(tt_beforstranhui, this.textBox1.Text, this.textBox2.Text);
+                    tt_package = GetBoxNumber6(tt_beforstranhui, this.textBox1.Text, this.textBox3.Text);
                 }
                 else if ((this.label10.Text == "HG6201T" || this.label10.Text == "HG2201T") && tt_areacode == "安徽")
                 {
