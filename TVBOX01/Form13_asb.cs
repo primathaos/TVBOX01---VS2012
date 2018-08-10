@@ -1432,6 +1432,10 @@ namespace TVBOX01
                 string tt_scanmac = this.textBox3.Text.Trim().ToUpper();
                 string tt_shortmac = tt_scanmac.Replace(":", "");
 
+                //if(tt_shortmac.Contains("FHTT"))
+                //{
+                //    tt_shortmac = this.textBox6.Text.Trim() + tt_shortmac.Substring((tt_shortmac.Length - 6), 6);
+                //}
 
                 //第一步位数判断
                 Boolean tt_flag1 = false;
@@ -4216,19 +4220,22 @@ namespace TVBOX01
             dt.Columns.Add("内容");
 
             string tt_ltponword = "";
-            if (this.label85.Text == "GPON")
+            if (this.label69.Text == "GPON")
             {
                 tt_ltponword = "&sn=";
             }
-            else if (this.label85.Text == "EPON")
+            else if (this.label69.Text == "EPON")
             {
                 tt_ltponword = "&mac=";
             }
 
             string tt_LTQR = "http://op.smartont.net/app/download?ssid1=" + this.label108.Text + "&password=" + this.label110.Text +
-                             "&username=" + this.label108.Text + "&pwd=" + this.label110.Text + "&model=" + this.label69.Text +
+                             "&username=" + this.label112.Text + "&pwd=" + this.label111.Text + "&model=" + this.label69.Text +
                              "&type=" + this.label29.Text + tt_ltponword + this.label71.Text + "&serialnumber=" + this.label101.Text +
                              "&ip=192.168.1.1";
+
+            string tt_LTQR_2G_Min = "http://op.smartont.net/app/download?ssid1=" + this.label108.Text + "&password=" + this.label110.Text + 
+                                    "&username=" + this.label108.Text + "&pwd=" + this.label110.Text;
 
             string tt_XJDZ = "";
             if ((this.label29.Text == "HG6201T" || this.label29.Text == "HG2201T") && this.label30.Text == "新疆")
@@ -4350,6 +4357,12 @@ namespace TVBOX01
             row18["内容"] = this.label61.Text;
             dt.Rows.Add(row18);
 
+            DataRow row19 = dt.NewRow();
+            row19["参数"] = "S19";
+            row19["名称"] = "联通单频小型化二维码";
+            row19["内容"] = tt_LTQR_2G_Min;
+            dt.Rows.Add(row19);
+
             this.dataGridView6.DataSource = null;
             this.dataGridView6.Rows.Clear();
 
@@ -4387,6 +4400,7 @@ namespace TVBOX01
                 report.SetParameterValue("S16", dst.Tables[0].Rows[15][2].ToString());
                 report.SetParameterValue("S17", dst.Tables[0].Rows[16][2].ToString());
                 report.SetParameterValue("S18", dst.Tables[0].Rows[17][2].ToString());
+                report.SetParameterValue("S19", dst.Tables[0].Rows[18][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

@@ -103,7 +103,11 @@ namespace TVBOX01
 
         //地区代码
         static string tt_areacode_AZ = "";
-
+        
+        //生产序列号模式
+        static string tt_hostlable_checktype = "";
+        int tt_host_max_num = 0;//当前生成的最大序列号
+        int tt_made_max_num = 0;//当前子工单已生成了序列号的数量
 
         private void Form15_ayx_Load(object sender, EventArgs e)
         {
@@ -802,10 +806,10 @@ namespace TVBOX01
             if(tt_flag1_2)
             {
                 string tt_ec = this.label17.Text;
-                string tt_sql3_1 = "select  docdesc,Fpath03,Fdata03,Fmd03  from odc_ec where zjbm = '" + tt_ec + "' ";
-                string tt_sql3_2 = "select  docdesc,Fpath07,Fdata07,Fmd07  from odc_ec where zjbm = '" + tt_ec + "' ";
-                string tt_sql3_3 = "select  docdesc,Fpath04,Fdata04,Fmd04  from odc_ec where zjbm = '" + tt_ec + "' ";
-                string tt_sql3_4 = "select  docdesc,Fpath10,Fdata10,Fmd10  from odc_ec where zjbm = '" + tt_ec + "' ";
+                string tt_sql3_1 = "select  docdesc,Fpath03,Fdata03,Fmd03  from odc_ec where zjbm = '" + tt_ec + "' ";//I型标签
+                string tt_sql3_2 = "select  docdesc,Fpath07,Fdata07,Fmd07  from odc_ec where zjbm = '" + tt_ec + "' ";//二维码
+                string tt_sql3_3 = "select  docdesc,Fpath04,Fdata04,Fmd04  from odc_ec where zjbm = '" + tt_ec + "' ";//彩盒
+                string tt_sql3_4 = "select  docdesc,Fpath10,Fdata10,Fmd10  from odc_ec where zjbm = '" + tt_ec + "' ";//II型
 
                 if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽")
                 {
@@ -979,6 +983,32 @@ namespace TVBOX01
                     MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
                 }
 
+
+                //序列号检查模式选择
+
+                string tt_sql17 = "select count(1),max(hostlable),max(id) from odc_alllable where taskscode like '%" + tt_task1 + "' and hostlable <> maclable";
+                string[] tt_array17 = new string[3];
+                tt_array17 = Dataset1.GetDatasetArray(tt_sql17, tt_conn);
+                tt_host_max_num = 0;
+                tt_made_max_num = 0;
+                if (tt_array17[0] != "0")
+                {
+                    tt_host_max_num = int.Parse(tt_array17[1].Substring(8, 4));
+                    tt_made_max_num = int.Parse(tt_array17[0]);
+                }
+
+                if (tt_host_max_num == tt_made_max_num)
+                {
+                    tt_hostlable_checktype = "1";
+                    PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
+                }
+                else
+                {
+                    tt_hostlable_checktype = "0";
+                    PutLableInfor("往期生产序列生成不正常，不采用强约束模式");
+                }
+
+                //特殊地区标签打印号段检查
                 if (tt_productname == "HG6821M" && this.label14.Text == "上海" && tt_flag8_1)
                 {
                     this.QR_view.Text = "预览资产编码";
@@ -1001,7 +1031,7 @@ namespace TVBOX01
                         MessageBox.Show("没有找到子工单" + tt_task1 + "的上海资产编码配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
                     }
                 }
-                else if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽" && tt_flag8_1)
+                else if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽" && tt_flag8_1) 
                 {
                     this.QR_view.Text = "预览SN码";
                     this.QR_print.Text = "打印SN码";
@@ -1189,7 +1219,6 @@ namespace TVBOX01
                 }
             }
             #endregion
-            
 
             #region  最后判断
             if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag8 &&
@@ -1660,7 +1689,7 @@ namespace TVBOX01
         //获取生产信息
         private void GetProductNumInfo()
         {
-            string tt_sql = "select count(1),count(case when hprinttime is not null then 1 end),0 " +
+            string tt_sql = "select count(1),count(case when boxlable is not null then 1 end),0 " +
                             "from odc_alllable where taskscode = '" + this.textBox1.Text.Trim().ToUpper() + "' ";
 
             string[] tt_array = new string[3];
@@ -3200,7 +3229,13 @@ namespace TVBOX01
                 string tt_task = this.textBox1.Text.Trim().ToUpper();
                 string tt_bigtask = this.textBox9.Text.Trim().ToUpper();
                 string tt_scanmac = this.Mac_reprint_input.Text.Trim();
-                string tt_shortmac = GetShortMac(tt_scanmac); 
+                string tt_shortmac = GetShortMac(tt_scanmac);
+
+                //if (tt_shortmac.Contains("FHTT"))
+                //{
+                //    tt_shortmac = this.textBox5.Text.Trim() + tt_shortmac.Substring((tt_shortmac.Length - 6), 6);
+                //}
+
                 #endregion
 
 
@@ -3635,7 +3670,7 @@ namespace TVBOX01
                 int tt_tasknumber = int.Parse(this.label12.Text);
                 if (tt_flag7)
                 {
-                    int tt_productnum = int.Parse(this.label59.Text);
+                    int tt_productnum = tt_host_max_num;
                     if (tt_productnum < tt_tasknumber)
                     {
                         tt_flag4 = true;
@@ -3651,11 +3686,18 @@ namespace TVBOX01
                             tt_flag4 = true;
                             setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，等于计划数量：" + tt_tasknumber.ToString() + ",但产品在当前站位，且产品已有序列号，产品可能为正常产品重投后流至此站位，goon");
                         }
+                        else if (int.Parse(this.label59.Text) < tt_host_max_num)
+                        {
+                            setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，等于计划数量：" + tt_tasknumber.ToString() + ",但已有序列号产品的数量：" + this.label59.Text + " 小于生成的最大序列号：" + tt_host_max_num.ToString());
+                            PutLableInfor("生产数量已满不能再生产，产品序列号有跳号现象！");
+                        }
                         else
                         {
                             setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，等于计划数量：" + tt_tasknumber.ToString() + ",且产品没有序列号或站位不正确,不能再生产goon");
                             PutLableInfor("产品站位不正确，或生产数量已满不能再生产了！");
                         }
+
+                       
                     }
                     else
                     {
@@ -4176,11 +4218,12 @@ namespace TVBOX01
                         string tt_username = STR;
                         tt_intgetno = Dataset1.FhYDSnInStation(tt_smalltask, tt_bigtask, tt_username,
                                                               tt_hostlable, tt_shortmac, tt_shanghailabel,
-                                                              tt_gyid_Use, tt_ccode, tt_ncode,
+                                                              tt_gyid_Use, tt_ccode, tt_ncode, tt_made_max_num, tt_hostlable_checktype,
                                                               tt_conn);
                         if (tt_intgetno > 0)
                         {
                             tt_flag25 = true;
+                            tt_made_max_num = tt_intgetno; //刷新已生产序列号的产品数量
                             setRichtexBox("25、该产品过站成功，返回生产序号值:" + tt_intgetno.ToString() + ",请继续扫描,ok");
                         }
                         else
@@ -4553,11 +4596,12 @@ namespace TVBOX01
                     string tt_username = STR;
                     tt_intgetno = Dataset1.FhYDSnInStation(tt_smalltask, tt_bigtask, tt_username,
                                                           tt_hostlable, tt_shortmac, tt_shanghailabel,
-                                                          tt_gyid_Use, tt_ccode, tt_ncode,
+                                                          tt_gyid_Use, tt_ccode, tt_ncode, tt_made_max_num, tt_hostlable_checktype,
                                                           tt_conn);
                     if (tt_intgetno > 0)
                     {
                         tt_flag7 = true;
+                        tt_made_max_num = tt_intgetno; //刷新已生产序列号的产品数量
                         setRichtexBox("7、该产品过站成功，返回生产序号值:" + tt_intgetno.ToString() + ",请继续扫描,ok");
                     }
                     else
@@ -4897,6 +4941,9 @@ namespace TVBOX01
                                 ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
                                 ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
 
+            string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+                                    "&pwd=" + tt_password;
+
             string tt_shanghaiprint = this.label77.Text;
 
             DataSet dst2 = new DataSet();
@@ -4943,6 +4990,12 @@ namespace TVBOX01
             row6["内容"] = tt_shanghaiprint;
             dt2.Rows.Add(row6);
 
+            DataRow row7 = dt2.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "联通单频小型化二维码";
+            row7["内容"] = tt_LTQR_2G_Min;
+            dt2.Rows.Add(row7);
+
             this.QR_dataGridView.DataSource = null;
             this.QR_dataGridView.Rows.Clear();
 
@@ -4968,6 +5021,7 @@ namespace TVBOX01
                 report.SetParameterValue("S04", dst2.Tables[0].Rows[3][2].ToString());
                 report.SetParameterValue("S05", dst2.Tables[0].Rows[4][2].ToString());
                 report.SetParameterValue("S06", dst2.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst2.Tables[0].Rows[6][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
@@ -5559,6 +5613,12 @@ namespace TVBOX01
             {
                 GetParaDataPrint2_CH01(tt_itemtype);
             }
+
+            //CH01---数据类型一 烽火移动彩盒
+            if (tt_fdata4 == "MC01")
+            {
+                GetParaDataPrint2_CH01(tt_itemtype);
+            }
         }
 
         //----以下是YX01数据采集----
@@ -5708,6 +5768,122 @@ namespace TVBOX01
                 report.SetParameterValue("S06", dst4.Tables[0].Rows[1][2].ToString());
                 report.SetParameterValue("S07", dst4.Tables[0].Rows[2][2].ToString());
                 report.SetParameterValue("S14", dst4.Tables[0].Rows[3][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top4;
+                        p1.Left += tt_left4;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top4;
+                        p2.Left += tt_left4;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top4;
+                        p3.Left += tt_left4;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
+                    report.PrintSettings.Printer = this.IItype_printset.Text;
+                    report.Print();
+                    report.Save(tt_path4);
+                    tt_top4 = 0;
+                    tt_left4 = 0;
+                    PutLableInfor("打印完毕");
+                    setRichtexBox("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印！");
+            }
+        }
+
+        //----以下是MC01数据采集----联通MAC
+        private void GetParaDataPrint2_MC01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst4 = new DataSet();
+            DataTable dt4 = new DataTable();
+
+            dst4.Tables.Add(dt4);
+            dt4.Columns.Add("参数");
+            dt4.Columns.Add("名称");
+            dt4.Columns.Add("内容");
+
+            DataRow row5 = dt4.NewRow();
+            row5["参数"] = "S01";
+            row5["名称"] = "长MAC";
+            row5["内容"] = this.label46.Text;
+            dt4.Rows.Add(row5);
+
+            DataRow row6 = dt4.NewRow();
+            row6["参数"] = "S02";
+            row6["名称"] = "短MAC";
+            row6["内容"] = this.label45.Text;
+            dt4.Rows.Add(row6);
+
+            DataRow row7 = dt4.NewRow();
+            row7["参数"] = "S03";
+            row7["名称"] = "OUN 短MAC";
+            row7["内容"] = this.label174.Text.Replace("-","");
+            dt4.Rows.Add(row7);
+
+            DataRow row8 = dt4.NewRow();
+            row8["参数"] = "S04";
+            row8["名称"] = "OUN 长MAC";
+            row8["内容"] = this.label174.Text;
+            dt4.Rows.Add(row8);
+
+            //第二步加载到表格显示
+            this.IItype_dataGridView.DataSource = null;
+            this.IItype_dataGridView.Rows.Clear();
+
+            this.IItype_dataGridView.DataSource = dst4.Tables[0];
+            this.IItype_dataGridView.Update();
+
+            this.IItype_dataGridView.Columns[0].Width = 60;
+            this.IItype_dataGridView.Columns[1].Width = 80;
+            this.IItype_dataGridView.Columns[2].Width = 200;
+
+            //第三步 打印或预览
+
+            if (dst4.Tables.Count > 0 && dst4.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path4);
+                report.SetParameterValue("S01", dst4.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst4.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst4.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst4.Tables[0].Rows[3][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

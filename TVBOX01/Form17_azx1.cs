@@ -1393,8 +1393,8 @@ namespace TVBOX01
                 string tt_boxnum = "";
                 string tt_middlelot_old = "";
                 string tt_boxnum_old = "";
-                string tt_Year = Host_Year_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(2, 2)));
-                string tt_Month = Host_Month_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(4, 2)));
+                //string tt_Year = Host_Year_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(2, 2)));
+                //string tt_Month = Host_Month_Num_AZ(int.Parse(this.label12.Text.Replace("-", "").Substring(4, 2)));
 
                 try
                 {
@@ -1408,7 +1408,7 @@ namespace TVBOX01
                         string tt_sql0 = "select count(1),max(pagesn),max(fid) from odc_package where taskcode in " +
                                          "(select taskscode from dbo.odc_tasks where areacode = '" + tt_areacode + "' " +
                                          "and product_name = '" + this.label10.Text + "') " +
-                                         "and pagesn like '" + tt_beforstr7.Substring(0,5) + tt_Year + tt_Month + AZ + "C___' ";
+                                         "and pagesn like '" + tt_beforstr7 + AZ + "C___' ";
                         string[] tt_array0 = new string[3];
                         tt_array0 = Dataset1.GetDatasetArray(tt_sql0, tt_conn);
                         if (tt_array0[0] != "0")
@@ -3946,8 +3946,8 @@ namespace TVBOX01
                         }
                         else
                         {
-                            setRichtexBox("17、NG05,该单板这个站位没有测试:" + tt_codecheck + "，请仔细检查MAC:" + tt_shortmac + ",的流程:全流程为:" + tt_allprocesses + ",检测流程为:" + tt_partprocesses + ",是否有漏测站位，over");
-                            PutLableInfor2("NG05,该单板这个站位没有测试:" + tt_codecheck + "，请检查是否漏测", tt_task, tt_shortmac);
+                            setRichtexBox("17、NG05,该单板这个站位没有测试:" + tt_codecheck_1 + "，请仔细检查MAC:" + tt_shortmac + ",的流程:全流程为:" + tt_allprocesses + ",检测流程为:" + tt_partprocesses + ",是否有漏测站位，over");
+                            PutLableInfor2("NG05,该单板这个站位没有测试:" + tt_codecheck_1 + "，请检查是否漏测", tt_task, tt_shortmac);
                         }
                     }
                     else
@@ -6616,6 +6616,193 @@ namespace TVBOX01
             row43["内容"] = tt_pon_name;
             dt.Rows.Add(row43);
 
+            //设备标识码2
+
+            DataRow row44 = dt.NewRow();
+            row44["参数"] = "N11";
+            row44["名称"] = "移动码11";
+            row44["内容"] = GetListViewItem(3, 11);
+            dt.Rows.Add(row44);
+
+            DataRow row45 = dt.NewRow();
+            row45["参数"] = "N12";
+            row45["名称"] = "移动码12";
+            row45["内容"] = GetListViewItem(3, 12);
+            dt.Rows.Add(row45);
+
+            DataRow row46 = dt.NewRow();
+            row46["参数"] = "N13";
+            row46["名称"] = "移动码13";
+            row46["内容"] = GetListViewItem(3, 13);
+            dt.Rows.Add(row46);
+
+            DataRow row47 = dt.NewRow();
+            row47["参数"] = "N14";
+            row47["名称"] = "移动码14";
+            row47["内容"] = GetListViewItem(3, 14);
+            dt.Rows.Add(row47);
+
+            DataRow row48 = dt.NewRow();
+            row48["参数"] = "N15";
+            row48["名称"] = "移动码15";
+            row48["内容"] = GetListViewItem(3, 15);
+            dt.Rows.Add(row48);
+
+            DataRow row49 = dt.NewRow();
+            row49["参数"] = "N16";
+            row49["名称"] = "移动码16";
+            row49["内容"] = GetListViewItem(3, 16);
+            dt.Rows.Add(row49);
+
+            DataRow row50 = dt.NewRow();
+            row50["参数"] = "N17";
+            row50["名称"] = "移动码17";
+            row50["内容"] = GetListViewItem(3, 17);
+            dt.Rows.Add(row50);
+
+            DataRow row51 = dt.NewRow();
+            row51["参数"] = "N18";
+            row51["名称"] = "移动码18";
+            row51["内容"] = GetListViewItem(3, 18);
+            dt.Rows.Add(row51);
+
+            DataRow row52 = dt.NewRow();
+            row52["参数"] = "N19";
+            row52["名称"] = "移动码19";
+            row52["内容"] = GetListViewItem(3, 19);
+            dt.Rows.Add(row52);
+
+            DataRow row53 = dt.NewRow();
+            row53["参数"] = "N20";
+            row53["名称"] = "移动码20";
+            row53["内容"] = GetListViewItem(3, 20);
+            dt.Rows.Add(row53);
+
+            //装箱序列号2
+
+            DataRow row54 = dt.NewRow();
+            row54["参数"] = "P11";
+            row54["名称"] = "序列号11";
+            row54["内容"] = GetListViewItem(1, 11);
+            dt.Rows.Add(row54);       
+
+            DataRow row55 = dt.NewRow();
+            row55["参数"] = "P12";
+            row55["名称"] = "序列号12";
+            row55["内容"] = GetListViewItem(1, 12);
+            dt.Rows.Add(row55);
+
+            DataRow row56 = dt.NewRow();
+            row56["参数"] = "P13";
+            row56["名称"] = "序列号13";
+            row56["内容"] = GetListViewItem(1, 13);
+            dt.Rows.Add(row56);
+
+            DataRow row57 = dt.NewRow();
+            row57["参数"] = "P14";
+            row57["名称"] = "序列号14";
+            row57["内容"] = GetListViewItem(1, 14);
+            dt.Rows.Add(row57);
+
+            DataRow row58 = dt.NewRow();
+            row58["参数"] = "P15";
+            row58["名称"] = "序列号15";
+            row58["内容"] = GetListViewItem(1, 15);
+            dt.Rows.Add(row58);
+
+            DataRow row59 = dt.NewRow();
+            row59["参数"] = "P16";
+            row59["名称"] = "序列号16";
+            row59["内容"] = GetListViewItem(1, 16);
+            dt.Rows.Add(row59);
+
+            DataRow row60 = dt.NewRow();
+            row60["参数"] = "P17";
+            row60["名称"] = "序列号17";
+            row60["内容"] = GetListViewItem(1, 17);
+            dt.Rows.Add(row60);
+
+            DataRow row61 = dt.NewRow();
+            row61["参数"] = "P18";
+            row61["名称"] = "序列号18";
+            row61["内容"] = GetListViewItem(1, 18);
+            dt.Rows.Add(row61);
+
+            DataRow row62 = dt.NewRow();
+            row62["参数"] = "P19";
+            row62["名称"] = "序列号19";
+            row62["内容"] = GetListViewItem(1, 19);
+            dt.Rows.Add(row62);
+
+            DataRow row63 = dt.NewRow();
+            row63["参数"] = "P20";
+            row63["名称"] = "序列号20";
+            row63["内容"] = GetListViewItem(1, 20);
+            dt.Rows.Add(row63);
+
+            //设备标示暗码2
+
+            DataRow row64 = dt.NewRow();
+            row64["参数"] = "A11";
+            row64["名称"] = "移动暗码11";
+            row64["内容"] = GetListViewItem(6, 11);
+            dt.Rows.Add(row64);
+
+            DataRow row65 = dt.NewRow();
+            row65["参数"] = "A12";
+            row65["名称"] = "移动暗码12";
+            row65["内容"] = GetListViewItem(6, 12);
+            dt.Rows.Add(row65);
+
+            DataRow row66 = dt.NewRow();
+            row66["参数"] = "A13";
+            row66["名称"] = "移动暗码13";
+            row66["内容"] = GetListViewItem(6, 13);
+            dt.Rows.Add(row66);
+
+            DataRow row67 = dt.NewRow();
+            row67["参数"] = "A14";
+            row67["名称"] = "移动暗码14";
+            row67["内容"] = GetListViewItem(6, 14);
+            dt.Rows.Add(row67);
+
+            DataRow row68 = dt.NewRow();
+            row68["参数"] = "A15";
+            row68["名称"] = "移动暗码15";
+            row68["内容"] = GetListViewItem(6, 15);
+            dt.Rows.Add(row68);
+
+            DataRow row69 = dt.NewRow();
+            row69["参数"] = "A16";
+            row69["名称"] = "移动暗码16";
+            row69["内容"] = GetListViewItem(6, 16);
+            dt.Rows.Add(row69);
+
+            DataRow row70 = dt.NewRow();
+            row70["参数"] = "A17";
+            row70["名称"] = "移动暗码17";
+            row70["内容"] = GetListViewItem(6, 17);
+            dt.Rows.Add(row70);
+
+            DataRow row71 = dt.NewRow();
+            row71["参数"] = "A18";
+            row71["名称"] = "移动暗码18";
+            row71["内容"] = GetListViewItem(6, 18);
+            dt.Rows.Add(row71);
+
+            DataRow row72 = dt.NewRow();
+            row72["参数"] = "A19";
+            row72["名称"] = "移动暗码19";
+            row72["内容"] = GetListViewItem(6, 19);
+            dt.Rows.Add(row72);
+
+            DataRow row73 = dt.NewRow();
+            row73["参数"] = "A20";
+            row73["名称"] = "移动暗码20";
+            row73["内容"] = GetListViewItem(6, 20);
+            dt.Rows.Add(row73);
+
+
             //第二步加载到表格显示
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
@@ -6684,6 +6871,38 @@ namespace TVBOX01
 
                 report.SetParameterValue("S09", dst.Tables[0].Rows[42][2].ToString());
 
+                report.SetParameterValue("N11", dst.Tables[0].Rows[43][2].ToString());
+                report.SetParameterValue("N12", dst.Tables[0].Rows[44][2].ToString());
+                report.SetParameterValue("N13", dst.Tables[0].Rows[45][2].ToString());
+                report.SetParameterValue("N14", dst.Tables[0].Rows[46][2].ToString());
+                report.SetParameterValue("N15", dst.Tables[0].Rows[47][2].ToString());
+                report.SetParameterValue("N16", dst.Tables[0].Rows[48][2].ToString());
+                report.SetParameterValue("N17", dst.Tables[0].Rows[49][2].ToString());
+                report.SetParameterValue("N18", dst.Tables[0].Rows[50][2].ToString());
+                report.SetParameterValue("N19", dst.Tables[0].Rows[51][2].ToString());
+                report.SetParameterValue("N20", dst.Tables[0].Rows[52][2].ToString());
+
+                report.SetParameterValue("P11", dst.Tables[0].Rows[53][2].ToString());
+                report.SetParameterValue("P12", dst.Tables[0].Rows[54][2].ToString());
+                report.SetParameterValue("P13", dst.Tables[0].Rows[55][2].ToString());
+                report.SetParameterValue("P14", dst.Tables[0].Rows[56][2].ToString());
+                report.SetParameterValue("P15", dst.Tables[0].Rows[57][2].ToString());
+                report.SetParameterValue("P16", dst.Tables[0].Rows[58][2].ToString());
+                report.SetParameterValue("P17", dst.Tables[0].Rows[59][2].ToString());
+                report.SetParameterValue("P18", dst.Tables[0].Rows[60][2].ToString());
+                report.SetParameterValue("P19", dst.Tables[0].Rows[61][2].ToString());
+                report.SetParameterValue("P20", dst.Tables[0].Rows[62][2].ToString());
+
+                report.SetParameterValue("A11", dst.Tables[0].Rows[63][2].ToString());
+                report.SetParameterValue("A12", dst.Tables[0].Rows[64][2].ToString());
+                report.SetParameterValue("A13", dst.Tables[0].Rows[65][2].ToString());
+                report.SetParameterValue("A14", dst.Tables[0].Rows[66][2].ToString());
+                report.SetParameterValue("A15", dst.Tables[0].Rows[67][2].ToString());
+                report.SetParameterValue("A16", dst.Tables[0].Rows[68][2].ToString());
+                report.SetParameterValue("A17", dst.Tables[0].Rows[69][2].ToString());
+                report.SetParameterValue("A18", dst.Tables[0].Rows[70][2].ToString());
+                report.SetParameterValue("A19", dst.Tables[0].Rows[71][2].ToString());
+                report.SetParameterValue("A20", dst.Tables[0].Rows[72][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

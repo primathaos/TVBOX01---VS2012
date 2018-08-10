@@ -1470,6 +1470,8 @@ namespace TVBOX01
                                                string tt_gyid,
                                                string tt_ccode,
                                                string tt_ncode,
+                                               int tt_hostlable_made_num,
+                                               string tt_hostlable_checktype,
                                                string con)
         {
             int tt_intno = 0;
@@ -1503,12 +1505,24 @@ namespace TVBOX01
                         tt_hostmode = ds.Tables[0].Rows[0].ItemArray[3].ToString();
                     }
 
-
+                    bool tt_hostlable_check = false;
                     if (tt_beforstr.Length > 3)
                     {
                         tt_nexthost = (int.Parse(tt_hostmax) + 1).ToString();
                         tt_boxlable = tt_beforstr + tt_nexthost.PadLeft(4, '0');
 
+                        if (tt_hostlable_checktype == "1")//需要强制检查hostlable生成状态
+                        {
+                            if (tt_nexthost == (tt_hostlable_made_num + 1).ToString())//如果tt_nexthost值与 alllable表已有hostlable的产品数+1一致，则判断true 
+                            {
+                                tt_hostlable_check = true;
+                            }
+                        }
+                        else if (tt_hostlable_checktype == "0")//不需要强制检查hostlable生成状态
+                        {
+                            tt_hostlable_check = true;
+                        }
+                   
                         if (tt_shanghaicheck != "")
                         {
                             tt_shanghainexthost = string.Format("{0:X}", int.Parse(tt_nexthost));
@@ -1520,62 +1534,69 @@ namespace TVBOX01
                         tt_boxlable = tt_hostlable;
                     }
 
-                    SqlTransaction transaction;
-                    transaction = connection.BeginTransaction("SampleTransaction");
-                    command.Connection = connection;
-                    command.Transaction = transaction;
-
-                    try
+                    if (tt_hostlable_check)
                     {
-                        string tt_sql1 = "UPDATE ODC_ROUTINGTASKLIST  " +
-                                         "SET ENDDATE = getdate(),STATUS ='0',NAPPLYTYPE='1',NUSERID='" + tt_gyid + "',NUSERNAME='" + tt_username + "' " +
-                                         "WHERE NAPPLYTYPE is null and PCBA_PN='" + tt_shortmac + "' ";
-                        command.CommandText = tt_sql1;
-                        command.ExecuteNonQuery();
+                        SqlTransaction transaction;
+                        transaction = connection.BeginTransaction("SampleTransaction");
+                        command.Connection = connection;
+                        command.Transaction = transaction;
 
-
-                        string tt_sql2 = "INSERT INTO ODC_ROUTINGTASKLIST (TASKSCODE,PCBA_PN,CCODE,STATUS,CREATETIME,CUSERID,CUSERNAME,NCODE) " +
-                                         "VALUES ('" + tt_smalltask + "','" + tt_shortmac + "','" + tt_ccode + "','0',getdate(),'" + tt_gyid + "','" + tt_username + "','" + tt_ncode + "') ";
-
-                        command.CommandText = tt_sql2;
-                        command.ExecuteNonQuery();
-
-
-                        string tt_sql3 = "update odc_alllable set boxlable ='" + tt_boxlable + "', hprinttime = getdate(), " +
-                                                             " taskscode = '" + tt_smalltask + "', hostlable = '" + tt_boxlable + "', productlable = '" + tt_shanghailabel + "'" +
-                                         "where hprintman ='" + tt_bigtask + "' and taskscode = '" + tt_bigtask + "'  and maclable ='" + tt_shortmac + "'  ";
-
-                        command.CommandText = tt_sql3;
-                        command.ExecuteNonQuery();
-
-
-                        string tt_sql4 = "update ODC_HOSTLABLEOPTIOAN set hostmax = '" + tt_nexthost + "' " +
-                                         "where taskscode = '" + tt_smalltask + "' and id = " + tt_id;
-                        command.CommandText = tt_sql4;
-                        command.ExecuteNonQuery();
-
-                        transaction.Commit();
-                        tt_intno = int.Parse(tt_nexthost);
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("统一事务处理报错：" + ex.GetType().ToString());
-                        tt_intno = -1;
                         try
                         {
-                            transaction.Rollback();
+                            string tt_sql1 = "UPDATE ODC_ROUTINGTASKLIST  " +
+                                             "SET ENDDATE = getdate(),STATUS ='0',NAPPLYTYPE='1',NUSERID='" + tt_gyid + "',NUSERNAME='" + tt_username + "' " +
+                                             "WHERE NAPPLYTYPE is null and PCBA_PN='" + tt_shortmac + "' ";
+                            command.CommandText = tt_sql1;
+                            command.ExecuteNonQuery();
+
+
+                            string tt_sql2 = "INSERT INTO ODC_ROUTINGTASKLIST (TASKSCODE,PCBA_PN,CCODE,STATUS,CREATETIME,CUSERID,CUSERNAME,NCODE) " +
+                                             "VALUES ('" + tt_smalltask + "','" + tt_shortmac + "','" + tt_ccode + "','0',getdate(),'" + tt_gyid + "','" + tt_username + "','" + tt_ncode + "') ";
+
+                            command.CommandText = tt_sql2;
+                            command.ExecuteNonQuery();
+
+
+                            string tt_sql3 = "update odc_alllable set boxlable ='" + tt_boxlable + "', hprinttime = getdate(), " +
+                                             " taskscode = '" + tt_smalltask + "', hostlable = '" + tt_boxlable + "', productlable = '" + tt_shanghailabel + "'" +
+                                             "where hprintman ='" + tt_bigtask + "' and taskscode = '" + tt_bigtask + "'  and maclable ='" + tt_shortmac + "'  ";
+
+                            command.CommandText = tt_sql3;
+                            command.ExecuteNonQuery();
+
+
+                            string tt_sql4 = "update ODC_HOSTLABLEOPTIOAN set hostmax = '" + tt_nexthost + "' " +
+                                             "where taskscode = '" + tt_smalltask + "' and id = " + tt_id;
+                            command.CommandText = tt_sql4;
+                            command.ExecuteNonQuery();
+
+                            transaction.Commit();
+                            tt_intno = int.Parse(tt_nexthost);
+
                         }
-                        catch (Exception ex2)
+                        catch (Exception ex)
                         {
-                            MessageBox.Show("事务回滚报错" + ex2.GetType().ToString());
+                            MessageBox.Show("统一事务处理报错：" + ex.GetType().ToString());
+                            tt_intno = -1;
+                            try
+                            {
+                                transaction.Rollback();
+                            }
+                            catch (Exception ex2)
+                            {
+                                MessageBox.Show("事务回滚报错" + ex2.GetType().ToString());
+                            }
                         }
+                    }
+                    else
+                    {
+                        MessageBox.Show("获取的生产序列号值与应当生成的序列号值不一致，产品未成功过站，请重新扫描！");
+                        Close(connection);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("获取生产序列号，数据过站异常！");
+                    MessageBox.Show("获取HOSTLABLE表数据异常！");
                     Close(connection);
                 }
             }
