@@ -3676,7 +3676,7 @@ namespace TVBOX01
                         tt_flag4 = true;
                         setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，小于计划数量：" + tt_tasknumber.ToString() + ",还可以再生产goon");
                     }
-                    else if (tt_productnum == tt_tasknumber)
+                    else
                     {
                         DataSet tt_dataset = Dataset2.getMacAllCodeInfo(tt_shortmac, tt_conn);
                         string tt_nowcode = Dataset2.getPcbaNowCode(tt_dataset);
@@ -3695,15 +3695,9 @@ namespace TVBOX01
                         {
                             setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，等于计划数量：" + tt_tasknumber.ToString() + ",且产品没有序列号或站位不正确,不能再生产goon");
                             PutLableInfor("产品站位不正确，或生产数量已满不能再生产了！");
-                        }
+                        }                       
+                    }
 
-                       
-                    }
-                    else
-                    {
-                        setRichtexBox("7、第一次数量检查，已获取序列号生产数量：" + tt_productnum.ToString() + "，大于等于计划数量：" + tt_tasknumber.ToString() + ",不能再生产goon");
-                        PutLableInfor("生产数量已满不能再生产了！");
-                    }
                 }
                 #endregion
 
