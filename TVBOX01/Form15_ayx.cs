@@ -392,7 +392,8 @@ namespace TVBOX01
             //richtext
             this.richTextBox1.Text = null;
             this.richTextBox1.BackColor = Color.White;
-            
+            this.richTextBox1.ForeColor = Color.Red;
+
         }
 
         //清除扫描框信息
@@ -989,23 +990,46 @@ namespace TVBOX01
                 string tt_sql17 = "select count(1),max(hostlable),max(id) from odc_alllable where taskscode like '%" + tt_task1 + "' and hostlable <> maclable";
                 string[] tt_array17 = new string[3];
                 tt_array17 = Dataset1.GetDatasetArray(tt_sql17, tt_conn);
-                tt_host_max_num = 0;
-                tt_made_max_num = 0;
+                tt_host_max_num = 0;//序列号最大产品的序列号值
+                tt_made_max_num = 0;//已有序列号产品的数量
                 if (tt_array17[0] != "0")
                 {
                     tt_host_max_num = int.Parse(tt_array17[1].Substring(8, 4));
                     tt_made_max_num = int.Parse(tt_array17[0]);
                 }
 
-                if (tt_host_max_num == tt_made_max_num)
+                if (tt_host_max_num == tt_made_max_num) //若序列号值与已有序列号产品的数量一致，说明该制造单以前没有跳号
                 {
                     tt_hostlable_checktype = "1";
                     PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
                 }
-                else
+                else //若序列号值与已有序列号产品的数量不一致，说明该制造单有跳号，查找跳号产品
                 {
                     tt_hostlable_checktype = "0";
                     PutLableInfor("往期生产序列生成不正常，不采用强约束模式");
+                    this.richTextBox1.ForeColor = Color.Red;
+                    setRichtexBox("开始查找跳号数据…………");
+                    setRichtexBox("跳号数据如下：");
+                    string tt_sql0 = @"select hostlable from odc_alllable where taskscode like '%" + tt_task1 + @"'and hostlable <> maclable order by hostlable "; //获取所有已生成了序列号产品的序列号数据
+                    DataSet ds0 = Dataset1.GetDataSetTwo(tt_sql0, tt_conn);
+                    if (ds0.Tables.Count > 0 && ds0.Tables[0].Rows.Count > 0)
+                    {
+                        for (int i = 0,j = 1; i < ds0.Tables[0].Rows.Count; i++)
+                        {
+                            string hostlable = ds0.Tables[0].Rows[i][0].ToString();
+                            int hostlable_num = int.Parse(hostlable.Substring(hostlable.Length - 4, 4)); //取序列号数值
+                            if (hostlable_num == j) //若序列号数值与预期生成的数值一致，预期数值+1，继续循环
+                            {
+                                j++;
+                            }
+                            else //若不一致，显示缺失的序列号，预期生成的数值+1，循环次数重复1次，继续查找下一个是否相符
+                            {
+                                setRichtexBox(hostlable.Substring(0, hostlable.Length - 4) + (j).ToString().PadLeft(4, '0'));
+                                j++;
+                                i--;
+                            }
+                        }
+                    }
                 }
 
                 //特殊地区标签打印号段检查
@@ -1018,7 +1042,7 @@ namespace TVBOX01
                     this.label39.Text = "资产编码";
 
                     string tt_sql8_1 = "select count(1),min(hostmode),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
-                                     "where taskscode = '" + tt_task1 + "' ";
+                                       "where taskscode = '" + tt_task1 + "' ";
                     string[] tt_array8_1 = new string[3];
                     tt_array8_1 = Dataset1.GetDatasetArray(tt_sql8_1, tt_conn);
                     if (tt_array8_1[0] == "1")

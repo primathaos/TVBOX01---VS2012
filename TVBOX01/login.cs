@@ -581,11 +581,6 @@ namespace TVBOX01
                         this.Show();
                         this.textBox2.Text = null;
                     }
-
-
-
-
-
                 }
                 else
                 {

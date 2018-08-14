@@ -4070,8 +4070,42 @@ namespace TVBOX01
 
                         //自动装箱
                         string tt_package = "";
-                        if (this.textBox2.Text == this.textBox3.Text)
+                        if (this.textBox2.Text == this.listView1.Items.Count.ToString())
                         {
+                            //由于出现了原因不明的单箱数据重复情况，临时加入重复装箱2次检查
+                            bool tt_repeat_2 = true;
+                            for (int i = 0; i < this.listView1.Items.Count; i++)
+                            {
+                                string tt_boxsn = this.listView1.Items[i].SubItems[1].Text;
+                                for (int j = 0,s = 0; j < this.listView1.Items.Count; j++)
+                                {
+                                    string tt_boxsn_check = this.listView1.Items[j].SubItems[1].Text;
+                                    if (tt_boxsn == tt_boxsn_check)//当数据匹配 s值+1，匹配2次，则说明出现装箱数据重复
+                                    {
+                                        s++;
+                                        if (s == 2)
+                                        {
+                                            tt_repeat_2 = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        tt_repeat_2 = true;
+                                    }
+                                    if (j == this.listView1.Items.Count) s = 0;//循环完成后，s值置零
+                                }
+                                if (!tt_repeat_2) break;
+                            }
+
+                            if (!tt_repeat_2)
+                            {
+                                setRichtexBox("20、装箱的数据中出现重复数据，请检查，over");
+                                PutLableInfor("装箱的数据中出现重复数据，请重置后重新扫描");
+                                this.richTextBox1.BackColor = Color.Red;
+                                return;
+                            }
+
                             //第一步获取箱号
                             if ((this.label10.Text == "HG6201M" || this.label10.Text == "HG6821M") && tt_areacode == "安徽")
                             {
