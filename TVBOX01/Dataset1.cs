@@ -1590,7 +1590,7 @@ namespace TVBOX01
                     }
                     else
                     {
-                        MessageBox.Show("获取的生产序列号值与应当生成的序列号值不一致，产品未成功过站，请重新扫描！");
+                        MessageBox.Show("获取的生产序列号值与应当生成的序列号值不一致，产品未成功过站，请重新勾选制造单并重新扫描！");
                         Close(connection);
                     }
                 }

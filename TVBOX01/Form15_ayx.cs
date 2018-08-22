@@ -968,110 +968,185 @@ namespace TVBOX01
             if(tt_flag6)
             {
                 bool tt_flag8_1 = false;
-
-                string tt_sql8 = "select count(1),min(hostqzwh),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
-                                     "where taskscode = '" + tt_task1 + "' ";
+                string tt_sql8 = "select count(1),min(hostqzwh),min(hostmax) from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_task1 + "' ";
                 string[] tt_array8 = new string[3];
-                tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
-                if (tt_array8[0] == "1")
-                {
-                    tt_flag8_1 = true;
-                    this.label65.Text = tt_array8[1].ToUpper();
-                    this.label44.Text = tt_array8[2];
-                }
-                else
-                {
-                    MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
-                }
 
-
-                //序列号检查模式选择
-
-                string tt_sql17 = "select count(1),max(hostlable),max(id) from odc_alllable where taskscode like '%" + tt_task1 + "' and hostlable <> maclable";
-                string[] tt_array17 = new string[3];
-                tt_array17 = Dataset1.GetDatasetArray(tt_sql17, tt_conn);
-                tt_host_max_num = 0;//序列号最大产品的序列号值
-                tt_made_max_num = 0;//已有序列号产品的数量
-                if (tt_array17[0] != "0")
+                //循环查询hostlable表g次，每次间隔delay，若每次hostmax值均不变，证明没有其它正在生产同一子工单，此检查是为了防止后续的跳号修复被误触发
+                //建议采用小循环数，大延迟方式，以减小服务器负担，建议不要随意修改当前设置（g = 6、delay = 2500），延迟过大会给人程序卡死的错觉
+                //建议总查询时间不小于15s（小于15s 可能会判断出错），只能检查出正在运作的工单，无法检查出勾选工单后停止操作的工单
+                int g = 6;
+                int delay = 2500;
+                string[] tt_mark_check = new string[g];
+                for (int i = 0; i < g; i++)
                 {
-                    tt_host_max_num = int.Parse(tt_array17[1].Substring(8, 4));
-                    tt_made_max_num = int.Parse(tt_array17[0]);
-                }
-
-                if (tt_host_max_num == tt_made_max_num) //若序列号值与已有序列号产品的数量一致，说明该制造单以前没有跳号
-                {
-                    tt_hostlable_checktype = "1";
-                    PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
-                }
-                else //若序列号值与已有序列号产品的数量不一致，说明该制造单有跳号，查找跳号产品
-                {
-                    tt_hostlable_checktype = "0";
-                    PutLableInfor("往期生产序列生成不正常，不采用强约束模式");
-                    this.richTextBox1.ForeColor = Color.Red;
-                    setRichtexBox("开始查找跳号数据…………");
-                    setRichtexBox("跳号数据如下：");
-                    string tt_sql0 = @"select hostlable from odc_alllable where taskscode like '%" + tt_task1 + @"'and hostlable <> maclable order by hostlable "; //获取所有已生成了序列号产品的序列号数据
-                    DataSet ds0 = Dataset1.GetDataSetTwo(tt_sql0, tt_conn);
-                    if (ds0.Tables.Count > 0 && ds0.Tables[0].Rows.Count > 0)
+                    tt_array8 = new string[3];
+                    tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
+                    if (tt_array8[0] == "1")
                     {
-                        for (int i = 0,j = 1; i < ds0.Tables[0].Rows.Count; i++)
-                        {
-                            string hostlable = ds0.Tables[0].Rows[i][0].ToString();
-                            int hostlable_num = int.Parse(hostlable.Substring(hostlable.Length - 4, 4)); //取序列号数值
-                            if (hostlable_num == j) //若序列号数值与预期生成的数值一致，预期数值+1，继续循环
-                            {
-                                j++;
-                            }
-                            else //若不一致，显示缺失的序列号，预期生成的数值+1，循环次数重复1次，继续查找下一个是否相符
-                            {
-                                setRichtexBox(hostlable.Substring(0, hostlable.Length - 4) + (j).ToString().PadLeft(4, '0'));
-                                j++;
-                                i--;
-                            }
-                        }
-                    }
-                }
-
-                //特殊地区标签打印号段检查
-                if (tt_productname == "HG6821M" && this.label14.Text == "上海" && tt_flag8_1)
-                {
-                    this.QR_view.Text = "预览资产编码";
-                    this.QR_print.Text = "打印资产编码";
-                    this.QR_label.Text = "资产编码";
-                    this.label115.Text = "资产码";
-                    this.label39.Text = "资产编码";
-
-                    string tt_sql8_1 = "select count(1),min(hostmode),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
-                                       "where taskscode = '" + tt_task1 + "' ";
-                    string[] tt_array8_1 = new string[3];
-                    tt_array8_1 = Dataset1.GetDatasetArray(tt_sql8_1, tt_conn);
-                    if (tt_array8_1[0] == "1")
-                    {
-                        tt_flag8 = true;
-                        tt_shanghailabel = tt_array8_1[1].ToUpper().Trim();
+                        this.label65.Text = tt_array8[1].ToUpper();
+                        this.label44.Text = tt_array8[2];
                     }
                     else
                     {
-                        MessageBox.Show("没有找到子工单" + tt_task1 + "的上海资产编码配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                        MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                        break;
                     }
+                    tt_mark_check[i] = tt_array8[2];
+                    double percent = (Convert.ToDouble(i + 1) / Convert.ToDouble(g)) * 100;
+                    Application.DoEvents(); //强制刷新UI
+                    Thread.Sleep(delay);
+                    PutLableInfor("正在判断是否有工单同时生产，进度" + percent.ToString("f2") + "%");
                 }
-                else if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽" && tt_flag8_1) 
+
+                if (tt_mark_check[0] == tt_mark_check[g - 1])
                 {
-                    this.QR_view.Text = "预览SN码";
-                    this.QR_print.Text = "打印SN码";
-                    this.QR_label.Text = "SN码标签";
-                    this.label115.Text = "SN 码";
-                    this.label39.Text = "SN码标签";
-                    tt_flag8 = true;
-                }                
+                    tt_flag8_1 = true;
+                }
                 else
                 {
-                    this.QR_view.Text = "预览二维码";
-                    this.QR_print.Text = "打印二维码";
-                    this.QR_label.Text = "二维码标签";
-                    this.label115.Text = "二维码";
-                    this.label39.Text = "二维码标签";
-                    tt_flag8 = true;
+                    MessageBox.Show("有其它线体在生产子工单" + tt_task1 + "，请检查工单是否选择正确！");
+                }
+
+                if (tt_flag8_1)
+                {
+                    //序列号检查模式选择（查询语句使用like,是为了防止双胞胎产品的序列号被遗漏）
+                    string tt_sql8_0 = "select a.hostmax,b.host_made,b.hostlable from " +
+                                       "(select hostmax from dbo.odc_hostlableoptioan where taskscode = '" + tt_task1 + "') as a," +
+                                       "(select count(1) host_made, max(hostlable) hostlable from odc_alllable where taskscode like '%" + tt_task1 + "'" +
+                                       "and hostlable <> maclable) as b";
+                    string[] tt_array8_0 = new string[3];
+                    tt_array8_0 = Dataset1.GetDatasetArray(tt_sql8_0, tt_conn);
+                    int tt_hostlable_num = 0;  //hostlable表中的当前数值
+                    tt_made_max_num = 0;       //已有序列号产品的数量
+                    tt_host_max_num = 0;       //序列号最大产品的序列号值
+
+                    if (tt_array8_0[0] != "0")
+                    {
+                        tt_hostlable_num = int.Parse(tt_array8_0[0]);
+                        tt_made_max_num = int.Parse(tt_array8_0[1]);
+                        tt_host_max_num = int.Parse(tt_array8_0[2].Substring(8, 4));
+                    }
+
+                    //对刚出现的跳号行为尝试修复，触发条件为hostlable表流水号数据比alllable表最大序列号值刚好大1
+                    bool repair_hostlable = true;
+                    if (tt_hostlable_num - tt_host_max_num == 1)
+                    {
+                        this.richTextBox1.ForeColor = Color.Red;
+                        setRichtexBox("发现上次扫描报错原因为网络波动导致的跳号异常");
+                        setRichtexBox("尝试进行修复…………");
+
+                        //调用修复，使用alllable表最大序列号值替换hostlable表流水号数据
+                        int repair_check = Repair_hostlable_max(tt_task1, tt_host_max_num.ToString(), tt_hostlable_num.ToString());
+                        if (repair_check == 1)
+                        {
+                            //刷新UI
+                            tt_array8 = new string[3];
+                            tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
+                            if (tt_array8[0] == "1")
+                            {
+                                this.label65.Text = tt_array8[1].ToUpper();
+                                this.label44.Text = tt_array8[2];
+                            }
+
+                            if (this.label44.Text == tt_host_max_num.ToString())
+                            {
+                                setRichtexBox("修复成功！");
+                            }
+                            else
+                            {
+                                setRichtexBox("修复失败，或者有其他生产线在生产同一工单，请重新勾选制造单检查，否则会导致产品无法正常生产！");
+                                PutLableInfor("因为网络波动导致的跳号问题修复失败，请重新勾选制作单！");
+                                repair_hostlable = false;
+                            }
+                        }
+                        else
+                        {
+                            setRichtexBox("修复失败，或者有其他生产线在生产同一工单，请重新勾选制造单检查，否则会导致产品无法正常生产！");
+                            PutLableInfor("因为网络波动导致的跳号问题修复失败，请重新勾选制作单！");
+                            repair_hostlable = false;
+                        }
+                    }
+
+                    if (repair_hostlable)
+                    {
+                        if (tt_host_max_num == tt_made_max_num) //若序列号值与已有序列号产品的数量一致，说明该制造单以前没有跳号
+                        {
+                            tt_hostlable_checktype = "1";
+                            PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
+                        }
+                        else //若序列号值与已有序列号产品的数量不一致，说明该制造单有跳号，查找跳号产品
+                        {
+                            tt_hostlable_checktype = "0";
+                            PutLableInfor("往期生产序列生成不正常，不采用强约束模式");
+                            this.richTextBox1.ForeColor = Color.Red;
+                            setRichtexBox("开始查找跳号数据…………");
+                            setRichtexBox("跳号数据如下：");
+
+                            //使用语句搜索该子工单alllable表中的序列号数据，即已生成的序列号数据
+                            string tt_sql0 = @"select hostlable from odc_alllable where taskscode like '%" + tt_task1 + @"'and hostlable <> maclable order by hostlable ";
+                            DataSet ds0 = Dataset1.GetDataSetTwo(tt_sql0, tt_conn);
+                            if (ds0.Tables.Count > 0 && ds0.Tables[0].Rows.Count > 0)
+                            {
+                                for (int i = 0, j = 1; i < ds0.Tables[0].Rows.Count; i++)
+                                {
+                                    string hostlable = ds0.Tables[0].Rows[i][0].ToString();
+                                    int hostlable_num = int.Parse(hostlable.Substring(hostlable.Length - 4, 4)); //取序列号数值
+                                    if (hostlable_num == j) //若序列号数值与预期生成的数值一致，预期数值+1，继续循环
+                                    {
+                                        j++;
+                                    }
+                                    else //若不一致，显示缺失的序列号，预期生成的数值+1，不一致的数据重复比对1次，继续查找下一个是否相符
+                                    {
+                                        setRichtexBox(hostlable.Substring(0, hostlable.Length - 4) + (j).ToString().PadLeft(4, '0'));
+                                        j++;
+                                        i--;
+                                    }
+                                }
+                            }
+                        }
+
+                        //特殊地区标签打印号段检查
+                        if (tt_productname == "HG6821M" && this.label14.Text == "上海" && tt_flag8_1)
+                        {
+                            this.QR_view.Text = "预览资产编码";
+                            this.QR_print.Text = "打印资产编码";
+                            this.QR_label.Text = "资产编码";
+                            this.label115.Text = "资产码";
+                            this.label39.Text = "资产编码";
+
+                            string tt_sql8_1 = "select count(1),min(hostmode),min(hostmax) from ODC_HOSTLABLEOPTIOAN " +
+                                               "where taskscode = '" + tt_task1 + "' ";
+                            string[] tt_array8_1 = new string[3];
+                            tt_array8_1 = Dataset1.GetDatasetArray(tt_sql8_1, tt_conn);
+                            if (tt_array8_1[0] == "1")
+                            {
+                                tt_flag8 = true;
+                                tt_shanghailabel = tt_array8_1[1].ToUpper().Trim();
+                            }
+                            else
+                            {
+                                MessageBox.Show("没有找到子工单" + tt_task1 + "的上海资产编码配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                            }
+                        }
+                        else if ((tt_productname == "HG6201M" || tt_productname == "HG6821M") && this.label14.Text == "安徽" && tt_flag8_1)
+                        {
+                            this.QR_view.Text = "预览SN码";
+                            this.QR_print.Text = "打印SN码";
+                            this.QR_label.Text = "SN码标签";
+                            this.label115.Text = "SN 码";
+                            this.label39.Text = "SN码标签";
+                            tt_flag8 = true;
+                        }
+                        else
+                        {
+                            this.QR_view.Text = "预览二维码";
+                            this.QR_print.Text = "打印二维码";
+                            this.QR_label.Text = "二维码标签";
+                            this.label115.Text = "二维码";
+                            this.label39.Text = "二维码标签";
+                            tt_flag8 = true;
+                        }
+                    }
                 }
             }
             #endregion
@@ -2085,6 +2160,15 @@ namespace TVBOX01
             return tt_Checknum;
         }
 
+        //修复HOSATLABLE
+        private int Repair_hostlable_max(string tt_taskscode, string tt_hostlable_right, string tt_hostlable_wrong)
+        {
+            string tt_sql = "update odc_hostlableoptioan set hostmax = '" + tt_hostlable_right + "' " +
+                            "where taskscode = '" + tt_taskscode + "' and hostmax = " + tt_hostlable_wrong;
+            int tt_Checknum = Dataset1.ExecCommand(tt_sql, tt_conn);
+            return tt_Checknum;
+        }
+
         //判断物料表ID值
         private bool GetMaterialIdinfor(string tt_id)
         {
@@ -2200,10 +2284,9 @@ namespace TVBOX01
 
             string tt_sql1 = "select hprintman 总工单,taskscode 子工单, pcbasn 单板号,hostlable 主机条码,maclable MAC, " +
                              "boxlable 生产序列号,Bosasn BOSA, shelllable GPSN, Smtaskscode 串号, Dystlable 电源号, " +
-                             "sprinttime 关联时间 " +
-
-                            "from odc_alllable " +
-                            "where taskscode = '" + tt_task + "'";
+                             "sprinttime 关联时间 " +                           
+                             "from odc_alllable " +
+                             "where taskscode = '" + tt_task + "'";
 
             DataSet ds1 = Dataset1.GetDataSet(tt_sql1, tt_conn);
 
@@ -2229,7 +2312,7 @@ namespace TVBOX01
             string tt_host = "";
             if( this.textBox16.Text != "")
             {
-                tt_host = " and  hostlable = '" + this.textBox16.Text + "'";
+                tt_host = " and hostlable = '" + this.textBox16.Text + "'";
             }
 
             string tt_mac = "";
@@ -2241,9 +2324,8 @@ namespace TVBOX01
             string tt_sql1 = "select hprintman 总工单,taskscode 子工单, pcbasn 单板号,hostlable 主机条码,maclable MAC, " +
                              "boxlable 生产序列号,Bosasn BOSA, shelllable GPSN, Smtaskscode 串号, Dystlable 电源号, " +
                              "sprinttime 关联时间 " +
-
-                            "from odc_alllable " +
-                            "where taskscode = '" + tt_task + "'" + tt_host + tt_mac;
+                             "from odc_alllable " +
+                             "where taskscode = '" + tt_task + "'" + tt_host + tt_mac;
 
             DataSet ds1 = Dataset1.GetDataSet(tt_sql1, tt_conn);
 
@@ -4944,24 +5026,30 @@ namespace TVBOX01
                 tt_ltponword = "&mac=";
             }
 
+            //联通二维码
             string tt_LTQR = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
                              "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
                              tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
 
+            //联通天津二维码
             string tt_LTQR_TJ = "ssid1=" + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
                                 "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
                                 tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
 
-            string tt_shortmac = this.label45.Text;//MAC
+            //MAC
+            string tt_shortmac = this.label45.Text;
 
+            //移动浙江二维码
             string tt_YDQR_ZJ = "厂家:烽火通信科技股份有限公司,型号:" + this.label56.Text + ",SN:" + tt_gpsn +
                                 ",生产日期:" + this.label59.Text.Replace("/", ".") + ",用户无线默认SSID:" + tt_ssid +
                                 ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
                                 ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
 
+            //联通单频小型化二维码
             string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
                                     "&pwd=" + tt_password;
 
+            //上海定制条码
             string tt_shanghaiprint = this.label77.Text;
 
             DataSet dst2 = new DataSet();
@@ -5014,6 +5102,18 @@ namespace TVBOX01
             row7["内容"] = tt_LTQR_2G_Min;
             dt2.Rows.Add(row7);
 
+            DataRow row8 = dt2.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "WiFi名称";
+            row8["内容"] = tt_ssid;
+            dt2.Rows.Add(row8);
+
+            DataRow row9 = dt2.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "WiFi密码";
+            row9["内容"] = tt_wifipassword;
+            dt2.Rows.Add(row9);
+
             this.QR_dataGridView.DataSource = null;
             this.QR_dataGridView.Rows.Clear();
 
@@ -5040,6 +5140,8 @@ namespace TVBOX01
                 report.SetParameterValue("S05", dst2.Tables[0].Rows[4][2].ToString());
                 report.SetParameterValue("S06", dst2.Tables[0].Rows[5][2].ToString());
                 report.SetParameterValue("S07", dst2.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst2.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst2.Tables[0].Rows[8][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {
