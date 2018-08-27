@@ -4136,7 +4136,8 @@ namespace TVBOX01
                                 {
                                     GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                                     GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
-                                    if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U") //如果是联通，那么再打印一张
+                                    if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U" ||
+                                        ((this.label10.Text == "HG6201T" || this.label10.Text == "HG6201T") && tt_areacode == "陕西")) //如果是联通或者陕西电信，那么再打印一张
                                     {
                                         GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                                     }
@@ -4157,7 +4158,7 @@ namespace TVBOX01
                         {
                             GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                             GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
-                            if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U") //如果是联通，那么再打印一张
+                            if (this.label10.Text == "HG6201U" || this.label10.Text == "HG6821U" ) //如果是联通，那么再打印一张
                             {
                                 GetParaDataPrint(1, this.checkBox5.Checked, this.checkBox6.Checked, false);
                             }

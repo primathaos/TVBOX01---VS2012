@@ -392,8 +392,7 @@ namespace TVBOX01
             //richtext
             this.richTextBox1.Text = null;
             this.richTextBox1.BackColor = Color.White;
-            this.richTextBox1.ForeColor = Color.Red;
-
+            this.richTextBox1.ForeColor = Color.Black;
         }
 
         //清除扫描框信息
@@ -416,6 +415,11 @@ namespace TVBOX01
         {
             if (this.checkBox1.Checked)
             {
+                this.checkBox1.Visible = false;
+                this.button1.Visible = false;
+                this.textBox1.Enabled = false;
+                this.textBox9.Enabled = false;
+
                 if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini"))
                 {
                     MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory + "PrintSet.ini" + "文件不存在");
@@ -489,8 +493,8 @@ namespace TVBOX01
 
                 if (tt_flag && PrintChange != "")
                 {
-                    this.textBox1.Enabled = false;
-                    this.textBox9.Enabled = false;
+                    PutLableInfor("设置软件扫描模式……");
+                    Application.DoEvents(); //强制刷新UI
 
                     if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
                     {
@@ -529,11 +533,28 @@ namespace TVBOX01
 
                     GetProductNumInfo();  //生产信息
                     getPalletBoxNo(this.label86.Text,this.label85.Text,this.label44.Text,this.label12.Text);
+                    this.checkBox1.Visible = true;
+                    this.button1.Visible = true;
+
+                    //显示序列号检查模式
+                    if (tt_hostlable_checktype == "0")
+                    {
+                        PutLableInfor("往期生产序列生成不正常，不采用强约束模式生产");
+                    }
+                    else
+                    {
+                        PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
+                    }
+
                     MessageBox.Show("---OK---，这是烽火生产序列号，左边是子工单，右边是总工单，不要填错");
                 }
                 else
                 {
                     MessageBox.Show("工单选择失败 或 打印模式设置不正确");
+                    this.checkBox1.Visible = true;
+                    this.button1.Visible = true;
+                    this.textBox1.Enabled = true;
+                    this.textBox9.Enabled = true;
                     ClearLabelInfo();
                     ScanDataInitial();
                 }
@@ -670,6 +691,8 @@ namespace TVBOX01
 
             string tt_productname = "";
             tt_computermac = Dataset1.GetHostIpName();
+            PutLableInfor("开始检查工单信息，请稍等……");
+            Application.DoEvents(); //强制刷新UI
 
             #region 第一步：子工单检查
             bool tt_flag1 = false;
@@ -973,7 +996,7 @@ namespace TVBOX01
 
                 //循环查询hostlable表g次，每次间隔delay，若每次hostmax值均不变，证明没有其它正在生产同一子工单，此检查是为了防止后续的跳号修复被误触发
                 //建议采用小循环数，大延迟方式，以减小服务器负担，建议不要随意修改当前设置（g = 6、delay = 2500），延迟过大会给人程序卡死的错觉
-                //建议总查询时间不小于15s（小于15s 可能会判断出错），只能检查出正在运作的工单，无法检查出勾选工单后停止操作的工单
+                //建议总查询时间不小于15s（小于15s 可能判断失误），只能检查出正在运作的工单，无法检查出勾选工单后停止生产动作的工单
                 int g = 6;
                 int delay = 2500;
                 string[] tt_mark_check = new string[g];
@@ -993,14 +1016,16 @@ namespace TVBOX01
                     }
                     tt_mark_check[i] = tt_array8[2];
                     double percent = (Convert.ToDouble(i + 1) / Convert.ToDouble(g)) * 100;
-                    Application.DoEvents(); //强制刷新UI
+                    PutLableInfor("正在判断是否有工单同时生产，进度" + percent.ToString("f2") + "%，检查还需时" + (((g * delay)/1000) - (((i+1) * delay) / 1000)) + "秒");
                     Thread.Sleep(delay);
-                    PutLableInfor("正在判断是否有工单同时生产，进度" + percent.ToString("f2") + "%");
+                    Application.DoEvents(); //强制刷新UI
                 }
 
                 if (tt_mark_check[0] == tt_mark_check[g - 1])
                 {
                     tt_flag8_1 = true;
+                    PutLableInfor("正在检查工单相关的其他信息，请稍等……");
+                    Application.DoEvents(); //强制刷新UI
                 }
                 else
                 {
@@ -1072,14 +1097,14 @@ namespace TVBOX01
                         if (tt_host_max_num == tt_made_max_num) //若序列号值与已有序列号产品的数量一致，说明该制造单以前没有跳号
                         {
                             tt_hostlable_checktype = "1";
-                            PutLableInfor("往期生产序列生成正常，采用强约束模式生产");
                         }
                         else //若序列号值与已有序列号产品的数量不一致，说明该制造单有跳号，查找跳号产品
                         {
                             tt_hostlable_checktype = "0";
-                            PutLableInfor("往期生产序列生成不正常，不采用强约束模式");
+                            PutLableInfor("往期生产序列生成不正常，开始查找跳号……");
                             this.richTextBox1.ForeColor = Color.Red;
                             setRichtexBox("开始查找跳号数据…………");
+                            Application.DoEvents(); //强制刷新UI
                             setRichtexBox("跳号数据如下：");
 
                             //使用语句搜索该子工单alllable表中的序列号数据，即已生成的序列号数据
@@ -1101,11 +1126,17 @@ namespace TVBOX01
                                         j++;
                                         i--;
                                     }
+                                    double percent = (Convert.ToDouble(i + 1) / Convert.ToDouble(ds0.Tables[0].Rows.Count)) * 100;
+                                    PutLableInfor("正在查找跳号数据，进度" + percent.ToString("f2") + "%");
+                                    Application.DoEvents(); //强制刷新UI
                                 }
                             }
                         }
 
                         //特殊地区标签打印号段检查
+                        PutLableInfor("正在检查是否有特殊地区要求，请稍等……");
+                        Application.DoEvents(); //强制刷新UI
+
                         if (tt_productname == "HG6821M" && this.label14.Text == "上海" && tt_flag8_1)
                         {
                             this.QR_view.Text = "预览资产编码";
@@ -1156,6 +1187,8 @@ namespace TVBOX01
             bool tt_flag9 = false;
             if(tt_flag8)
             {
+                PutLableInfor("查找打印模板……");
+                Application.DoEvents(); //强制刷新UI
                 bool tt_flag9_1 = getPathIstrue(tt_path1);
                 bool tt_flag9_2 = getPathIstrue(tt_path2);
                 bool tt_flag9_3 = getPathIstrue(tt_path3);
@@ -1207,6 +1240,8 @@ namespace TVBOX01
             string tt_serialsets = "";
             if(tt_flag9)
             {
+                PutLableInfor("查找串号约束条件……");
+                Application.DoEvents(); //强制刷新UI
                 string tt_area = this.label14.Text;
                 tt_serialsets = GetProductSerialSet(tt_area,tt_productname,this.label15.Text);
                 if (!tt_serialsets.Equals(""))
@@ -1246,6 +1281,8 @@ namespace TVBOX01
             string tt_codeserial = this.label75.Text;
             if (tt_flag12)
             {
+                PutLableInfor("检查待测站位及流程序列号……");
+                Application.DoEvents(); //强制刷新UI
                 if (tt_testcode.Equals("") || tt_codeserial.Equals(""))
                 {
                     MessageBox.Show("流程的待测站位，或流程的序列号为空，请检查流程设置");
@@ -1262,6 +1299,8 @@ namespace TVBOX01
             bool tt_flag14 = false;
             if(tt_flag13)
             {
+                PutLableInfor("获取站位测试流程……");
+                Application.DoEvents(); //强制刷新UI
                 string tt_sql14 = "select pxid from odc_routing  where pid = " + tt_gyid1 + "  and LCBZ > 1 and LCBZ < '" + tt_codeserial + "' ";
                 tt_routdataset = Dataset1.GetDataSetTwo(tt_sql14, tt_conn);
                 if (tt_routdataset.Tables.Count > 0 && tt_routdataset.Tables[0].Rows.Count > 0)
@@ -1283,6 +1322,8 @@ namespace TVBOX01
             bool tt_flag15 = false;
             if (tt_flag14)
             {
+                PutLableInfor("获取装箱设置……");
+                Application.DoEvents(); //强制刷新UI
                 string tt_sql15 = "select count(1),min(fpliietset),min(fboxset) from odc_dypowertype " +
                                   "where Ftype = '"+tt_productname+"' ";
                 string[] tt_array15 = new string[3];
@@ -1308,6 +1349,8 @@ namespace TVBOX01
             string tt_boxset = this.label85.Text;
             if (tt_flag15)
             {
+                PutLableInfor("获取箱号栈板号设置……");
+                Application.DoEvents(); //强制刷新UI
                 if (tt_pallletset.Equals("") || tt_boxset.Equals(""))
                 {
                     MessageBox.Show("该产品型号" + tt_productname + "在电源配置表中没有配置栈板数和装箱数设置，请检查");
@@ -1645,6 +1688,9 @@ namespace TVBOX01
         //计算箱号栈板号
         private void getPalletBoxNo(string tt_palletset,string tt_boxset,string tt_boxlableno,string tt_taskquantity)
         {
+            PutLableInfor("正在刷新生产信息……");
+            Application.DoEvents(); //强制刷新UI
+
             //计算箱号
             decimal tt_unitint = decimal.Parse(tt_boxset);
             decimal tt_snnumber = decimal.Parse(tt_boxlableno);
@@ -1788,6 +1834,9 @@ namespace TVBOX01
         //获取生产信息
         private void GetProductNumInfo()
         {
+            PutLableInfor("正在获取当前生产信息……");
+            Application.DoEvents(); //强制刷新UI
+
             string tt_sql = "select count(1),count(case when boxlable is not null then 1 end),0 " +
                             "from odc_alllable where taskscode = '" + this.textBox1.Text.Trim().ToUpper() + "' ";
 
@@ -1800,6 +1849,9 @@ namespace TVBOX01
         //刷新站位
         private void CheckStation(string tt_mac,string tt_process)
         {
+            PutLableInfor("刷新产品站位……");
+            Application.DoEvents(); //强制刷新UI
+
             string tt_sql = "select ccode 前站 ,Ncode 后站,napplytype 过站,taskscode 工单,pcba_pn MAC, createtime,fremark " +
                             "from ODC_ROUTINGTASKLIST where pcba_pn = '" + tt_mac + "' order by id desc";
 
@@ -3601,6 +3653,13 @@ namespace TVBOX01
                 //---开始MAC扫描
                 #region
                 setRichtexBox("-----开始MAC过站扫描--------");
+
+                //小型化、四川电信初始化扫描
+                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                {
+                    ScanDataInitial();
+                }
+
                 Mac_input.Enabled = false;
                 string tt_smalltask = this.textBox1.Text.Trim().ToUpper();
                 string tt_bigtask = this.textBox9.Text.Trim().ToUpper();
@@ -4324,6 +4383,7 @@ namespace TVBOX01
                         {
                             tt_flag25 = true;
                             tt_made_max_num = tt_intgetno; //刷新已生产序列号的产品数量
+                            tt_host_max_num = tt_intgetno;
                             setRichtexBox("25、该产品过站成功，返回生产序号值:" + tt_intgetno.ToString() + ",请继续扫描,ok");
                         }
                         else
@@ -4424,7 +4484,6 @@ namespace TVBOX01
                     if (int.Parse(PrintChange) < 2)//非多打方案此时开始打印
                     {   
                         //条码信息
-
                         this.label44.Text = tt_intgetno.ToString();  //过站返回的最大值
 
                         //生产节拍
@@ -4442,6 +4501,8 @@ namespace TVBOX01
                             {
                                 GetParaDataPrint2(0);
                             }
+                            GetProductNumInfo();
+                            CheckStation(tt_shortmac, tt_gyid_Use);
                             PutLableInfor("复测check产品过站成功，打印机不出纸，请继续扫描！");
                         }
                         else
@@ -4451,10 +4512,10 @@ namespace TVBOX01
                             {
                                 GetParaDataPrint2(1);
                             }
+                            GetProductNumInfo();
+                            CheckStation(tt_shortmac, tt_gyid_Use);
                             PutLableInfor("过站成功，请继续扫描！");
                         }
-                        GetProductNumInfo();
-                        CheckStation(tt_shortmac, tt_gyid_Use);
                         this.richTextBox1.BackColor = Color.Chartreuse;
                     }
                     else
@@ -4702,6 +4763,7 @@ namespace TVBOX01
                     {
                         tt_flag7 = true;
                         tt_made_max_num = tt_intgetno; //刷新已生产序列号的产品数量
+                        tt_host_max_num = tt_intgetno;
                         setRichtexBox("7、该产品过站成功，返回生产序号值:" + tt_intgetno.ToString() + ",请继续扫描,ok");
                     }
                     else
@@ -4778,7 +4840,8 @@ namespace TVBOX01
                         }
                         GetParaDataPrint3(0);
                         GetParaDataPrint4(0);
-
+                        GetProductNumInfo();
+                        CheckStation(tt_shortmac, tt_gyid_Use);
                         PutLableInfor("复测check产品过站成功，打印机不出纸，请继续扫描！");
                     }
                     else
@@ -4790,10 +4853,10 @@ namespace TVBOX01
                         }
                         GetParaDataPrint3(1);
                         GetParaDataPrint4(1);
+                        GetProductNumInfo();
+                        CheckStation(tt_shortmac, tt_gyid_Use);
                         PutLableInfor("OK 电源关联成功，请扫描下一产品！");
                     }
-                    GetProductNumInfo();
-                    CheckStation(tt_shortmac, tt_gyid_Use);
                     this.richTextBox1.BackColor = Color.Chartreuse;
                 }
                 else

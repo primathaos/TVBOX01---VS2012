@@ -21,6 +21,10 @@ namespace TVBOX01
                 string serverIP = ConfigurationManager.AppSettings["ServerIP"];
                 int serverPort = int.Parse(ConfigurationManager.AppSettings["ServerPort"]);
 
+                //刷新打印模板，需要svn软件安装命令行操作模组（建议32位的系统安装此版本或以上版本：TortoiseSVN-1.10.1.28295-win32-svn-1.10.2）
+                //cmd指令pushd是用于重定向至执行档目录的，此指令适用范围较cd更广，请不要更改
+                RunCmd("svn update pushd " + AppDomain.CurrentDomain.BaseDirectory);
+
                 if (VersionHelper.HasNewVersion(serverIP, serverPort))
                 {
                     //if (DialogResult.Yes == MessageBox.Show("检测到新版本，是否启动升级", "自动升级", MessageBoxButtons.YesNo))
@@ -40,5 +44,31 @@ namespace TVBOX01
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new login());
         }
+
+        static string RunCmd(string command)
+        {
+            // 需用引用命名空间System.Diagnostics;
+            // 打开一个新进程
+            Process p = new Process();
+            // 指定进程程序名称
+            p.StartInfo.FileName = "cmd.exe";
+            // 设定要输入命令
+            p.StartInfo.Arguments = "/c " + command;
+            // 关闭Shell的使用
+            p.StartInfo.UseShellExecute = false;
+            // 重定向标准输入
+            p.StartInfo.RedirectStandardInput = true;
+            // 重定向标准输出
+            p.StartInfo.RedirectStandardOutput = true;
+            // 重定向错误输出
+            p.StartInfo.RedirectStandardError = true;
+            // 不显示命令提示符窗口
+            p.StartInfo.CreateNoWindow = true;
+            // 启动程序
+            p.Start();
+            // 返回执行的结果
+            return p.StandardOutput.ReadToEnd();
+        }
+
     }
 }
