@@ -991,48 +991,86 @@ namespace TVBOX01
             if(tt_flag6)
             {
                 bool tt_flag8_1 = false;
+
                 string tt_sql8 = "select count(1),min(hostqzwh),min(hostmax) from ODC_HOSTLABLEOPTIOAN where taskscode = '" + tt_task1 + "' ";
                 string[] tt_array8 = new string[3];
-
-                //循环查询hostlable表g次，每次间隔delay，若每次hostmax值均不变，证明没有其它正在生产同一子工单，此检查是为了防止后续的跳号修复被误触发
-                //建议采用小循环数，大延迟方式，以减小服务器负担，建议不要随意修改当前设置（g = 6、delay = 2500），延迟过大会给人程序卡死的错觉
-                //建议总查询时间不小于15s（小于15s 可能判断失误），只能检查出正在运作的工单，无法检查出勾选工单后停止生产动作的工单
-                int g = 6;
-                int delay = 2500;
-                string[] tt_mark_check = new string[g];
-                for (int i = 0; i < g; i++)
-                {
-                    tt_array8 = new string[3];
-                    tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
-                    if (tt_array8[0] == "1")
-                    {
-                        this.label65.Text = tt_array8[1].ToUpper();
-                        this.label44.Text = tt_array8[2];
-                    }
-                    else
-                    {
-                        MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
-                        break;
-                    }
-                    tt_mark_check[i] = tt_array8[2];
-                    double percent = (Convert.ToDouble(i + 1) / Convert.ToDouble(g)) * 100;
-                    PutLableInfor("正在判断是否有工单同时生产，进度" + percent.ToString("f2") + "%，检查还需时" + (((g * delay)/1000) - (((i+1) * delay) / 1000)) + "秒");
-                    Thread.Sleep(delay);
-                    Application.DoEvents(); //强制刷新UI
-                }
-
-                if (tt_mark_check[0] == tt_mark_check[g - 1])
+                tt_array8 = new string[3];
+                tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
+                if (tt_array8[0] == "1")
                 {
                     tt_flag8_1 = true;
-                    PutLableInfor("正在检查工单相关的其他信息，请稍等……");
-                    Application.DoEvents(); //强制刷新UI
+                    this.label65.Text = tt_array8[1].ToUpper();
+                    this.label44.Text = tt_array8[2];
+                }
+                else
+                {
+                    MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                }
+
+                //查询制造单当前时间与上次生成序列号的时间间隔是否大于设定时间
+                string tt_hosttime = "";
+                string tt_sql8_2 = "select datediff(second,hostdate,getdate()) from dbo.odc_hostlableoptioan where taskscode = '" + tt_task1 + "'";
+                DataSet ds8_2 = Dataset1.GetDataSetTwo(tt_sql8_2, tt_conn);
+
+                if (ds8_2.Tables.Count > 0 && ds8_2.Tables[0].Rows.Count > 0)
+                {
+                    tt_hosttime = ds8_2.Tables[0].Rows[0].ItemArray[0].ToString(); //生产序列号生成间隔时间(秒)
+                }
+                else
+                {
+                    MessageBox.Show("获取生产序列号时间间隔失败");
+                }
+
+                bool tt_flag8_2 = false;
+                //若查询时间大于设定时间，或时间查询为空（产品从未生产过），则true
+                if (tt_hosttime == "" || int.Parse(tt_hosttime) > 20)
+                {
+                    tt_flag8_2 = true;
                 }
                 else
                 {
                     MessageBox.Show("有其它线体在生产子工单" + tt_task1 + "，请检查工单是否选择正确！");
                 }
 
-                if (tt_flag8_1)
+                //循环查询hostlable表g次，每次间隔delay，若每次hostmax值均不变，证明没有其它正在生产同一子工单，此检查是为了防止后续的跳号修复被误触发
+                //建议采用小循环数，大延迟方式，以减小服务器负担，建议不要随意修改当前设置（g = 6、delay = 2500），延迟过大会给人程序卡死的错觉
+                //建议总查询时间不小于15s（小于15s 可能判断失误），只能检查出正在运作的工单，无法检查出勾选工单后停止生产动作的工单
+                //int g = 6;
+                //int delay = 2500;
+                //string[] tt_mark_check = new string[g];
+                //for (int i = 0; i < g; i++)
+                //{
+                //    tt_array8 = new string[3];
+                //    tt_array8 = Dataset1.GetDatasetArray(tt_sql8, tt_conn);
+                //    if (tt_array8[0] == "1")
+                //    {
+                //        this.label65.Text = tt_array8[1].ToUpper();
+                //        this.label44.Text = tt_array8[2];
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show("没有找到子工单" + tt_task1 + "的串号表配置信息，或有子工单号配置表重复,查询结果返回值" + tt_array8[0] + "请确认！");
+                //        break;
+                //    }
+                //    tt_mark_check[i] = tt_array8[2];
+                //    double percent = (Convert.ToDouble(i + 1) / Convert.ToDouble(g)) * 100;
+                //    PutLableInfor("正在判断是否有工单同时生产，进度" + percent.ToString("f2") + "%，检查还需时" + (((g * delay)/1000) - (((i+1) * delay) / 1000)) + "秒");
+                //    Thread.Sleep(delay);
+                //    Application.DoEvents(); //强制刷新UI
+                //}
+
+                //if (tt_mark_check[0] == tt_mark_check[g - 1])
+                //{
+                //    tt_flag8_1 = true;
+                //    PutLableInfor("正在检查工单相关的其他信息，请稍等……");
+                //    Application.DoEvents(); //强制刷新UI
+                //}
+                //else
+                //{
+                //    MessageBox.Show("有其它线体在生产子工单" + tt_task1 + "，请检查工单是否选择正确！");
+                //}
+
+                if (tt_flag8_1 && tt_flag8_2)
                 {
                     //序列号检查模式选择（查询语句使用like,是为了防止双胞胎产品的序列号被遗漏）
                     string tt_sql8_0 = "select a.hostmax,b.host_made,b.hostlable from " +
@@ -2737,36 +2775,30 @@ namespace TVBOX01
                         }
                         SetPrintRecord(tt_taskscode, tt_recordmac, tt_host, tt_local, tt_username, tt_computermac ,tt_remark);
 
-                        if (str.Contains("FH003") && tt_nowcode == "3201")
+                        if (str.Contains("FH003") && int.Parse(tt_nowcode) > 3100 && int.Parse(PrintChange) >= 2) //若使用的多打模式（小线流程），流程中就没有3100，需要使用这种处理方式
                         {
                             int delete_checknum = Delete_Check(tt_recordmac);
                             setRichtexBox("产品为待装箱产品，比对数据" + delete_checknum + "条已删除，需要重新条码比对");
                             PutLableInfor("产品为待装箱产品，比对数据" + delete_checknum + "条已删除，需要重新条码比对");
                         }
-
-                        //if (str.Contains("FH003") && int.Parse(tt_nowcode) > 3100)
-                        //{
-                        //    string tt_gyid = this.label54.Text;
-                        //    string tt_ccode = this.label55.Text;
-                        //    string tt_ncode = "3100";
-                        //    bool tt_flag1 = Dataset1.FhUnPassStationI(tt_taskscode, tt_username, tt_recordmac, tt_gyid, tt_ccode, tt_ncode, tt_conn);
-                        //    if (tt_flag1 && tt_nowcode == "3201")
-                        //    {
-                        //        int delete_checknum = Delete_Check(tt_recordmac);
-                        //        setRichtexBox("重打完成，产品属于待装箱产品，已退回彩盒站位，产品为待装箱产品，比对数据" + delete_checknum + "条已删除，需要重新条码比对,ok");
-                        //        PutLableInfor("重打完成，产品属于待装箱产品，已退回彩盒站位，条码比对数据已删除");
-                        //    }
-                        //    else if (tt_flag1)
-                        //    {
-                        //        setRichtexBox("重打完成，产品属于彩盒后产品，已退回彩盒站位,ok");
-                        //        PutLableInfor("重打完成，产品属于彩盒后产品，已退回彩盒站位");
-                        //    }
-                        //    else
-                        //    {
-                        //        setRichtexBox("流程异常，产品未跳转也无法正常流线，请联系工程,NG");
-                        //        PutLableInfor("流程异常，产品未跳转也无法正常流线，请联系工程");
-                        //    }
-                        //}
+                        else if (str.Contains("FH003") && int.Parse(tt_nowcode) > 3100) //大线流程下的重打处理
+                        {
+                            string tt_gyid = this.label54.Text;
+                            string tt_ccode = this.label55.Text;
+                            string tt_ncode = "3100";
+                            bool tt_flag1 = Dataset1.FhUnPassStationI(tt_taskscode, tt_username, tt_recordmac, tt_gyid, tt_ccode, tt_ncode, tt_conn);
+                            if (tt_flag1)
+                            {
+                                int delete_checknum = Delete_Check(tt_recordmac);
+                                setRichtexBox("重打完成，产品属于待装箱产品，已退回彩盒站位，产品为待装箱产品，比对数据" + delete_checknum + "条已删除，需要重新条码比对,ok");
+                                PutLableInfor("重打完成，产品属于待装箱产品，已退回彩盒站位，条码比对数据已删除");
+                            }
+                            else
+                            {
+                                setRichtexBox("流程异常，产品未跳转也无法正常流线，请联系工程,NG");
+                                PutLableInfor("流程异常，产品未跳转也无法正常流线，请联系工程");
+                            }
+                        }
                     }
                     else
                     {

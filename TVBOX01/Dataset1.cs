@@ -173,9 +173,9 @@ namespace TVBOX01
             using (SqlDataAdapter dap = new SqlDataAdapter(tt_sql, connection))
             {
                 dap.Fill(ds);
-                tt_datasetinfor[0] = ds.Tables[0].Rows[0].ItemArray[0].ToString(); //
-                tt_datasetinfor[1] = ds.Tables[0].Rows[0].ItemArray[1].ToString(); //
-                tt_datasetinfor[2] = ds.Tables[0].Rows[0].ItemArray[2].ToString(); //
+                tt_datasetinfor[0] = ds.Tables[0].Rows[0].ItemArray[0].ToString();
+                tt_datasetinfor[1] = ds.Tables[0].Rows[0].ItemArray[1].ToString();
+                tt_datasetinfor[2] = ds.Tables[0].Rows[0].ItemArray[2].ToString();
             }
             return tt_datasetinfor;
         }
@@ -1549,23 +1549,18 @@ namespace TVBOX01
                             command.CommandText = tt_sql1;
                             command.ExecuteNonQuery();
 
-
                             string tt_sql2 = "INSERT INTO ODC_ROUTINGTASKLIST (TASKSCODE,PCBA_PN,CCODE,STATUS,CREATETIME,CUSERID,CUSERNAME,NCODE) " +
                                              "VALUES ('" + tt_smalltask + "','" + tt_shortmac + "','" + tt_ccode + "','0',getdate(),'" + tt_gyid + "','" + tt_username + "','" + tt_ncode + "') ";
-
                             command.CommandText = tt_sql2;
                             command.ExecuteNonQuery();
-
 
                             string tt_sql3 = "update odc_alllable set boxlable ='" + tt_boxlable + "', hprinttime = getdate(), " +
                                              " taskscode = '" + tt_smalltask + "', hostlable = '" + tt_boxlable + "', productlable = '" + tt_shanghailabel + "'" +
                                              "where hprintman ='" + tt_bigtask + "' and taskscode = '" + tt_bigtask + "'  and maclable ='" + tt_shortmac + "'  ";
-
                             command.CommandText = tt_sql3;
                             command.ExecuteNonQuery();
 
-
-                            string tt_sql4 = "update ODC_HOSTLABLEOPTIOAN set hostmax = '" + tt_nexthost + "' " +
+                            string tt_sql4 = "update ODC_HOSTLABLEOPTIOAN set hostmax = '" + tt_nexthost + "', hostdate = getdate()" +
                                              "where taskscode = '" + tt_smalltask + "' and id = " + tt_id;
                             command.CommandText = tt_sql4;
                             command.ExecuteNonQuery();
@@ -1924,8 +1919,6 @@ namespace TVBOX01
 
                     command.CommandText = tt_sql1;
                     command.ExecuteNonQuery();
-
-
 
                     //第二步 更新关联表数据
 
