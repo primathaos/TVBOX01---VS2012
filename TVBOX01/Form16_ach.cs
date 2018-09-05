@@ -443,7 +443,7 @@ namespace TVBOX01
                                 tt_power_search = "HG6201M_OLD";
                             }
 
-                            tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' and Fdesc <> '" + tt_parenttask + "' ";
+                            tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' and Fdesc not like '小型化%'";
                         }
 
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
@@ -1936,7 +1936,7 @@ namespace TVBOX01
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4)
                 {
                     string tt_sql5 = "select ssid,username,password,Wlanpas,ssid_5G,wlanpas_5G,barcode1  from odc_macinfo " +
-                                      "where taskscode = '" + this.textBox1.Text + "' and mac = '" + this.label59.Text + "' ";
+                                      "where taskscode = '" + this.textBox1.Text.Substring(0, this.textBox1.Text.Length - 2) + "' and mac = '" + this.label59.Text + "' ";
 
                     DataSet ds5 = Dataset1.GetDataSet(tt_sql5, tt_conn);
                     if (ds5.Tables.Count > 0 && ds5.Tables[0].Rows.Count > 0)
@@ -2188,7 +2188,7 @@ namespace TVBOX01
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag7 && tt_flag8 && tt_flag9)
                 {
                     string tt_sql10 = "select ssid,username,password,Wlanpas,ssid_5G,wlanpas_5G,barcode1  from odc_macinfo " +
-                                      "where taskscode = '" + tt_task + "' and mac = '" + tt_longmac + "' ";
+                                      "where taskscode = '" + tt_task.Substring(0,tt_task.Length-2) + "' and mac = '" + tt_longmac + "' ";
 
                     DataSet ds10 = Dataset1.GetDataSet(tt_sql10, tt_conn);
                     if (ds10.Tables.Count > 0 && ds10.Tables[0].Rows.Count > 0)

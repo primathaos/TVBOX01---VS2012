@@ -472,12 +472,12 @@ namespace TVBOX01
                     Boolean tt_flag3 = false;
                     if (tt_flag2)
                     {
-                        string tt_change = "<> ";
+                        string tt_change = "not like '小型化%'";
                         if (tt_parenttask.Contains("小型化")) //如果小型化产品
                         {
-                            tt_change = "= ";
+                            tt_change = "= '" + tt_parenttask + "'";
                         }
-                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change;
 
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
 
@@ -1321,7 +1321,7 @@ namespace TVBOX01
             }
             else
             {
-                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc <> '" + tt_parenttask + "' ";
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc not like '小型化%'";
                 string[] tt_array = new string[3];
                 tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
                 if (tt_array[0] == "1")

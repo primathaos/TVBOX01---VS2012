@@ -357,12 +357,12 @@ namespace TVBOX01
                     Boolean tt_flag1_1 = false;
                     if (tt_flag1)
                     {
-                        string tt_change = "<> ";
+                        string tt_change = "not like '小型化%'";
                         if (tt_parenttask.Contains("小型化")) //如果小型化产品
                         {
-                            tt_change = "= ";
+                            tt_change = "= '" + tt_parenttask + "'";
                         }
-                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change;
 
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
                         if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)

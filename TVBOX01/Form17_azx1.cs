@@ -1821,7 +1821,7 @@ namespace TVBOX01
             }
             else
             {
-                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc not like '小型化%'";
                 string[] tt_array = new string[3];
                 tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
                 if (tt_array[0] == "1")
@@ -2247,12 +2247,12 @@ namespace TVBOX01
                     {
                         string tt_sbxh = "";
 
-                        string tt_change = "<> ";
+                        string tt_change = "not like '小型化%'";
                         if (tt_parenttask.Contains("小型化")) //如果小型化产品
                         {
-                            tt_change = "= ";
+                            tt_change = "= '" + tt_parenttask + "'";
                         }
-                        string tt_sql11 = "select wifi from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+                        string tt_sql11 = "select wifi from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change;
 
                         DataSet ds11 = Dataset1.GetDataSetTwo(tt_sql11, tt_conn);
                         if (ds11.Tables.Count > 0 && ds11.Tables[0].Rows.Count > 0)
@@ -2501,12 +2501,12 @@ namespace TVBOX01
                     bool tt_flag10 = false;
                     if (tt_flag9)
                     {
-                        string tt_change = "<> ";
+                        string tt_change = "not like '小型化%'";
                         if (tt_parenttask.Contains("小型化")) //如果小型化产品
                         {
-                            tt_change = "= ";
+                            tt_change = "= '" + tt_parenttask + "'";
                         }
-                        string tt_sql10 = "select count(1),min(fboxset),0 from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+                        string tt_sql10 = "select count(1),min(fboxset),0 from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change;
 
                         string[] tt_array10 = new string[3];
                         tt_array10 = Dataset1.GetDatasetArray(tt_sql10, tt_conn);

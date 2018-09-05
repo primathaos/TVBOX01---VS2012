@@ -1461,7 +1461,7 @@ namespace TVBOX01
             }
             else
             {
-                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc <> '" + tt_parenttask + "' ";
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc not like '小型化%'";
                 string[] tt_array = new string[3];
                 tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
                 if (tt_array[0] == "1")
