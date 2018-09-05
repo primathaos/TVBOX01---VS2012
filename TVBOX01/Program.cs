@@ -29,7 +29,7 @@ namespace TVBOX01
                 {
                     //if (DialogResult.Yes == MessageBox.Show("检测到新版本，是否启动升级", "自动升级", MessageBoxButtons.YesNo))
                     //{
-                    string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe";
+                    string updateExePath = AppDomain.CurrentDomain.BaseDirectory + "CloseTvbox01.exe"; //调用软件中止TVBOX并启用自动升级
                     System.Diagnostics.Process myProcess = System.Diagnostics.Process.Start(updateExePath);
                     return;
                     //}

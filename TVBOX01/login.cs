@@ -329,9 +329,9 @@ namespace TVBOX01
 
             #region 三、烽火移动wifi
             //-------------以下烽火移动-------------
-            //3.1 烽火移动wifi 设备标签 //通用设备标签 //杨浩
+            //3.1 烽火移动wifi 设备标签 //通用设备标签
             #region
-            if (tt_username == "FH011" || tt_username == "FH111")
+            if (tt_username == "FH011" || tt_username == "FH111" || tt_username == "FH012" || tt_username == "FH112")
             {
                 string tt_password = GetUserPassword(tt_username);
                 if (this.textBox2.Text == tt_password)
@@ -384,9 +384,9 @@ namespace TVBOX01
             }
             #endregion
 
-            //3.2 烽火移动wifi  移动标签  //通用移动、电信标签 //杨浩
+            //3.2 烽火移动wifi  移动标签  //通用移动、电信标签
             #region
-            if (tt_username == "FH002" || tt_username == "FH102" || tt_username == "FH112")
+            if (tt_username == "FH002" || tt_username == "FH102")
             {
                 string tt_password = GetUserPassword(tt_username);
                 if (this.textBox2.Text == tt_password)
@@ -439,8 +439,7 @@ namespace TVBOX01
             }
             #endregion
 
-
-            //3.3 烽火移动wifi 生产序列号标签 //通用 //杨浩
+            //3.3 烽火移动wifi 生产序列号标签 //通用
             #region
             if (tt_username == "FH003" || tt_username == "FH103")
             {
@@ -500,8 +499,7 @@ namespace TVBOX01
             }
             #endregion
 
-
-            //3.4 烽火移动wifi 彩盒标签 //通用 //杨浩
+            //3.4 烽火移动wifi 彩盒标签 //通用
             #region
             if (tt_username == "FH004" || tt_username == "FH104")
             {
@@ -532,8 +530,7 @@ namespace TVBOX01
             }
             #endregion
 
-
-            //3.5 烽火移动wifi 中箱标签一/二 //通用 //杨浩
+            //3.5 烽火移动wifi 中箱标签一/二 //通用
             #region
             if (tt_username == "FH005" || tt_username == "FH105" || tt_username == "FH006" || tt_username == "FH106")
             {
@@ -588,7 +585,6 @@ namespace TVBOX01
                 }
             }
             #endregion
-
 
             //15 烽火移动 中箱标签二
             #region

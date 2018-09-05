@@ -61,13 +61,15 @@ namespace TVBOX01
 
         //打印铭牌时，电源选择1.5A显示标识（正常HG6201M产品为1.0A）
         string tt_power_old = "";
-        //1.5A电源物料不足问题重打标识
-        string tt_power_re = "";
+        //1.5A电源物料不足问题重打标识 //同时也是小型化标识
+        string tt_parenttask = "";
         //四川地区时间参数
         string tt_SichuanTime = "";
         string tt_Sichuanlongmac = "";
         //本机MAC
         static string tt_computermac = "";
+        //小型化批量打印中断标识
+        int Prints_Stop = 0;
 
         private void Form13_asb_Load(object sender, EventArgs e)
         {
@@ -81,15 +83,17 @@ namespace TVBOX01
             this.toolStripStatusLabel6.Text = tt_productstarttime.ToString();
 
             //初始不显示身份验证栏
-            this.groupBox15.Visible = false;
+            this.groupBox14.Visible = false;
 
             //初始不显示微调栏
-            this.groupBox14.Visible = false;            
+            this.groupBox15.Visible = false;            
 
             //隐藏线长调试按钮
             this.LineManger.Visible = false;
-
             this.tabPage10.Parent = null;
+
+            //通常不显示批量打印栏位
+            this.tabPage11.Parent = null;
 
             //员工账号分离
             if (str.Contains("FH011"))
@@ -102,6 +106,47 @@ namespace TVBOX01
                 this.LineManger.Visible = true;
             }
 
+            //烽火小型化铭牌批量打印员工账号
+            if (str.Contains("FH012"))
+            {
+                this.Plate_View.Visible = false;
+                this.Plate_Print.Visible = false;
+                this.Operator_View.Visible = false;
+                this.Operator_Print.Visible = false;
+                this.tabPage3.Parent = null;
+                this.tabPage4.Parent = null;
+                this.tabPage11.Parent = tabControl2;
+                this.LineManger.Visible = true;
+                this.label120.Text = "";
+                this.tabPage10.Text = "铭牌";
+                this.label73.Text = "";
+                this.label118.Text = "打印参数";
+                this.label1.Text = "已打印铭牌数量";
+                this.label46.Text = "";
+                this.label45.Text = "";
+
+            }
+
+            //烽火小型化铭牌批量打印工程账号
+            if (str.Contains("FH112"))
+            {
+                this.Plate_View.Visible = false;
+                this.Plate_Print.Visible = false;
+                this.Operator_Print.Visible = false;
+                this.tabPage3.Parent = null;
+                this.tabPage4.Parent = null;
+                this.groupBox15.Visible = true;
+                this.tabPage9.Parent = null;
+                this.tabPage10.Parent = tabControl5;
+                this.tabPage11.Parent = tabControl2;
+                this.label120.Text = "";
+                this.tabPage10.Text = "铭牌";
+                this.label73.Text = "";
+                this.label118.Text = "打印参数";
+                this.label1.Text = "已打印铭牌数量";
+                this.label46.Text = "";
+                this.label45.Text = "";
+            }
 
             ClearLabelInfo();
             //生产节拍
@@ -343,13 +388,13 @@ namespace TVBOX01
                     string tt_idnum = ds1.Tables[0].Rows[0].ItemArray[12].ToString();//制造单ID
 
                     tt_power_old = ds1.Tables[0].Rows[0].ItemArray[13].ToString().Trim();//旧电源适配器标识
-                    tt_power_re = ds1.Tables[0].Rows[0].ItemArray[14].ToString().Trim();//旧电源适配器标识(需重打检查)
+                    tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[14].ToString().Trim();//旧电源适配器标识(重打时检查) //同时也是小型化产品标识参数
 
                     tt_SichuanTime = (this.label28.Text.Replace(".", "/")).Substring(2, 5); //四川电信铭牌时间参数
 
                     int tt_idnum1 = Convert.ToInt32(tt_idnum);
 
-                    if (tt_productname == "HG6201G" || tt_productname == "HG6201GW" || tt_productname == "HG6201GS")
+                    if (tt_productname == "HG6201G" || tt_productname == "HG6201GW" || tt_productname == "HG6201GS") //广电产品型号转换
                     {
                         this.label29.Text = "HG6201M";
                     }
@@ -358,7 +403,7 @@ namespace TVBOX01
                         this.label29.Text = tt_productname;
                     }
 
-                    if (this.label30.Text == "河南")
+                    if (this.label30.Text == "河南") //移动地区定制化区分
                     {
                         this.label124.Text = "10086-5";
                         this.label121.Text = "设备二维码信息";
@@ -427,14 +472,20 @@ namespace TVBOX01
                     Boolean tt_flag3 = false;
                     if (tt_flag2)
                     {
-                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' ";
+                        string tt_change = "<> ";
+                        if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                        {
+                            tt_change = "= ";
+                        }
+                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
 
                         if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
                         {
                             this.label90.Text = ds3.Tables[0].Rows[0].ItemArray[0].ToString(); //电压
                             this.label92.Text = ds3.Tables[0].Rows[0].ItemArray[1].ToString(); //电流
-                            if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                            if (tt_productname == "HG6201M" && tt_power_old == "1.5") //旧电源兼容
                             {
                                 this.label92.Text = "1.5A";
                             }
@@ -512,7 +563,7 @@ namespace TVBOX01
                     if (tt_flag5)
                     {
                         string tt_product = this.label29.Text;
-                        tt_telecustomer = GetTelecomOperator(tt_product);
+                        tt_telecustomer = GetTelecomOperator(tt_product, tt_parenttask);
                         if (tt_telecustomer == "0")
                         {
                             MessageBox.Show("运营商获取失败，无法确定是电信还是移动产品");
@@ -607,15 +658,16 @@ namespace TVBOX01
                     //    }
                     //}
 
-
-
                     //最后验证
                     if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag7 && tt_flag8 && tt_flag9)
                     {
                         this.textBox1.Enabled = false;
                         this.textBox2.Visible = true;
                         this.textBox3.Visible = true;
-                        GetProductNumInfo();  //生产信息                        
+                        if (!str.Contains("FH012") && !str.Contains("FH112")) //小型化批量打印不检查
+                        {
+                            GetProductNumInfo();  //生产信息  
+                        }
                     }
                     else
                     {
@@ -1259,22 +1311,29 @@ namespace TVBOX01
         }
 
         //获取运营商
-        private string GetTelecomOperator(string tt_peoductname)
+        private string GetTelecomOperator(string tt_peoductname, string tt_parenttask)
         {
             string tt_teleplan = "0";
 
-            string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
-
-            string[] tt_array = new string[3];
-            tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
-            if (tt_array[0] == "1")
+            if (tt_parenttask.Contains("小型化")) //如果小型化产品
             {
-                tt_teleplan = tt_array[1];
+                tt_teleplan = tt_parenttask;
             }
             else
             {
-                MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc <> '" + tt_parenttask + "' ";
+                string[] tt_array = new string[3];
+                tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
+                if (tt_array[0] == "1")
+                {
+                    tt_teleplan = tt_array[1];
+                }
+                else
+                {
+                    MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                }
             }
+
             return tt_teleplan;
         }
 
@@ -1432,10 +1491,10 @@ namespace TVBOX01
                 string tt_scanmac = this.textBox3.Text.Trim().ToUpper();
                 string tt_shortmac = tt_scanmac.Replace(":", "");
 
-                //if(tt_shortmac.Contains("FHTT"))
-                //{
-                //    tt_shortmac = this.textBox6.Text.Trim() + tt_shortmac.Substring((tt_shortmac.Length - 6), 6);
-                //}
+                if (tt_shortmac.Contains("FHTT"))
+                {
+                    tt_shortmac = this.textBox3.Text.Trim() + tt_shortmac.Substring((tt_shortmac.Length - 6), 6);
+                }
 
                 //第一步位数判断
                 Boolean tt_flag1 = false;
@@ -2140,7 +2199,7 @@ namespace TVBOX01
                     //打印记录
 
                     string tt_remark = "";
-                    if (tt_power_re == "1.5A" && tt_power_old != "1.5")
+                    if (tt_parenttask == "1.5A" && tt_power_old != "1.5")
                     {
                         tt_remark = "原1.5A产品改为打印1.0A铭牌";
                     }
@@ -2149,7 +2208,7 @@ namespace TVBOX01
 
                     //打印
                     GetParaDataPrint1(1);
-                    if (PlatePrintPattern == "1")
+                    if (PlatePrintPattern == "1") //如果多打，调用
                     {
                         GetParaDataPrint2(1);
                     }
@@ -2181,7 +2240,6 @@ namespace TVBOX01
                     this.textBox14.Text = null;
                 }
             }
-
         }
 
         //锁定MAC特征码输入框
@@ -2317,6 +2375,7 @@ namespace TVBOX01
             ScanDataInitial();
             this.textBox2.Text = null;
             this.textBox3.Text = null;
+            Prints_Stop = 1;
             textBox2.Focus();
             textBox2.SelectAll();
         }
@@ -2391,7 +2450,7 @@ namespace TVBOX01
                     if (tt_flag && tt_nowcode != "9990")
                     {
                         string tt_remark = "";
-                        if (tt_power_re == "1.5A" && tt_power_old != "1.5")
+                        if (tt_parenttask == "1.5A" && tt_power_old != "1.5")
                         {
                             tt_remark = "原1.5A产品改为打印1.0A铭牌";
                         }
@@ -2504,6 +2563,10 @@ namespace TVBOX01
                     MessageBox.Show("当前站位或序号：" + tt_prientcode + "必须大于待测站位或序号：" + tt_checkcode + ",才能重打标签");
                 }
 
+            }
+            else if (str.Contains("FH012") || str.Contains("FH112")) //小型化批量打印不检查
+            {
+                GetParaDataPrint2(2);  //预览
             }
             else
             {
@@ -2639,6 +2702,57 @@ namespace TVBOX01
 
         }
 
+        //小型化铭牌批量打印(小型化产品的铭牌打印在软件中调用的是运营商标签打印)
+        private void Minitype_Plate_Prints_Click(object sender, EventArgs e)
+        {
+            if (this.print_num.Text != "" && int.Parse(this.print_num.Text) > 0)
+            {
+                this.label47.Text = "";
+                this.Minitype_Plate_Prints.Visible = false;
+                Prints_Stop = 0;
+                int printnum = int.Parse(this.print_num.Text);
+                for (int i = 0; i < printnum; i++)
+                {
+                    if (Prints_Stop == 1) break;
+                    GetParaDataPrint2(1);  //打印
+                    this.richTextBox1.Text = null;
+                    this.richTextBox1.BackColor = Color.White;
+                    this.label47.Text = (i + 1).ToString();
+                    Application.DoEvents(); //强制刷新UI
+                }
+                this.Minitype_Plate_Prints.Visible = true;
+                if (int.Parse(this.label47.Text) < printnum)
+                {
+                    PutLableInfor("批量打印被强行终止，已打印完成" + this.label47.Text + "PCS");
+                    this.richTextBox1.BackColor = Color.Red;
+                }
+                else
+                {
+                    PutLableInfor("批量打印" + this.print_num.Text + "PCS，打印完成");
+                    this.richTextBox1.BackColor = Color.Chartreuse;
+                }
+            }
+
+            print_num.Focus();
+            print_num.SelectAll();
+        }
+
+        //批量打印输入限制
+        private void print_num_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (Char)8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        //小型化铭牌批量打印中断
+        private void Minitype_Prints_Stop_Click(object sender, EventArgs e)
+        {
+            Prints_Stop = 1;
+            this.Minitype_Plate_Prints.Visible = true;
+        }
+
         //线长调试模式
         private void LineManger_Click(object sender, EventArgs e)
         {
@@ -2655,22 +2769,27 @@ namespace TVBOX01
                     comboBox2.DataSource = ds1.Tables[0];
                     comboBox2.DisplayMember = "fusername";
                     this.groupBox14.Visible = true;
-                    this.groupBox12.Visible = false;
-                    this.groupBox5.Visible = false;
-                    this.dataGridView1.Visible = false;
                     this.comboBox1.Text = "0.3";
                     this.comboBox2.Text = "下拉选择";
                     this.textBox21.Text = "";
                     this.textBox22.Text = "";
                     this.comboBox2.Enabled = true;
                     this.textBox21.Enabled = true;
-                    this.textBox22.Enabled = true;                    
+                    this.textBox22.Enabled = true;
                     this.groupBox15.Visible = false;
                     this.Plate_Print.Visible = false;
-                    this.tabPage4.Parent = null;
-                    this.tabPage3.Parent = tabControl2;
-                    this.textBox3.Enabled = true;
-                    this.textBox3.Text = "";
+                    if (str.Contains("FH012"))
+                    {
+                        this.print_num.Text = "1";
+                        this.print_num.Enabled = false;
+                    }
+                    else
+                    {
+                        this.tabPage4.Parent = null;
+                        this.tabPage3.Parent = tabControl2;
+                        this.textBox3.Enabled = true;
+                        this.textBox3.Text = "";
+                    }
                 }
                 else
                 {
@@ -2683,7 +2802,7 @@ namespace TVBOX01
             }
         }
 
-        //输入限制
+        //线长工号输入限制
         private void textBox21_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (Char)8)
@@ -2706,13 +2825,21 @@ namespace TVBOX01
                     this.comboBox2.Enabled = false;
                     this.textBox21.Enabled = false;
                     this.textBox22.Enabled = false;
-                    this.Plate_Print.Visible = true;
-                    if (PlatePrintPattern == "1")
+                    if (str.Contains("FH012"))
                     {
-                        this.Operator_Print.Visible = true;
+                        this.tabPage9.Parent = null;
+                        this.tabPage10.Parent = tabControl5;
                     }
-                    this.tabPage3.Parent = null;
-                    this.tabPage4.Parent = tabControl2;
+                    else
+                    {
+                        this.Plate_Print.Visible = true;
+                        if (PlatePrintPattern == "1")
+                        {
+                            this.Operator_Print.Visible = true;
+                        }
+                        this.tabPage3.Parent = null;
+                        this.tabPage4.Parent = tabControl2;
+                    }
                     ScanDataInitial();
                     //获取线长调试开始时间
                     tt_reprintstattime = DateTime.Now;
@@ -2735,9 +2862,17 @@ namespace TVBOX01
             this.textBox21.Enabled = true;
             this.textBox22.Enabled = true;
             this.groupBox15.Visible = false;
-            this.Plate_Print.Visible = false;
-            this.tabPage4.Parent = null;
-            this.tabPage3.Parent = tabControl2;
+            if (str.Contains("FH012"))
+            {
+                this.print_num.Text = "";
+                this.print_num.Enabled = true;
+            }
+            else
+            {
+                this.Plate_Print.Visible = false;
+                this.tabPage4.Parent = null;
+                this.tabPage3.Parent = tabControl2;
+            }
         }
 
         //取消身份验证过程，并结束设置
@@ -2752,12 +2887,17 @@ namespace TVBOX01
             this.textBox22.Enabled = true;
             this.groupBox14.Visible = false;
             this.groupBox15.Visible = false;
-            this.groupBox12.Visible = true;
-            this.groupBox5.Visible = true;
-            this.dataGridView1.Visible = true;
-            this.Plate_Print.Visible = false;
-            this.tabPage4.Parent = null;
-            this.tabPage3.Parent = tabControl2;
+            if (str.Contains("FH012"))
+            {
+                this.print_num.Text = "";
+                this.print_num.Enabled = true;
+            }
+            else
+            {
+                this.Plate_Print.Visible = false;
+                this.tabPage4.Parent = null;
+                this.tabPage3.Parent = tabControl2;
+            }
         }
 
         //上移按钮
@@ -2820,12 +2960,17 @@ namespace TVBOX01
             this.textBox22.Enabled = true;
             this.groupBox14.Visible = false;
             this.groupBox15.Visible = false;
-            this.groupBox12.Visible = true;
-            this.groupBox5.Visible = true;
-            this.dataGridView1.Visible = true;
-            this.Plate_Print.Visible = false;
-            this.tabPage4.Parent = null;
-            this.tabPage3.Parent = tabControl2;
+            if (str.Contains("FH012"))
+            {
+                this.print_num.Text = "";
+                this.print_num.Enabled = true;
+            }
+            else
+            {
+                this.Plate_Print.Visible = false;
+                this.tabPage4.Parent = null;
+                this.tabPage3.Parent = tabControl2;
+            }
         }
 
         #endregion
@@ -4439,7 +4584,7 @@ namespace TVBOX01
                 //--打印
                 if (tt_itemtype == 1)
                 {
-                    if (PlatePrintPattern == "1")
+                    if (PlatePrintPattern == "1" && !(str.Contains("FH012") || str.Contains("FH112")))
                     {
                         report.PrintSettings.Printer = "运营商";
                     }
@@ -4656,7 +4801,9 @@ namespace TVBOX01
             }
         }
 
+
         #endregion
+
 
     }
 }

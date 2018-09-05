@@ -1024,7 +1024,7 @@ namespace TVBOX01
                     if (Getproductname(tt_mac) == "HG6201M"
                         || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac)) 
                         && Getproductarea(tt_mac).Trim() != "安徽"
-                        && tt_parenttask != "小型化方案"))
+                        && tt_parenttask != "小型化电信"))//如果产品不属于需要测试吞吐量的产品 //这是用于早期流程切换兼容用的，如果没有流程切换就不用修改
                     {
                         tt_productname_check = 1;
                     }
@@ -1094,7 +1094,7 @@ namespace TVBOX01
                     if (Getproductname(tt_mac) == "HG6201M"
                         || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac))
                         && Getproductarea(tt_mac).Trim() != "安徽"
-                        && tt_parenttask != "小型化方案"))
+                        && tt_parenttask != "小型化电信"))//如果产品不属于需要测试吞吐量的产品  //这是用于早期流程切换兼容用的，如果没有流程切换就不用修改
                     {
                         tt_productname_check = 1;
                     }
@@ -1136,7 +1136,7 @@ namespace TVBOX01
                         && (Getproductname(tt_mac) == "HG6201M"
                         || ("HG6201T,HG2201T".Contains(Getproductname(tt_mac))
                         && Getproductarea(tt_mac).Trim() != "安徽"
-                        && tt_parenttask != "小型化方案")))
+                        && tt_parenttask != "小型化电信"))) //如果产品不属于需要测试吞吐量的产品 //这是用于早期流程切换兼容用的，如果没有流程切换就不用修改
                     {
                         tt_mataionstation = "2115";
                     }

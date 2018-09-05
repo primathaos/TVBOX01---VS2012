@@ -60,7 +60,16 @@ namespace TVBOX01
 
         //本机MAC
         static string tt_computermac = "";
-		
+
+        //联通二维码数据
+        string tt_ssidLT = "";
+        string tt_macusernameLT = "";
+        string tt_passwordLT = "";
+        string tt_wlanpasLT = "";
+        string tt_5guserLT = "";
+        string tt_5gpasswordLT = "";
+        string tt_barcode1LT = "";
+
         private void Form16_ach_Load(object sender, EventArgs e)
         {
             //FastReport环境变量设置（打印时不提示 "正在准备../正在打印..",一个程序只需设定一次，故一般写在程序入口）
@@ -271,7 +280,14 @@ namespace TVBOX01
             this.richTextBox1.Text = null;
             this.richTextBox1.BackColor = Color.White;
 
-
+            //联通二维码数据清理
+            tt_ssidLT = "";
+            tt_macusernameLT = "";
+            tt_passwordLT = "";
+            tt_wlanpasLT = "";
+            tt_5guserLT = "";
+            tt_5gpasswordLT = "";
+            tt_barcode1LT = "";
         }
 
         #endregion
@@ -352,7 +368,7 @@ namespace TVBOX01
                         this.label15.Text = this.label15.Text.Replace("/", "-");
                     }
 
-                    if (tt_parenttask == "小型化方案")
+                    if (tt_parenttask == "小型化电信" || tt_parenttask == "小型化移动") //如果小型化产品彩盒标签合一了，则不再调用
                     {
                         this.label83.Text = "彩盒2模板路径";
                         this.label102.Text = "彩盒2标签";
@@ -413,13 +429,23 @@ namespace TVBOX01
                     Boolean tt_flag3 = false;
                     if (tt_flag2)
                     {
-                        string tt_power_search = tt_productname;
-                        if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                        string tt_sql3 = "";
+
+                        if (tt_parenttask.Contains("小型化")) //如果小型化产品
                         {
-                            tt_power_search = "HG6201M_OLD";
+                            tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc = '" + tt_parenttask + "'";
+                        }
+                        else
+                        {
+                            string tt_power_search = tt_productname;
+                            if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                            {
+                                tt_power_search = "HG6201M_OLD";
+                            }
+
+                            tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' and Fdesc <> '" + tt_parenttask + "' ";
                         }
 
-                        string tt_sql3 = "select fpwmodel,fdesc,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' ";
                         DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
 
                         if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
@@ -428,15 +454,14 @@ namespace TVBOX01
                             this.label97.Text = ds3.Tables[0].Rows[0].ItemArray[1].ToString(); //运营商
                             this.label94.Text = ds3.Tables[0].Rows[0].ItemArray[2].ToString(); //产品特征
                             this.label88.Text = ds3.Tables[0].Rows[0].ItemArray[3].ToString(); //产品颜色
-
                             this.textBox8.Text = this.label96.Text;
-
                             tt_flag3 = true;
                         }
                         else
                         {
                             MessageBox.Show("没有电源适配器信息，请确认数据库电源表");
                         }
+
                     }
 
                     //第四步 MAC特征码查询
@@ -494,7 +519,7 @@ namespace TVBOX01
                         string tt_sql5_1 = "select docdesc,Fpath04,Fdata04,Fmd04 from odc_ec where zjbm = '" + tt_ec + "' ";
                         string tt_sql5_2 = "select docdesc,Fpath10,Fdata10,Fmd10 from odc_ec where zjbm = '" + tt_ec + "' ";
 
-                        if (tt_parenttask == "小型化方案")//小型化方案彩盒II
+                        if (tt_parenttask == "小型化电信" || tt_parenttask == "小型化移动") //如果小型化产品彩盒标签合一了，则不再调用 //小型化方案彩盒II
                         {
                             tt_sql5_2 = "select docdesc,Fpath09,Fdata09,Fmd09 from odc_ec where zjbm = '" + tt_ec + "' ";
                         }
@@ -1910,8 +1935,28 @@ namespace TVBOX01
                 Boolean tt_flag5 = false;
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4)
                 {
-                    tt_flag5 = true;
-                    setRichtexBox("5、Macinfo表查找数据过,goon");
+                    string tt_sql5 = "select ssid,username,password,Wlanpas,ssid_5G,wlanpas_5G,barcode1  from odc_macinfo " +
+                                      "where taskscode = '" + this.textBox1.Text + "' and mac = '" + this.label59.Text + "' ";
+
+                    DataSet ds5 = Dataset1.GetDataSet(tt_sql5, tt_conn);
+                    if (ds5.Tables.Count > 0 && ds5.Tables[0].Rows.Count > 0)
+                    {
+                        tt_flag5 = true;
+                        tt_ssidLT = ds5.Tables[0].Rows[0].ItemArray[0].ToString();  //SSID
+                        tt_macusernameLT = ds5.Tables[0].Rows[0].ItemArray[1].ToString();  //用户名
+                        tt_passwordLT = ds5.Tables[0].Rows[0].ItemArray[2].ToString();  //密码
+                        tt_wlanpasLT = ds5.Tables[0].Rows[0].ItemArray[3].ToString();  //WIFI密码
+                        tt_5guserLT = ds5.Tables[0].Rows[0].ItemArray[4].ToString();  //5G账号
+                        tt_5gpasswordLT = ds5.Tables[0].Rows[0].ItemArray[5].ToString();  //5G密码
+                        tt_barcode1LT = ds5.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();  //设备标示号暗码
+
+                        setRichtexBox("5、Macinfo表找到一条数据，SSID=" + tt_ssidLT + ",username=" + tt_macusernameLT + ",password=" + tt_passwordLT + ",wanlaps=" + tt_wlanpasLT + ",goon");
+                    }
+                    else
+                    {
+                        setRichtexBox("5、Macinfo表没有找到一条数据，over");
+                        PutLableInfor("Macinfo表没有找到条数据，请检查！");
+                    }
 
                 }
 
@@ -2142,8 +2187,28 @@ namespace TVBOX01
                 Boolean tt_flag10 = false;
                 if (tt_flag1 && tt_flag2 && tt_flag3 && tt_flag4 && tt_flag5 && tt_flag6 && tt_flag7 && tt_flag8 && tt_flag9)
                 {
-                    tt_flag10 = true;
-                    setRichtexBox("10、Macinfo表查找数据过,goon");
+                    string tt_sql10 = "select ssid,username,password,Wlanpas,ssid_5G,wlanpas_5G,barcode1  from odc_macinfo " +
+                                      "where taskscode = '" + tt_task + "' and mac = '" + tt_longmac + "' ";
+
+                    DataSet ds10 = Dataset1.GetDataSet(tt_sql10, tt_conn);
+                    if (ds10.Tables.Count > 0 && ds10.Tables[0].Rows.Count > 0)
+                    {
+                        tt_flag10 = true;
+                        tt_ssidLT = ds10.Tables[0].Rows[0].ItemArray[0].ToString();  //SSID
+                        tt_macusernameLT = ds10.Tables[0].Rows[0].ItemArray[1].ToString();  //用户名
+                        tt_passwordLT = ds10.Tables[0].Rows[0].ItemArray[2].ToString();  //密码
+                        tt_wlanpasLT = ds10.Tables[0].Rows[0].ItemArray[3].ToString();  //WIFI密码
+                        tt_5guserLT = ds10.Tables[0].Rows[0].ItemArray[4].ToString();  //5G账号
+                        tt_5gpasswordLT = ds10.Tables[0].Rows[0].ItemArray[5].ToString();  //5G密码
+                        tt_barcode1LT = ds10.Tables[0].Rows[0].ItemArray[6].ToString().ToUpper();  //设备标示号暗码
+
+                        setRichtexBox("10、Macinfo表找到一条数据，SSID=" + tt_ssidLT + ",username=" + tt_macusernameLT + ",password=" + tt_passwordLT + ",wanlaps=" + tt_wlanpasLT + ",goon");
+                    }
+                    else
+                    {
+                        setRichtexBox("10、Macinfo表没有找到一条数据，over");
+                        PutLableInfor("Macinfo表没有找到条数据，请检查！");
+                    }
                 }
 
                 //第十一步物料追溯添加
@@ -3102,8 +3167,66 @@ namespace TVBOX01
 
             //数据收集
 
+            string tt_httpdx = "https://download.189cube.com/clientdownload?ssid1="; //电信IP地址
+            string tt_ssid = tt_ssidLT; //默认无线网络名称
+            string tt_wifipassword = tt_wlanpasLT; //默认无线网络密匙
+            string tt_password = tt_passwordLT; //默认终端配置密码
+            string tt_productname = this.label13.Text; //设备型号
+            string tt_productmark = tt_barcode1LT; //设备标示
+            string tt_ponname = this.label87.Text; //设备类型
+
+            string tt_ltponword = "";
+            if (tt_ponname == "GPON")
+            {
+                tt_ltponword = "&sn=";
+            }
+            else if (tt_ponname == "EPON")
+            {
+                tt_ltponword = "&mac=";
+            }
+
+            string tt_twodimcode = tt_httpdx + tt_ssid + "&password=" + tt_wifipassword + "&useradminpw="
+                                 + tt_password + "&model=" + tt_productname + "&sn=" + tt_productmark;
+
+            string tt_httplt = "http://op.smartont.net/app/download?ssid1="; //联通IP地址
+            string tt_username = tt_macusernameLT;
+            string tt_gpsn = this.label61.Text;
+
+            if (tt_ponname == "EPON")
+            {
+                tt_gpsn = tt_gpsn.Replace("-", "");
+            }
+
+            //联通二维码
+            string tt_LTQR = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+                             "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
+                             tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
+
+            //联通天津二维码
+            string tt_LTQR_TJ = "ssid1=" + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+                                "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
+                                tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
+
+            //MAC
+            string tt_shortmac = this.label46.Text;
+
+            //移动浙江二维码
+            string tt_YDQR_ZJ = "厂家:烽火通信科技股份有限公司,型号:" + this.label56.Text + ",SN:" + tt_gpsn +
+                                ",生产日期:" + this.label15.Text.Replace("/", ".") + ",用户无线默认SSID:" + tt_ssid +
+                                ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
+                                ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
+
+            ////联通单频小型化二维码
+            //string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+            //                        "&pwd=" + tt_password;
+
+            string tt_LTQR_2G_Min = "";
+
+            //上海定制条码
+            string tt_shanghaiprint = this.label77.Text;
+
+            //四川温馨提示二维码
             string tt_sichuan_QR = "http://fuwu.51awifi.com/oms/pang/bind.htm?mac=" + this.label46.Text;
-           
 
             DataSet dst2 = new DataSet();
             DataTable dt2 = new DataTable();
@@ -3112,12 +3235,65 @@ namespace TVBOX01
             dt2.Columns.Add("名称");
             dt2.Columns.Add("内容");
 
-
             DataRow row1 = dt2.NewRow();
             row1["参数"] = "S01";
-            row1["名称"] = "四川电信二维码";
-            row1["内容"] = tt_sichuan_QR;
+            row1["名称"] = "电信二维码";
+            row1["内容"] = tt_twodimcode;
             dt2.Rows.Add(row1);
+
+            DataRow row2 = dt2.NewRow();
+            row2["参数"] = "S02";
+            row2["名称"] = "联通二维码";
+            row2["内容"] = tt_LTQR;
+            dt2.Rows.Add(row2);
+
+            DataRow row3 = dt2.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "联通天津二维码";
+            row3["内容"] = tt_LTQR_TJ;
+            dt2.Rows.Add(row3);
+
+            DataRow row4 = dt2.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "SN&MAC";
+            row4["内容"] = tt_gpsn;
+            dt2.Rows.Add(row4);
+
+            DataRow row5 = dt2.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "移动浙江二维码";
+            row5["内容"] = tt_YDQR_ZJ;
+            dt2.Rows.Add(row5);
+
+            DataRow row6 = dt2.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "上海资产编码";
+            row6["内容"] = tt_shanghaiprint;
+            dt2.Rows.Add(row6);
+
+            DataRow row7 = dt2.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "联通单频小型化二维码";
+            row7["内容"] = tt_LTQR_2G_Min;
+            dt2.Rows.Add(row7);
+
+            DataRow row8 = dt2.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "WiFi名称";
+            row8["内容"] = tt_ssid;
+            dt2.Rows.Add(row8);
+
+            DataRow row9 = dt2.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "WiFi密码";
+            row9["内容"] = tt_wifipassword;
+            dt2.Rows.Add(row9);
+
+            DataRow row10 = dt2.NewRow();
+            row10["参数"] = "S10";
+            row10["名称"] = "四川温馨提示二维码";
+            row10["内容"] = tt_sichuan_QR;
+            dt2.Rows.Add(row10);
 
             this.dataGridView6.DataSource = null;
             this.dataGridView6.Rows.Clear();
@@ -3139,6 +3315,15 @@ namespace TVBOX01
                 report.Prepare();
                 report.Load(tt_path2);
                 report.SetParameterValue("S01", dst2.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst2.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst2.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst2.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst2.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst2.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst2.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst2.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst2.Tables[0].Rows[8][2].ToString());
+                report.SetParameterValue("S10", dst2.Tables[0].Rows[9][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

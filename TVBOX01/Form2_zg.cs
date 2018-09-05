@@ -76,6 +76,8 @@ namespace TVBOX01
         static string tt_conn;
         static int tt_yield = 0;
 
+        string tt_parenttask = "";
+
         DateTime tt_productstarttime = DateTime.Now; //开始时间
         DateTime tt_productprimtime; //上一次时间
 
@@ -399,8 +401,8 @@ namespace TVBOX01
         {
             if ( this.checkBox1.Checked  )
             {
-                string tt_sql = " select tasksquantity,product_name,areacode,gyid,tasktype,pon_name,bosatype,svers " +
-                          "from odc_tasks where  taskstate = 2 and taskscode = '" + this.textBox1.Text + "' ";
+                string tt_sql = " select tasksquantity,product_name,areacode,gyid,tasktype,pon_name,bosatype,svers,parenttask " +
+                                "from odc_tasks where  taskstate = 2 and taskscode = '" + this.textBox1.Text + "' ";
 
 
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql,tt_conn);
@@ -414,6 +416,7 @@ namespace TVBOX01
                     tt_ponname = ds1.Tables[0].Rows[0].ItemArray[5].ToString(); //PON 类型
                     tt_bosatype = ds1.Tables[0].Rows[0].ItemArray[6].ToString(); //BOSA 类型
                     tt_svers = ds1.Tables[0].Rows[0].ItemArray[7].ToString();//制造单编译时间
+                    tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[8].ToString();
 
                     //第一步 流程代码检查
                     #region
@@ -453,7 +456,7 @@ namespace TVBOX01
                     if (tt_flag2)
                     {
                         string tt_product = this.label5.Text;
-                        tt_telecustomer = getTelecomOperator(tt_product);
+                        tt_telecustomer = GetTelecomOperator(tt_product,tt_parenttask);
                         if (tt_telecustomer == "0")
                         {
                             MessageBox.Show("运营商获取失败，无法确定是电信还是移动产品");
@@ -1448,30 +1451,35 @@ namespace TVBOX01
 
 
         //获取运营商
-        private string getTelecomOperator(string tt_peoductname)
+        private string GetTelecomOperator(string tt_peoductname, string tt_parenttask)
         {
             string tt_teleplan = "0";
 
-            string tt_sql = "select count(1),min(Fdesc),0  from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
-
-            string[] tt_array = new string[3];
-            tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
-            if (tt_array[0] == "1")
+            if (tt_parenttask.Contains("小型化")) //如果小型化产品
             {
-                tt_teleplan = tt_array[1];
+                tt_teleplan = tt_parenttask;
             }
             else
             {
-                MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc <> '" + tt_parenttask + "' ";
+                string[] tt_array = new string[3];
+                tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
+                if (tt_array[0] == "1")
+                {
+                    tt_teleplan = tt_array[1];
+                }
+                else
+                {
+                    MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                }
             }
-
 
             return tt_teleplan;
         }
 
 
-       #endregion
-        
+        #endregion
+
 
         #region 6、列表操作
         //清理listview

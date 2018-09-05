@@ -62,7 +62,7 @@ namespace TVBOX01
         static float tt_left3 = 0; //彩盒标签左右偏移量
         static float tt_top4 = 0; //II型标签上下偏移量
         static float tt_left4 = 0; //II型标签左右偏移量
-        int tt_checkflag = 0;
+        int tt_checkflag = 0; //过站时判断是否需要重新打印
         
         //重打限制标识
         string tt_reprintmark = "1";
@@ -496,7 +496,7 @@ namespace TVBOX01
                     PutLableInfor("设置软件扫描模式……");
                     Application.DoEvents(); //强制刷新UI
 
-                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                    if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                     {
                         this.Mac_input.Visible = true;
                         this.Mac_input.Enabled = true;
@@ -778,13 +778,23 @@ namespace TVBOX01
             bool tt_flag1_2 = false;
             if (tt_flag1_1)
             {
-                string tt_power_search = this.label13.Text;
-                if (this.label13.Text == "HG6201M" && tt_power_old == "1.5")
+                string tt_sql1_2 = "";
+
+                if (tt_parenttask.Contains("小型化")) //如果小型化产品
                 {
-                    tt_power_search = "HG6201M_OLD";
+                    tt_sql1_2 = "select fpwmodel,wifi,fcolor from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc = '" + tt_parenttask + "'";
+                }
+                else
+                {
+                    string tt_power_search = tt_productname;
+                    if (tt_productname == "HG6201M" && tt_power_old == "1.5")
+                    {
+                        tt_power_search = "HG6201M_OLD";
+                    }
+
+                    tt_sql1_2 = "select fpwmodel,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' and Fdesc <> '" + tt_parenttask + "' ";
                 }
 
-                string tt_sql1_2 = "select fpwmodel,wifi,fcolor from odc_dypowertype where ftype = '" + tt_power_search + "' ";
                 DataSet ds1_2 = Dataset1.GetDataSetTwo(tt_sql1_2, tt_conn);
 
                 if (ds1_2.Tables.Count > 0 && ds1_2.Tables[0].Rows.Count > 0)
@@ -792,9 +802,7 @@ namespace TVBOX01
                     this.label168.Text = ds1_2.Tables[0].Rows[0].ItemArray[0].ToString(); //电源适配器特征码
                     this.label155.Text = ds1_2.Tables[0].Rows[0].ItemArray[1].ToString(); //产品特征
                     this.label156.Text = ds1_2.Tables[0].Rows[0].ItemArray[2].ToString(); //产品颜色
-
                     this.textBox29.Text = this.label168.Text;
-
                     tt_flag1_2 = true;
                 }
                 else
@@ -840,7 +848,7 @@ namespace TVBOX01
                     tt_sql3_2 = "select  docdesc,Fpath09,Fdata09,Fmd09  from odc_ec where zjbm = '" + tt_ec + "' ";
                 }
 
-                if (tt_parenttask == "小型化方案")
+                if (tt_parenttask.Contains("小型化"))
                 {
                     tt_sql3_4 = "select  docdesc,Fpath09,Fdata09,Fmd09  from odc_ec where zjbm = '" + tt_ec + "' ";
 
@@ -1362,8 +1370,14 @@ namespace TVBOX01
             {
                 PutLableInfor("获取装箱设置……");
                 Application.DoEvents(); //强制刷新UI
-                string tt_sql15 = "select count(1),min(fpliietset),min(fboxset) from odc_dypowertype " +
-                                  "where Ftype = '"+tt_productname+"' ";
+
+                string tt_change = "<> ";
+                if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                {
+                    tt_change = "= ";
+                }
+                string tt_sql15 = "select count(1),min(fpliietset),min(fboxset) from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+
                 string[] tt_array15 = new string[3];
                 tt_array15 = Dataset1.GetDatasetArray(tt_sql15, tt_conn);
                 if (tt_array15[0] == "1")
@@ -1376,7 +1390,6 @@ namespace TVBOX01
                 {
                     MessageBox.Show("没有找到子产品" + tt_productname + "的箱号栈板号配置信息，请确认！");
                 }
-
             }
             #endregion
 
@@ -2503,33 +2516,22 @@ namespace TVBOX01
             this.EQP_input.Text = null;
             this.Power_input.Text = null;
 
-            if (tt_parenttask != "小型化方案")
-            {
-                this.EQP_input.Enabled = true;
-                this.Mac_input.Enabled = false;
-                this.Power_input.Enabled = false;
-                this.Mac_reprint_input.Enabled = true;
-                EQP_input.Focus();
-                EQP_input.SelectAll();
-            }
-
-            if (!(tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
-            {
-                this.EQP_input.Enabled = true;
-                this.Mac_input.Enabled = false;
-                this.Power_input.Enabled = false;
-                this.Mac_reprint_input.Enabled = true;
-                EQP_input.Focus();
-                EQP_input.SelectAll();
-            }
-
-            if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+            if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //如果是小型化产品或四川电信常规定制产品
             {
                 this.Mac_input.Enabled = true;
                 this.Power_input.Enabled = false;
                 this.Mac_reprint_input.Enabled = true;
                 Mac_input.Focus();
                 Mac_input.SelectAll();
+            }
+            else
+            {
+                this.EQP_input.Enabled = true;
+                this.Mac_input.Enabled = false;
+                this.Power_input.Enabled = false;
+                this.Mac_reprint_input.Enabled = true;
+                EQP_input.Focus();
+                EQP_input.SelectAll();
             }
 
             //SetTaskcodeList();
@@ -2549,7 +2551,7 @@ namespace TVBOX01
                 this.EQP_input.Text = null;
                 this.Power_input.Text = null;
 
-                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                 {
                     this.Mac_input.Enabled = true;
                     this.Power_input.Enabled = false;
@@ -2578,7 +2580,7 @@ namespace TVBOX01
                 this.EQP_input.Text = null;
                 this.Power_input.Text = null;
 
-                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                 {
                     this.Mac_input.Enabled = true;
                     this.Power_input.Enabled = false;
@@ -3687,7 +3689,7 @@ namespace TVBOX01
                 setRichtexBox("-----开始MAC过站扫描--------");
 
                 //小型化、四川电信初始化扫描
-                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                 {
                     ScanDataInitial();
                 }
@@ -3955,7 +3957,7 @@ namespace TVBOX01
                 string tt_unitnum = this.EQP_input.Text.Trim().ToUpper().Replace(" ","");
                 if (tt_flag9)
                 {
-                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                    if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                     {
                         tt_flag10 = true;
                         setRichtexBox("10、小型化 or 四川电信方案不检查,gong");
@@ -3994,7 +3996,7 @@ namespace TVBOX01
                         bool tt_flag11_1 = CheckPrintRecord(tt_shortmac,"铭牌标签");
                         bool tt_flag11_2 = CheckPrintRecord(tt_shortmac, "运营商标签");
 
-                        if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                        if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                         {
                             tt_flag11_2 = true;
                         }
@@ -4188,7 +4190,7 @@ namespace TVBOX01
                     if (this.label13.Text.Trim() == "HG6201M"
                         || ("HG6201T,HG2201T".Contains(this.label13.Text.Trim())
                         && this.label14.Text != "安徽"
-                        && tt_parenttask != "小型化方案"))
+                        && tt_parenttask != "小型化电信"))//如果产品不属于需要测试吞吐量的产品  //这是用于早期流程切换兼容用的，如果没有流程切换就不用修改
                     {
                         tt_productname_check = 1;
                     }
@@ -4576,7 +4578,7 @@ namespace TVBOX01
 
                 if (int.Parse(PrintChange) < 2)//非多打方案光标转移
                 {
-                    if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                    if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                     {
                         //光标转移
                         this.Mac_input.Enabled = true;
@@ -4896,7 +4898,7 @@ namespace TVBOX01
                     this.richTextBox1.BackColor = Color.Red;
                 }
 
-                if (tt_parenttask == "小型化方案" || (tt_parenttask != "小型化方案" && "HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川"))
+                if (tt_parenttask.Contains("小型化") || ("HG6201T,HG2201T".Contains(this.label13.Text) && this.label14.Text == "四川")) //四川电信常规产品有定制需求的
                 {
                     //光标转移
                     this.Power_input.Enabled = false;
@@ -5088,6 +5090,11 @@ namespace TVBOX01
             {
                 GetParaDataPrint2_DX01(tt_itemtype);
             }
+
+            if (tt_fdata2 == "MC01")
+            {
+                GetParaDataPrint2_MC01(tt_itemtype);
+            }
         }
 
         //----以下是EW01数据采集----
@@ -5140,9 +5147,11 @@ namespace TVBOX01
                                 ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
                                 ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
 
-            //联通单频小型化二维码
-            string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
-                                    "&pwd=" + tt_password;
+            ////联通单频小型化二维码
+            //string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+            //                        "&pwd=" + tt_password;
+
+            string tt_LTQR_2G_Min = "";
 
             //上海定制条码
             string tt_shanghaiprint = this.label77.Text;
@@ -5596,7 +5605,121 @@ namespace TVBOX01
             }
         }
 
+        //----以下是MC01数据采集----联通MAC
+        private void GetParaDataPrint2_MC01(int tt_itemtype)
+        {
+            //第一步数据准备
+            DataSet dst2 = new DataSet();
+            DataTable dt2 = new DataTable();
 
+            dst2.Tables.Add(dt2);
+            dt2.Columns.Add("参数");
+            dt2.Columns.Add("名称");
+            dt2.Columns.Add("内容");
+
+            DataRow row5 = dt2.NewRow();
+            row5["参数"] = "S01";
+            row5["名称"] = "长MAC";
+            row5["内容"] = this.label46.Text;
+            dt2.Rows.Add(row5);
+
+            DataRow row6 = dt2.NewRow();
+            row6["参数"] = "S02";
+            row6["名称"] = "短MAC";
+            row6["内容"] = this.label45.Text;
+            dt2.Rows.Add(row6);
+
+            DataRow row7 = dt2.NewRow();
+            row7["参数"] = "S03";
+            row7["名称"] = "OUN 短MAC";
+            row7["内容"] = this.label174.Text.Replace("-", "");
+            dt2.Rows.Add(row7);
+
+            DataRow row8 = dt2.NewRow();
+            row8["参数"] = "S04";
+            row8["名称"] = "OUN 长MAC";
+            row8["内容"] = this.label174.Text;
+            dt2.Rows.Add(row8);
+
+            //第二步加载到表格显示
+            this.QR_dataGridView.DataSource = null;
+            this.QR_dataGridView.Rows.Clear();
+
+            this.QR_dataGridView.DataSource = dst2.Tables[0];
+            this.QR_dataGridView.Update();
+
+            this.QR_dataGridView.Columns[0].Width = 60;
+            this.QR_dataGridView.Columns[1].Width = 80;
+            this.QR_dataGridView.Columns[2].Width = 200;
+
+            //第三步 打印或预览
+
+            if (dst2.Tables.Count > 0 && dst2.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path4);
+                report.SetParameterValue("S01", dst2.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst2.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst2.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst2.Tables[0].Rows[3][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top2;
+                        p1.Left += tt_left2;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top2;
+                        p2.Left += tt_left2;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top2;
+                        p3.Left += tt_left2;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1)
+                {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
+                    report.PrintSettings.Printer = this.IItype_printset.Text;
+                    report.Print();
+                    report.Save(tt_path2);
+                    tt_top2 = 0;
+                    tt_left2 = 0;
+                    PutLableInfor("打印完毕");
+                    setRichtexBox("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+
+                setRichtexBox("99、打印或预览完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印！");
+            }
+        }
 
         #endregion
 
@@ -5832,7 +5955,13 @@ namespace TVBOX01
             //CH01---数据类型一 烽火移动彩盒
             if (tt_fdata4 == "MC01")
             {
-                GetParaDataPrint2_CH01(tt_itemtype);
+                GetParaDataPrint2_MC02(tt_itemtype);
+            }
+
+            //MP01---数据类型一
+            if (tt_fdata4 == "EW01")
+            {
+                GetParaDataPrint4_EW01(tt_itemtype);
             }
         }
 
@@ -6041,7 +6170,7 @@ namespace TVBOX01
         }
 
         //----以下是MC01数据采集----联通MAC
-        private void GetParaDataPrint2_MC01(int tt_itemtype)
+        private void GetParaDataPrint2_MC02(int tt_itemtype)
         {
             //第一步数据准备
             DataSet dst4 = new DataSet();
@@ -6156,6 +6285,220 @@ namespace TVBOX01
             }
         }
 
+        //----以下是EW01数据采集----联通二维
+        private void GetParaDataPrint4_EW01(int tt_itemtype)
+        {
+            //第一步数据准备
+
+            //数据收集
+
+            string tt_httpdx = "https://download.189cube.com/clientdownload?ssid1="; //电信IP地址
+            string tt_ssid = this.label128.Text; //默认无线网络名称
+            string tt_wifipassword = this.label132.Text; //默认无线网络密匙
+            string tt_password = this.label134.Text; //默认终端配置密码
+            string tt_productname = this.label13.Text; //设备型号
+            string tt_productmark = this.label116.Text; //设备标示
+
+            string tt_twodimcode = tt_httpdx + tt_ssid + "&password=" + tt_wifipassword + "&useradminpw="
+                                 + tt_password + "&model=" + tt_productname + "&sn=" + tt_productmark;
+
+            string tt_httplt = "http://op.smartont.net/app/download?ssid1="; //联通IP地址
+            string tt_username = this.label136.Text;
+            string tt_gpsn = this.label47.Text;
+
+            string tt_ltponword = "";
+            if (tt_ponname == "GPON")
+            {
+                tt_ltponword = "&sn=";
+            }
+            else if (tt_ponname == "EPON")
+            {
+                tt_ltponword = "&mac=";
+            }
+
+            //联通二维码
+            string tt_LTQR = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+                             "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
+                             tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
+
+            //联通天津二维码
+            string tt_LTQR_TJ = "ssid1=" + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+                                "&pwd=" + tt_password + "&model=" + tt_ponname + "&type=" + tt_productname +
+                                tt_ltponword + tt_gpsn + "&serialnumber=" + tt_productmark + "&ip=192.168.1.1";
+
+            //MAC
+            string tt_shortmac = this.label45.Text;
+
+            //移动浙江二维码
+            string tt_YDQR_ZJ = "厂家:烽火通信科技股份有限公司,型号:" + this.label56.Text + ",SN:" + tt_gpsn +
+                                ",生产日期:" + this.label59.Text.Replace("/", ".") + ",用户无线默认SSID:" + tt_ssid +
+                                ",用户无线默认SSID密码:" + tt_wifipassword + ",用户登陆默认账号:" + tt_username +
+                                ",用户登陆默认密码:" + tt_password + ",设备网卡MAC:" + tt_shortmac;
+
+            ////联通单频小型化二维码
+            //string tt_LTQR_2G_Min = tt_httplt + tt_ssid + "&password=" + tt_wifipassword + "&username=" + tt_username +
+            //                        "&pwd=" + tt_password;
+
+            string tt_LTQR_2G_Min = "";
+
+            //上海定制条码
+            string tt_shanghaiprint = this.label77.Text;
+
+            //四川温馨提示二维码
+            string tt_sichuan_QR = "http://fuwu.51awifi.com/oms/pang/bind.htm?mac=" + tt_shortmac;
+
+            DataSet dst4 = new DataSet();
+            DataTable dt4 = new DataTable();
+            dst4.Tables.Add(dt4);
+            dt4.Columns.Add("参数");
+            dt4.Columns.Add("名称");
+            dt4.Columns.Add("内容");
+
+
+            DataRow row1 = dt4.NewRow();
+            row1["参数"] = "S01";
+            row1["名称"] = "电信二维码";
+            row1["内容"] = tt_twodimcode;
+            dt4.Rows.Add(row1);
+
+            DataRow row2 = dt4.NewRow();
+            row2["参数"] = "S02";
+            row2["名称"] = "联通二维码";
+            row2["内容"] = tt_LTQR;
+            dt4.Rows.Add(row2);
+
+            DataRow row3 = dt4.NewRow();
+            row3["参数"] = "S03";
+            row3["名称"] = "联通天津二维码";
+            row3["内容"] = tt_LTQR_TJ;
+            dt4.Rows.Add(row3);
+
+            DataRow row4 = dt4.NewRow();
+            row4["参数"] = "S04";
+            row4["名称"] = "SN&MAC";
+            row4["内容"] = tt_gpsn;
+            dt4.Rows.Add(row4);
+
+            DataRow row5 = dt4.NewRow();
+            row5["参数"] = "S05";
+            row5["名称"] = "移动浙江二维码";
+            row5["内容"] = tt_YDQR_ZJ;
+            dt4.Rows.Add(row5);
+
+            DataRow row6 = dt4.NewRow();
+            row6["参数"] = "S06";
+            row6["名称"] = "上海资产编码";
+            row6["内容"] = tt_shanghaiprint;
+            dt4.Rows.Add(row6);
+
+            DataRow row7 = dt4.NewRow();
+            row7["参数"] = "S07";
+            row7["名称"] = "联通单频小型化二维码";
+            row7["内容"] = tt_LTQR_2G_Min;
+            dt4.Rows.Add(row7);
+
+            DataRow row8 = dt4.NewRow();
+            row8["参数"] = "S08";
+            row8["名称"] = "WiFi名称";
+            row8["内容"] = tt_ssid;
+            dt4.Rows.Add(row8);
+
+            DataRow row9 = dt4.NewRow();
+            row9["参数"] = "S09";
+            row9["名称"] = "WiFi密码";
+            row9["内容"] = tt_wifipassword;
+            dt4.Rows.Add(row9);
+
+            DataRow row10 = dt4.NewRow();
+            row10["参数"] = "S10";
+            row10["名称"] = "四川温馨提示二维码";
+            row10["内容"] = tt_sichuan_QR;
+            dt4.Rows.Add(row10);
+
+            this.IItype_dataGridView.DataSource = null;
+            this.IItype_dataGridView.Rows.Clear();
+
+            this.IItype_dataGridView.DataSource = dst4.Tables[0];
+            this.IItype_dataGridView.Update();
+
+            this.IItype_dataGridView.Columns[0].Width = 50;
+            this.IItype_dataGridView.Columns[1].Width = 80;
+            this.IItype_dataGridView.Columns[2].Width = 200;
+
+
+            //第四步 打印或预览
+            //单板打印
+            if (dst4.Tables.Count > 0 && dst4.Tables[0].Rows.Count > 0 && tt_itemtype > 0)
+            {
+                FastReport.Report report = new FastReport.Report();
+
+                report.Prepare();
+                report.Load(tt_path4);
+                report.SetParameterValue("S01", dst4.Tables[0].Rows[0][2].ToString());
+                report.SetParameterValue("S02", dst4.Tables[0].Rows[1][2].ToString());
+                report.SetParameterValue("S03", dst4.Tables[0].Rows[2][2].ToString());
+                report.SetParameterValue("S04", dst4.Tables[0].Rows[3][2].ToString());
+                report.SetParameterValue("S05", dst4.Tables[0].Rows[4][2].ToString());
+                report.SetParameterValue("S06", dst4.Tables[0].Rows[5][2].ToString());
+                report.SetParameterValue("S07", dst4.Tables[0].Rows[6][2].ToString());
+                report.SetParameterValue("S08", dst4.Tables[0].Rows[7][2].ToString());
+                report.SetParameterValue("S09", dst4.Tables[0].Rows[8][2].ToString());
+                report.SetParameterValue("S10", dst4.Tables[0].Rows[9][2].ToString());
+
+                for (int i = 0; i < 500; ++i)
+                {
+                    string s = string.Format("Text{0}", i + 1);
+                    TextObject p1 = report.FindObject(s) as TextObject;
+                    if (p1 != null)
+                    {
+                        p1.Top += tt_top4;
+                        p1.Left += tt_left4;
+                    }
+                    s = string.Format("Barcode{0}", i + 1);
+                    BarcodeObject p2 = report.FindObject(s) as BarcodeObject;
+                    if (p2 != null)
+                    {
+                        p2.Top += tt_top4;
+                        p2.Left += tt_left4;
+                    }
+                    s = string.Format("Picture{0}", i + 1);
+                    PictureObject p3 = report.FindObject(s) as PictureObject;
+                    if (p3 != null)
+                    {
+                        p3.Top += tt_top4;
+                        p3.Left += tt_left4;
+                    }
+                }
+
+                report.PrintSettings.ShowDialog = false;
+
+                //--打印
+                if (tt_itemtype == 1 && this.IItype_printset.Text != "")
+                {
+                    Thread.Sleep(int.Parse(IItype_PrintDelay));
+                    report.PrintSettings.Printer = this.IItype_printset.Text;
+                    report.Print();
+                    report.Save(tt_path4);
+                    tt_top4 = 0;
+                    tt_left4 = 0;
+                    PutLableInfor("打印完毕");
+                }
+
+                //--预览
+                if (tt_itemtype == 2)
+                {
+                    report.Design();
+                    PutLableInfor("预览完毕");
+                }
+                setRichtexBox("99、打印或预览二维码完毕，请检查标签，OK");
+            }
+            else
+            {
+                setRichtexBox("99、获取信息失败，或不是单板扫描状态，不能打印,over");
+                PutLableInfor("获取信息失败，或不是单板扫描状态，不能打印");
+            }
+        }
+
         #endregion
 
         #endregion
@@ -6228,8 +6571,12 @@ namespace TVBOX01
                                         tt_bosatype, tt_gyid2, tt_parenttask);
                     }
 
-                    string tt_sql2 = "select count(1),min(fpliietset),0 from odc_dypowertype " +
-                                         "where ftype = '" + tt_product_name + "' ";
+                    string tt_change = "<> ";
+                    if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                    {
+                        tt_change = "= ";
+                    }
+                    string tt_sql2 = "select count(1),min(fpliietset),0 from odc_dypowertype where ftype = '" + tt_product_name + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
 
                     string[] tt_array2 = new string[3];
                     tt_array2 = Dataset1.GetDatasetArray(tt_sql2, tt_conn);

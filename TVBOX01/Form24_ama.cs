@@ -51,6 +51,8 @@ namespace TVBOX01
         DateTime tt_reprintstattime;
         DateTime tt_reprintendtime;
 
+        string tt_parenttask = "";
+
 
         //本机MAC
         static string tt_computermac = "";
@@ -732,8 +734,8 @@ namespace TVBOX01
             #region
             bool tt_flag1 = false;
 
-            string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id " +
-                                 "from odc_tasks where taskstate = 2 and taskscode = '" + tt_task1 + "' ";
+            string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,Vendorid,Teamgroupid,pon_name,id,parenttask " +
+                             "from odc_tasks where taskstate = 2 and taskscode = '" + tt_task1 + "' ";
             DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
             if (ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
             {
@@ -752,6 +754,8 @@ namespace TVBOX01
                 this.label89.Text = ds1.Tables[0].Rows[0].ItemArray[11].ToString();  //PON类型
 
                 string tt_idnum = ds1.Tables[0].Rows[0].ItemArray[12].ToString();//制造单ID
+
+                tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[13].ToString();
 
                 tt_idnum1 = Convert.ToInt32(tt_idnum);
 
@@ -922,7 +926,13 @@ namespace TVBOX01
             bool tt_flag17 = false;
             if (tt_flag16)
             {
-                string tt_sql17 = "select volt,ampere from odc_dypowertype where ftype = '" + this.label29.Text + "' ";
+                string tt_change = "<> ";
+                if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                {
+                    tt_change = "= ";
+                }
+                string tt_sql17 = "select volt,ampere from odc_dypowertype where ftype = '" + this.label29.Text + "' and fdesc " + tt_change + "'" + tt_parenttask + "' ";
+
                 DataSet ds17 = Dataset1.GetDataSetTwo(tt_sql17, tt_conn);
 
                 if (ds17.Tables.Count > 0 && ds17.Tables[0].Rows.Count > 0)
@@ -1006,7 +1016,7 @@ namespace TVBOX01
             if (tt_flag8)
             {
                 string tt_product = this.label29.Text;
-                tt_telecustomer = getTelecomOperator(tt_product);
+                tt_telecustomer = GetTelecomOperator(tt_product,tt_parenttask);
                 if (tt_telecustomer == "0")
                 {
                     MessageBox.Show("运营商获取失败，无法确定是电信还是移动产品");
@@ -1639,23 +1649,28 @@ namespace TVBOX01
         }
 
         //获取运营商
-        private string getTelecomOperator(string tt_peoductname)
+        private string GetTelecomOperator(string tt_peoductname, string tt_parenttask)
         {
             string tt_teleplan = "0";
 
-            string tt_sql = "select count(1),min(Fdesc),0  from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
-
-            string[] tt_array = new string[3];
-            tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
-            if (tt_array[0] == "1")
+            if (tt_parenttask.Contains("小型化")) //如果小型化产品
             {
-                tt_teleplan = tt_array[1];
+                tt_teleplan = tt_parenttask;
             }
             else
             {
-                MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' and Fdesc <> '" + tt_parenttask + "' ";
+                string[] tt_array = new string[3];
+                tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
+                if (tt_array[0] == "1")
+                {
+                    tt_teleplan = tt_array[1];
+                }
+                else
+                {
+                    MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                }
             }
-
 
             return tt_teleplan;
         }

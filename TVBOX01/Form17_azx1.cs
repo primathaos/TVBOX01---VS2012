@@ -69,7 +69,7 @@ namespace TVBOX01
         static string BoxPrintMode = "";
 
         //小型化方案装箱兼容用
-        static string tt_MiniType = "";
+        static string tt_parenttask = "";
 
         //临时参数
 
@@ -431,12 +431,9 @@ namespace TVBOX01
                 //记录过站次数
                 if (tt_flag11 || tt_flag22)
                 {
-
                     tt_passcount++;
                     tt_yield++;
                 }
-
-
             }
 
 
@@ -856,11 +853,11 @@ namespace TVBOX01
         {
             string tt_WORD = "";
 
-            if (tt_pon_name == "GPON" && tt_telecustomer == "联通" && gpsn != "")
+            if (tt_pon_name == "GPON" && tt_telecustomer.Contains("联通") && gpsn != "")
             {
                 tt_WORD = "SN:";
             }
-            else if (tt_pon_name == "EPON" && tt_telecustomer == "联通" && gpsn != "")
+            else if (tt_pon_name == "EPON" && tt_telecustomer.Contains("联通") && gpsn != "")
             {
                 tt_WORD = "MAC:";
             }
@@ -1814,22 +1811,29 @@ namespace TVBOX01
         }
 
         //获取运营商
-        private string GetTelecomOperator(string tt_peoductname)
+        private string GetTelecomOperator(string tt_peoductname, string tt_parenttask)
         {
             string tt_teleplan = "0";
 
-            string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
-
-            string[] tt_array = new string[3];
-            tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
-            if (tt_array[0] == "1")
+            if (tt_parenttask.Contains("小型化")) //如果小型化产品
             {
-                tt_teleplan = tt_array[1];
+                tt_teleplan = tt_parenttask;
             }
             else
             {
-                MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                string tt_sql = "select count(1),min(Fdesc),0 from odc_dypowertype where Ftype = '" + tt_peoductname + "' ";
+                string[] tt_array = new string[3];
+                tt_array = Dataset1.GetDatasetArray(tt_sql, tt_conn);
+                if (tt_array[0] == "1")
+                {
+                    tt_teleplan = tt_array[1];
+                }
+                else
+                {
+                    MessageBox.Show("没有找打产品型号" + tt_peoductname + "，对应的供应商，请确认产品型号设置表");
+                }
             }
+
             return tt_teleplan;
         }
 
@@ -2110,7 +2114,7 @@ namespace TVBOX01
                     tt_pon_name = ds1.Tables[0].Rows[0].ItemArray[7].ToString();  //产品类型
                     tt_areacode = ds1.Tables[0].Rows[0].ItemArray[8].ToString();  //生产地区
                     tt_gyid_Old = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //次级流程配置
-                    tt_MiniType = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //小型化配置方案
+                    tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //小型化配置方案
 
                     tt_power_old = ds1.Tables[0].Rows[0].ItemArray[11].ToString().Trim();  //旧电源适配器标识
                     tt_power_re = ds1.Tables[0].Rows[0].ItemArray[10].ToString().Trim();  //旧电源适配器标识(需重打检查)
@@ -2242,9 +2246,15 @@ namespace TVBOX01
                     if (tt_flag3)
                     {
                         string tt_sbxh = "";
-                        string tt_sql11 = "select wifi from odc_dypowertype where ftype = '" + tt_productname + "' ";
-                        DataSet ds11 = Dataset1.GetDataSetTwo(tt_sql11, tt_conn);
 
+                        string tt_change = "<> ";
+                        if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                        {
+                            tt_change = "= ";
+                        }
+                        string tt_sql11 = "select wifi from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
+
+                        DataSet ds11 = Dataset1.GetDataSetTwo(tt_sql11, tt_conn);
                         if (ds11.Tables.Count > 0 && ds11.Tables[0].Rows.Count > 0)
                         {
                             tt_sbxh = ds11.Tables[0].Rows[0].ItemArray[0].ToString(); //设备特征
@@ -2491,8 +2501,12 @@ namespace TVBOX01
                     bool tt_flag10 = false;
                     if (tt_flag9)
                     {
-                        string tt_sql10 = "select count(1),min(fboxset),0 from odc_dypowertype " +
-                                          "where ftype = '" + tt_productname + "' ";
+                        string tt_change = "<> ";
+                        if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                        {
+                            tt_change = "= ";
+                        }
+                        string tt_sql10 = "select count(1),min(fboxset),0 from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
 
                         string[] tt_array10 = new string[3];
                         tt_array10 = Dataset1.GetDatasetArray(tt_sql10, tt_conn);
@@ -2500,10 +2514,6 @@ namespace TVBOX01
                         {
                             tt_flag10 = true;
                             if ((tt_productname == "HG6201T" || tt_productname == "HG2201T") && tt_areacode == "安徽")
-                            {
-                                this.label77.Text = "20";
-                            }
-                            else if (tt_MiniType == "小型化方案")
                             {
                                 this.label77.Text = "20";
                             }
@@ -2518,7 +2528,6 @@ namespace TVBOX01
                         {
                             MessageBox.Show("没有找到产品型号:" + tt_productname + "的配置表odc_dypowertype对应的装箱设定信息，对应字段:fboxset,请确认！");
                         }
-
                     }
                     #endregion
                     
@@ -2566,7 +2575,7 @@ namespace TVBOX01
                 this.tabPage3.Parent = tabControl2;
                 tt_QRDZ = 0;//重置是否检查二维码定制标签
                 //this.button17.Visible = true;
-                tt_MiniType = "";//小型化方案用
+                tt_parenttask = "";//小型化方案用
             }
         }
 
@@ -3867,13 +3876,12 @@ namespace TVBOX01
                         tt_gyid = tt_gyid_Old;
                     }
 
-
                     int tt_productname_check = 0;
 
                     if (this.label10.Text.Trim() == "HG6201M"
                         || ("HG6201T,HG2201T".Contains(this.label10.Text.Trim())
                         && tt_areacode != "安徽"
-                        && tt_MiniType != "小型化方案"))
+                        && tt_parenttask != "小型化电信"))//如果产品不属于需要测试吞吐量的产品  //这是用于早期流程切换兼容用的，如果没有流程切换就不用修改
                     {
                         tt_productname_check = 1;
                     }
@@ -6860,6 +6868,8 @@ namespace TVBOX01
             row75["内容"] = HOST_SN_Gansu_QR;
             dt.Rows.Add(row75);
 
+            //MAC 
+
             DataRow row76 = dt.NewRow();
             row76["参数"] = "M01";
             row76["名称"] = "MAC码01";
@@ -6979,6 +6989,128 @@ namespace TVBOX01
             row95["名称"] = "MAC码20";
             row95["内容"] = GetListViewItem(2, 20);
             dt.Rows.Add(row95);
+
+            //MAC 明码
+
+            DataRow row96 = dt.NewRow();
+            row96["参数"] = "MA01";
+            row96["名称"] = "MAC明码01";
+            row96["内容"] = Regex.Replace(GetListViewItem(2, 1), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row96);
+
+            DataRow row97 = dt.NewRow();
+            row97["参数"] = "MA02";
+            row97["名称"] = "MAC明码02";
+            row97["内容"] = Regex.Replace(GetListViewItem(2, 2), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row97);
+
+            DataRow row98 = dt.NewRow();
+            row98["参数"] = "MA03";
+            row98["名称"] = "MAC明码03";
+            row98["内容"] = Regex.Replace(GetListViewItem(2, 3), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row98);
+
+            DataRow row99 = dt.NewRow();
+            row99["参数"] = "MA04";
+            row99["名称"] = "MAC明码04";
+            row99["内容"] = Regex.Replace(GetListViewItem(2, 4), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row99);
+
+            DataRow row100 = dt.NewRow();
+            row100["参数"] = "MA05";
+            row100["名称"] = "MAC明码05";
+            row100["内容"] = Regex.Replace(GetListViewItem(2, 5), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row100);
+
+            DataRow row101 = dt.NewRow();
+            row101["参数"] = "MA06";
+            row101["名称"] = "MAC明码06";
+            row101["内容"] = Regex.Replace(GetListViewItem(2, 6), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row101);
+
+            DataRow row102 = dt.NewRow();
+            row102["参数"] = "MA07";
+            row102["名称"] = "MAC明码07";
+            row102["内容"] = Regex.Replace(GetListViewItem(2, 7), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row102);
+
+            DataRow row103 = dt.NewRow();
+            row103["参数"] = "MA08";
+            row103["名称"] = "MAC明码08";
+            row103["内容"] = Regex.Replace(GetListViewItem(2, 8), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row103);
+
+            DataRow row104 = dt.NewRow();
+            row104["参数"] = "MA09";
+            row104["名称"] = "MAC明码09";
+            row104["内容"] = Regex.Replace(GetListViewItem(2, 9), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row104);
+
+            DataRow row105 = dt.NewRow();
+            row105["参数"] = "MA10";
+            row105["名称"] = "MAC明码10";
+            row105["内容"] = Regex.Replace(GetListViewItem(2, 10), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row105);
+
+            DataRow row106 = dt.NewRow();
+            row106["参数"] = "MA11";
+            row106["名称"] = "MAC明码11";
+            row106["内容"] = Regex.Replace(GetListViewItem(2, 11), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row106);
+
+            DataRow row107 = dt.NewRow();
+            row107["参数"] = "MA12";
+            row107["名称"] = "MAC明码12";
+            row107["内容"] = Regex.Replace(GetListViewItem(2, 12), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row107);
+
+            DataRow row108 = dt.NewRow();
+            row108["参数"] = "MA13";
+            row108["名称"] = "MAC明码13";
+            row108["内容"] = Regex.Replace(GetListViewItem(2, 13), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row108);
+
+            DataRow row109 = dt.NewRow();
+            row109["参数"] = "MA14";
+            row109["名称"] = "MAC明码14";
+            row109["内容"] = Regex.Replace(GetListViewItem(2, 14), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row109);
+
+            DataRow row110 = dt.NewRow();
+            row110["参数"] = "MA15";
+            row110["名称"] = "MAC明码15";
+            row110["内容"] = Regex.Replace(GetListViewItem(2, 15), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row110);
+
+            DataRow row111 = dt.NewRow();
+            row111["参数"] = "MA16";
+            row111["名称"] = "MAC明码16";
+            row111["内容"] = Regex.Replace(GetListViewItem(2, 16), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row111);
+
+            DataRow row112 = dt.NewRow();
+            row112["参数"] = "MA17";
+            row112["名称"] = "MAC明码17";
+            row112["内容"] = Regex.Replace(GetListViewItem(2, 17), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row112);
+
+            DataRow row113 = dt.NewRow();
+            row113["参数"] = "MA18";
+            row113["名称"] = "MAC明码18";
+            row113["内容"] = Regex.Replace(GetListViewItem(2, 18), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row113);
+
+            DataRow row114 = dt.NewRow();
+            row114["参数"] = "MA19";
+            row114["名称"] = "MAC明码19";
+            row114["内容"] = Regex.Replace(GetListViewItem(2, 19), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row114);
+
+            DataRow row115 = dt.NewRow();
+            row115["参数"] = "MA20";
+            row115["名称"] = "MAC明码20";
+            row115["内容"] = Regex.Replace(GetListViewItem(2, 20), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row115);
 
             //第二步加载到表格显示
             this.dataGridView2.DataSource = null;
@@ -7105,6 +7237,27 @@ namespace TVBOX01
                 report.SetParameterValue("M19", dst.Tables[0].Rows[93][2].ToString());
                 report.SetParameterValue("M20", dst.Tables[0].Rows[94][2].ToString());
 
+                report.SetParameterValue("MA01", dst.Tables[0].Rows[95][2].ToString());
+                report.SetParameterValue("MA02", dst.Tables[0].Rows[96][2].ToString());
+                report.SetParameterValue("MA03", dst.Tables[0].Rows[97][2].ToString());
+                report.SetParameterValue("MA04", dst.Tables[0].Rows[98][2].ToString());
+                report.SetParameterValue("MA05", dst.Tables[0].Rows[99][2].ToString());
+                report.SetParameterValue("MA06", dst.Tables[0].Rows[100][2].ToString());
+                report.SetParameterValue("MA07", dst.Tables[0].Rows[101][2].ToString());
+                report.SetParameterValue("MA08", dst.Tables[0].Rows[102][2].ToString());
+                report.SetParameterValue("MA09", dst.Tables[0].Rows[103][2].ToString());
+                report.SetParameterValue("MA10", dst.Tables[0].Rows[104][2].ToString());
+                report.SetParameterValue("MA11", dst.Tables[0].Rows[105][2].ToString());
+                report.SetParameterValue("MA12", dst.Tables[0].Rows[106][2].ToString());
+                report.SetParameterValue("MA13", dst.Tables[0].Rows[107][2].ToString());
+                report.SetParameterValue("MA14", dst.Tables[0].Rows[108][2].ToString());
+                report.SetParameterValue("MA15", dst.Tables[0].Rows[109][2].ToString());
+                report.SetParameterValue("MA16", dst.Tables[0].Rows[110][2].ToString());
+                report.SetParameterValue("MA17", dst.Tables[0].Rows[111][2].ToString());
+                report.SetParameterValue("MA18", dst.Tables[0].Rows[112][2].ToString());
+                report.SetParameterValue("MA19", dst.Tables[0].Rows[113][2].ToString());
+                report.SetParameterValue("MA20", dst.Tables[0].Rows[114][2].ToString());
+
                 for (int i = 0; i < 500; ++i)
                 {
                     string s = string.Format("Text{0}", i + 1);
@@ -7165,7 +7318,7 @@ namespace TVBOX01
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();
 
-            string tt_telecustomer = GetTelecomOperator(this.label10.Text);
+            string tt_telecustomer = GetTelecomOperator(this.label10.Text,tt_parenttask);
 
             string GPSN_QR = Regex.Replace(GetListViewItem(4, 1), "-", "") + GetQR_LINE_BREAK(GetListViewItem(4, 1))
                            + Regex.Replace(GetListViewItem(4, 2), "-", "") + GetQR_LINE_BREAK(GetListViewItem(4, 1))
@@ -7630,11 +7783,7 @@ namespace TVBOX01
                     PutLableInfor("预览完毕");
                 }
 
-
-
                 setRichtexBox("99、打印或预览完毕，请检查铭牌，OK");
-
-
             }
             else
             {
@@ -7651,7 +7800,7 @@ namespace TVBOX01
             DataSet dst = new DataSet();
             DataTable dt = new DataTable();
 
-            string tt_telecustomer = GetTelecomOperator(this.label10.Text);
+            string tt_telecustomer = GetTelecomOperator(this.label10.Text, tt_parenttask);
 
             string GPSN_QR = Regex.Replace(GetListViewItem(4, 1), "-", "") + GetQR_LINE_BREAK(GetListViewItem(4, 2))
                            + Regex.Replace(GetListViewItem(4, 2), "-", "") + GetQR_LINE_BREAK(GetListViewItem(4, 3))
@@ -8637,6 +8786,250 @@ namespace TVBOX01
             row70["内容"] = GetListViewItem(4, 10);
             dt.Rows.Add(row70);
 
+            //MAC
+
+            DataRow row71 = dt.NewRow();
+            row71["参数"] = "M01";
+            row71["名称"] = "MAC码01";
+            row71["内容"] = GetListViewItem(2, 1);
+            dt.Rows.Add(row71);
+
+            DataRow row72 = dt.NewRow();
+            row72["参数"] = "M02";
+            row72["名称"] = "MAC码02";
+            row72["内容"] = GetListViewItem(2, 2);
+            dt.Rows.Add(row72);
+
+            DataRow row73 = dt.NewRow();
+            row73["参数"] = "M03";
+            row73["名称"] = "MAC码03";
+            row73["内容"] = GetListViewItem(2, 3);
+            dt.Rows.Add(row73);
+
+            DataRow row74 = dt.NewRow();
+            row74["参数"] = "M04";
+            row74["名称"] = "MAC码04";
+            row74["内容"] = GetListViewItem(2, 4);
+            dt.Rows.Add(row74);
+
+            DataRow row75 = dt.NewRow();
+            row75["参数"] = "M05";
+            row75["名称"] = "MAC码05";
+            row75["内容"] = GetListViewItem(2, 5);
+            dt.Rows.Add(row75);
+
+            DataRow row76 = dt.NewRow();
+            row76["参数"] = "M06";
+            row76["名称"] = "MAC码06";
+            row76["内容"] = GetListViewItem(2, 6);
+            dt.Rows.Add(row76);
+
+            DataRow row77 = dt.NewRow();
+            row77["参数"] = "M07";
+            row77["名称"] = "MAC码07";
+            row77["内容"] = GetListViewItem(2, 7);
+            dt.Rows.Add(row77);
+
+            DataRow row78 = dt.NewRow();
+            row78["参数"] = "M08";
+            row78["名称"] = "MAC码08";
+            row78["内容"] = GetListViewItem(2, 8);
+            dt.Rows.Add(row78);
+
+            DataRow row79 = dt.NewRow();
+            row79["参数"] = "M09";
+            row79["名称"] = "MAC码09";
+            row79["内容"] = GetListViewItem(2, 9);
+            dt.Rows.Add(row79);
+
+            DataRow row80 = dt.NewRow();
+            row80["参数"] = "M10";
+            row80["名称"] = "MAC码10";
+            row80["内容"] = GetListViewItem(2, 10);
+            dt.Rows.Add(row80);
+
+            DataRow row81 = dt.NewRow();
+            row81["参数"] = "M11";
+            row81["名称"] = "MAC码11";
+            row81["内容"] = GetListViewItem(2, 11);
+            dt.Rows.Add(row81);
+
+            DataRow row82 = dt.NewRow();
+            row82["参数"] = "M12";
+            row82["名称"] = "MAC码12";
+            row82["内容"] = GetListViewItem(2, 12);
+            dt.Rows.Add(row82);
+
+            DataRow row83 = dt.NewRow();
+            row83["参数"] = "M13";
+            row83["名称"] = "MAC码13";
+            row83["内容"] = GetListViewItem(2, 13);
+            dt.Rows.Add(row83);
+
+            DataRow row84 = dt.NewRow();
+            row84["参数"] = "M14";
+            row84["名称"] = "MAC码14";
+            row84["内容"] = GetListViewItem(2, 14);
+            dt.Rows.Add(row84);
+
+            DataRow row85 = dt.NewRow();
+            row85["参数"] = "M15";
+            row85["名称"] = "MAC码15";
+            row85["内容"] = GetListViewItem(2, 15);
+            dt.Rows.Add(row85);
+
+            DataRow row86 = dt.NewRow();
+            row86["参数"] = "M16";
+            row86["名称"] = "MAC码16";
+            row86["内容"] = GetListViewItem(2, 16);
+            dt.Rows.Add(row86);
+
+            DataRow row87 = dt.NewRow();
+            row87["参数"] = "M17";
+            row87["名称"] = "MAC码17";
+            row87["内容"] = GetListViewItem(2, 17);
+            dt.Rows.Add(row87);
+
+            DataRow row88 = dt.NewRow();
+            row88["参数"] = "M18";
+            row88["名称"] = "MAC码18";
+            row88["内容"] = GetListViewItem(2, 18);
+            dt.Rows.Add(row88);
+
+            DataRow row89 = dt.NewRow();
+            row89["参数"] = "M19";
+            row89["名称"] = "MAC码19";
+            row89["内容"] = GetListViewItem(2, 19);
+            dt.Rows.Add(row89);
+
+            DataRow row90 = dt.NewRow();
+            row90["参数"] = "M20";
+            row90["名称"] = "MAC码20";
+            row90["内容"] = GetListViewItem(2, 20);
+            dt.Rows.Add(row90);
+
+            //MAC明码
+
+            DataRow row91 = dt.NewRow();
+            row91["参数"] = "M01";
+            row91["名称"] = "MAC码01";
+            row91["内容"] = Regex.Replace(GetListViewItem(2, 1), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row91);
+
+            DataRow row92 = dt.NewRow();
+            row92["参数"] = "M02";
+            row92["名称"] = "MAC码02";
+            row92["内容"] = Regex.Replace(GetListViewItem(2, 2), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row92);
+
+            DataRow row93 = dt.NewRow();
+            row93["参数"] = "M03";
+            row93["名称"] = "MAC码03";
+            row93["内容"] = Regex.Replace(GetListViewItem(2, 3), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row93);
+
+            DataRow row94 = dt.NewRow();
+            row94["参数"] = "M04";
+            row94["名称"] = "MAC码04";
+            row94["内容"] = Regex.Replace(GetListViewItem(2, 4), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row94);
+
+            DataRow row95 = dt.NewRow();
+            row95["参数"] = "M05";
+            row95["名称"] = "MAC码05";
+            row95["内容"] = Regex.Replace(GetListViewItem(2, 5), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row95);
+
+            DataRow row96 = dt.NewRow();
+            row96["参数"] = "M06";
+            row96["名称"] = "MAC码06";
+            row96["内容"] = Regex.Replace(GetListViewItem(2, 6), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row96);
+
+            DataRow row97 = dt.NewRow();
+            row97["参数"] = "M07";
+            row97["名称"] = "MAC码07";
+            row97["内容"] = Regex.Replace(GetListViewItem(2, 7), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row97);
+
+            DataRow row98 = dt.NewRow();
+            row98["参数"] = "M08";
+            row98["名称"] = "MAC码08";
+            row98["内容"] = Regex.Replace(GetListViewItem(2, 8), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row98);
+
+            DataRow row99 = dt.NewRow();
+            row99["参数"] = "M09";
+            row99["名称"] = "MAC码09";
+            row99["内容"] = Regex.Replace(GetListViewItem(2, 9), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row99);
+
+            DataRow row100 = dt.NewRow();
+            row100["参数"] = "M10";
+            row100["名称"] = "MAC码10";
+            row100["内容"] = Regex.Replace(GetListViewItem(2, 10), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row100);
+
+            DataRow row101 = dt.NewRow();
+            row101["参数"] = "M11";
+            row101["名称"] = "MAC码11";
+            row101["内容"] = Regex.Replace(GetListViewItem(2, 11), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row101);
+
+            DataRow row102 = dt.NewRow();
+            row102["参数"] = "M12";
+            row102["名称"] = "MAC码12";
+            row102["内容"] = Regex.Replace(GetListViewItem(2, 12), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row102);
+
+            DataRow row103 = dt.NewRow();
+            row103["参数"] = "M13";
+            row103["名称"] = "MAC码13";
+            row103["内容"] = Regex.Replace(GetListViewItem(2, 13), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row103);
+
+            DataRow row104 = dt.NewRow();
+            row104["参数"] = "M14";
+            row104["名称"] = "MAC码14";
+            row104["内容"] = Regex.Replace(GetListViewItem(2, 14), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row104);
+
+            DataRow row105 = dt.NewRow();
+            row105["参数"] = "M15";
+            row105["名称"] = "MAC码15";
+            row105["内容"] = Regex.Replace(GetListViewItem(2, 15), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row105);
+
+            DataRow row106 = dt.NewRow();
+            row106["参数"] = "M16";
+            row106["名称"] = "MAC码16";
+            row106["内容"] = Regex.Replace(GetListViewItem(2, 16), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row106);
+
+            DataRow row107 = dt.NewRow();
+            row107["参数"] = "M17";
+            row107["名称"] = "MAC码17";
+            row107["内容"] = Regex.Replace(GetListViewItem(2, 17), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row107);
+
+            DataRow row108 = dt.NewRow();
+            row108["参数"] = "M18";
+            row108["名称"] = "MAC码18";
+            row108["内容"] = Regex.Replace(GetListViewItem(2, 18), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row108);
+
+            DataRow row109 = dt.NewRow();
+            row109["参数"] = "M19";
+            row109["名称"] = "MAC码19";
+            row109["内容"] = Regex.Replace(GetListViewItem(2, 19), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row109);
+
+            DataRow row110 = dt.NewRow();
+            row110["参数"] = "M20";
+            row110["名称"] = "MAC码20";
+            row110["内容"] = Regex.Replace(GetListViewItem(2, 20), @"(\w{2})", "$1-").Trim('-');
+            dt.Rows.Add(row110);
+
             //第二步加载到表格显示
             this.dataGridView2.DataSource = null;
             this.dataGridView2.Rows.Clear();
@@ -8732,6 +9125,48 @@ namespace TVBOX01
                 report.SetParameterValue("GP08", dst.Tables[0].Rows[67][2].ToString());
                 report.SetParameterValue("GP09", dst.Tables[0].Rows[68][2].ToString());
                 report.SetParameterValue("GP10", dst.Tables[0].Rows[69][2].ToString());
+
+                report.SetParameterValue("M01", dst.Tables[0].Rows[70][2].ToString());
+                report.SetParameterValue("M02", dst.Tables[0].Rows[71][2].ToString());
+                report.SetParameterValue("M03", dst.Tables[0].Rows[72][2].ToString());
+                report.SetParameterValue("M04", dst.Tables[0].Rows[73][2].ToString());
+                report.SetParameterValue("M05", dst.Tables[0].Rows[74][2].ToString());
+                report.SetParameterValue("M06", dst.Tables[0].Rows[75][2].ToString());
+                report.SetParameterValue("M07", dst.Tables[0].Rows[76][2].ToString());
+                report.SetParameterValue("M08", dst.Tables[0].Rows[77][2].ToString());
+                report.SetParameterValue("M09", dst.Tables[0].Rows[78][2].ToString());
+                report.SetParameterValue("M10", dst.Tables[0].Rows[79][2].ToString());
+                report.SetParameterValue("M11", dst.Tables[0].Rows[80][2].ToString());
+                report.SetParameterValue("M12", dst.Tables[0].Rows[81][2].ToString());
+                report.SetParameterValue("M13", dst.Tables[0].Rows[82][2].ToString());
+                report.SetParameterValue("M14", dst.Tables[0].Rows[83][2].ToString());
+                report.SetParameterValue("M15", dst.Tables[0].Rows[84][2].ToString());
+                report.SetParameterValue("M16", dst.Tables[0].Rows[85][2].ToString());
+                report.SetParameterValue("M17", dst.Tables[0].Rows[86][2].ToString());
+                report.SetParameterValue("M18", dst.Tables[0].Rows[87][2].ToString());
+                report.SetParameterValue("M19", dst.Tables[0].Rows[88][2].ToString());
+                report.SetParameterValue("M20", dst.Tables[0].Rows[89][2].ToString());
+
+                report.SetParameterValue("MA01", dst.Tables[0].Rows[90][2].ToString());
+                report.SetParameterValue("MA02", dst.Tables[0].Rows[91][2].ToString());
+                report.SetParameterValue("MA03", dst.Tables[0].Rows[92][2].ToString());
+                report.SetParameterValue("MA04", dst.Tables[0].Rows[93][2].ToString());
+                report.SetParameterValue("MA05", dst.Tables[0].Rows[94][2].ToString());
+                report.SetParameterValue("MA06", dst.Tables[0].Rows[95][2].ToString());
+                report.SetParameterValue("MA07", dst.Tables[0].Rows[96][2].ToString());
+                report.SetParameterValue("MA08", dst.Tables[0].Rows[97][2].ToString());
+                report.SetParameterValue("MA09", dst.Tables[0].Rows[98][2].ToString());
+                report.SetParameterValue("MA10", dst.Tables[0].Rows[99][2].ToString());
+                report.SetParameterValue("MA11", dst.Tables[0].Rows[100][2].ToString());
+                report.SetParameterValue("MA12", dst.Tables[0].Rows[101][2].ToString());
+                report.SetParameterValue("MA13", dst.Tables[0].Rows[102][2].ToString());
+                report.SetParameterValue("MA14", dst.Tables[0].Rows[103][2].ToString());
+                report.SetParameterValue("MA15", dst.Tables[0].Rows[104][2].ToString());
+                report.SetParameterValue("MA16", dst.Tables[0].Rows[105][2].ToString());
+                report.SetParameterValue("MA17", dst.Tables[0].Rows[106][2].ToString());
+                report.SetParameterValue("MA18", dst.Tables[0].Rows[107][2].ToString());
+                report.SetParameterValue("MA19", dst.Tables[0].Rows[108][2].ToString());
+                report.SetParameterValue("MA20", dst.Tables[0].Rows[109][2].ToString());
 
                 for (int i = 0; i < 500; ++i)
                 {

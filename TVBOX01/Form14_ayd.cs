@@ -38,6 +38,7 @@ namespace TVBOX01
         static string tt_Voltage = "";
         static string tt_Ampere = "";
         static string tt_NetType = "";
+        string tt_parenttask = "";
 
         DateTime tt_productstarttime = DateTime.Now; //开始时间
         DateTime tt_productprimtime; //上一次时间
@@ -270,18 +271,10 @@ namespace TVBOX01
                     //获取调试开始时间
                     tt_reprintstattime = DateTime.Now;
                 }
-                else if (str.Contains("FH112") && this.textBox1.Text == "BB1815002")
-                {
-                    this.button3.Visible = true;
-                    this.tabPage4.Parent = tabControl2;
-                    this.tabPage3.Parent = null;
-                    //获取调试开始时间
-                    tt_reprintstattime = DateTime.Now;
-                }
 
                 tt_computermac = Dataset1.GetHostIpName();
 
-                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,pon_name,Vendorid " +
+                string tt_sql1 = "select  tasksquantity,product_name,areacode,fec,convert(varchar, taskdate, 102) fdate,customer,flhratio,Gyid,Tasktype,pon_name,Vendorid,parenttask " +
                                  "from odc_tasks where taskscode = '" + this.textBox1.Text + "' ";
                 DataSet ds1 = Dataset1.GetDataSetTwo(tt_sql1, tt_conn);
 
@@ -299,6 +292,8 @@ namespace TVBOX01
                     this.label85.Text = ds1.Tables[0].Rows[0].ItemArray[9].ToString();  //PON类型
 
                     tt_Vendorid = ds1.Tables[0].Rows[0].ItemArray[10].ToString().ToUpper();  //天翼小型化测试用CMIID
+
+                    tt_parenttask = ds1.Tables[0].Rows[0].ItemArray[11].ToString().ToUpper();
 
                     if (tt_productname == "HG6201G" || tt_productname == "HG6201GW" || tt_productname == "HG6201GS")
                     {
@@ -362,9 +357,14 @@ namespace TVBOX01
                     Boolean tt_flag1_1 = false;
                     if (tt_flag1)
                     {
-                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' ";
-                        DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
+                        string tt_change = "<> ";
+                        if (tt_parenttask.Contains("小型化")) //如果小型化产品
+                        {
+                            tt_change = "= ";
+                        }
+                        string tt_sql3 = "select volt,ampere from odc_dypowertype where ftype = '" + tt_productname + "' and fdesc " + tt_change + "'" + tt_parenttask + "'";
 
+                        DataSet ds3 = Dataset1.GetDataSetTwo(tt_sql3, tt_conn);
                         if (ds3.Tables.Count > 0 && ds3.Tables[0].Rows.Count > 0)
                         {
                             tt_Voltage = ds3.Tables[0].Rows[0].ItemArray[0].ToString(); //电压
